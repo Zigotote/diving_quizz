@@ -17,7 +17,6 @@ class UserDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Bubble(
       style: bubbleStyle,
-      showNip: false,
       child: this.widget,
     );
   }
