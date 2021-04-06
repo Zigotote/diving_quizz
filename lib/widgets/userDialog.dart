@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import "package:bubble/bubble.dart";
 
 class UserDialog extends StatelessWidget {
-  UserDialog({this.widget});
+  UserDialog({this.child});
 
-  final Widget widget;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class UserDialog extends StatelessWidget {
         margin: BubbleEdges.only(top: 4),
         alignment: Alignment.topRight,
       ),
-      child: this.widget,
+      child: this.child,
     );
   }
 }

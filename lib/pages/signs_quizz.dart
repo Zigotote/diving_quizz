@@ -15,7 +15,11 @@ class _SignsQuizzState extends State<SignsQuizz> {
         appBar: AppBar(
           title: Text("Diving quizz"),
         ),
-        body: Question(),
+        body: Question(
+          image: "ok.png",
+          correctAnswer: "OK",
+          answers: {"OK", "Je ne sais pas"},
+        ),
       ),
     );
   }

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import "package:bubble/bubble.dart";
 
 class BootDialog extends StatelessWidget {
-  BootDialog({this.widget});
+  BootDialog({this.child});
 
-  final Widget widget;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class BootDialog extends StatelessWidget {
         margin: BubbleEdges.only(top: 8, right: 50),
         alignment: Alignment.topLeft,
       ),
-      child: this.widget,
+      child: this.child,
     );
   }
 }

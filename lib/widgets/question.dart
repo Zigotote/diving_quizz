@@ -4,27 +4,42 @@ import 'package:diving_quizz/widgets/userDialog.dart';
 import 'package:flutter/material.dart';
 
 class Question extends StatefulWidget {
+  final String image;
+  final String correctAnswer;
+  final Set<String> answers;
+
+  Question({
+    @required this.image,
+    @required this.correctAnswer,
+    @required this.answers,
+  });
+
   @override
   _QuestionState createState() => _QuestionState();
 }
 
 class _QuestionState extends State<Question> {
   Widget _answerWidget;
-  final String image = "ok.png";
-  final Set<String> answers = {"OK", "I don't know"};
 
   @override
   void initState() {
     super.initState();
     this._answerWidget = AnswerOptions(
       onAnswerSelected: this._handleAnswerSelected,
-      answers: this.answers,
+      answers: widget.answers,
     );
   }
 
   void _handleAnswerSelected(String answer) {
+    var bootResponse = "Non.";
+    if (answer == widget.correctAnswer) {
+      bootResponse = "Oui !";
+    }
     setState(() {
-      this._answerWidget = UserDialog(widget: Text(answer));
+      this._answerWidget = Column(children: [
+        UserDialog(child: Text(answer)),
+        BootDialog(child: Text(bootResponse))
+      ]);
     });
   }
 
@@ -34,11 +49,11 @@ class _QuestionState extends State<Question> {
       child: Column(
         children: [
           BootDialog(
-            widget: Text("Que signifie ce signe ?"),
+            child: Text("Que signifie ce signe ?"),
           ),
           BootDialog(
-            widget: Image(
-              image: AssetImage("assets/signs/" + this.image),
+            child: Image(
+              image: AssetImage("assets/signs/" + widget.image),
             ),
           ),
           AnimatedSwitcher(
@@ -51,12 +66,13 @@ class _QuestionState extends State<Question> {
             },
             child: this._answerWidget,
           ),
+          //TODO To remove
           ElevatedButton(
             onPressed: () {
               setState(() {
                 this._answerWidget = AnswerOptions(
                   onAnswerSelected: this._handleAnswerSelected,
-                  answers: this.answers,
+                  answers: widget.answers,
                 );
               });
             },
