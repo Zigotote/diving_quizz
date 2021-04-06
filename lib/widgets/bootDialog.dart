@@ -6,18 +6,16 @@ class BootDialog extends StatelessWidget {
 
   final Widget widget;
 
-  static final bubbleStyle = BubbleStyle(
-    nip: BubbleNip.leftCenter,
-    color: Colors.lightBlue.shade50,
-    elevation: 4,
-    margin: BubbleEdges.only(top: 8, right: 50),
-    alignment: Alignment.topLeft,
-  );
-
   @override
   Widget build(BuildContext context) {
     return Bubble(
-      style: bubbleStyle,
+      style: BubbleStyle(
+        nip: BubbleNip.leftCenter,
+        color: Colors.lightBlue.shade50,
+        elevation: 4,
+        margin: BubbleEdges.only(top: 8, right: 50),
+        alignment: Alignment.topLeft,
+      ),
       child: this.widget,
     );
   }

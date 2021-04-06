@@ -6,17 +6,15 @@ class UserDialog extends StatelessWidget {
 
   final Widget widget;
 
-  static final bubbleStyle = BubbleStyle(
-    nip: BubbleNip.rightCenter,
-    elevation: 4,
-    margin: BubbleEdges.only(top: 4),
-    alignment: Alignment.topRight,
-  );
-
   @override
   Widget build(BuildContext context) {
     return Bubble(
-      style: bubbleStyle,
+      style: BubbleStyle(
+        nip: BubbleNip.rightCenter,
+        elevation: 4,
+        margin: BubbleEdges.only(top: 4),
+        alignment: Alignment.topRight,
+      ),
       child: this.widget,
     );
   }
