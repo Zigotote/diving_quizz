@@ -83,32 +83,29 @@ class _SignsQuizzState extends State<SignsQuizz> {
       _needScroll = false;
       _scrollToBottom();
     }
-    return MaterialApp(
-      title: 'Diving quizz',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text("Diving quizz"),
-        ),
-        body: ListView.builder(
-          controller: _scrollController,
-          itemCount: _questionDialogs.length + 1,
-          itemBuilder: (context, index) {
-            // TODO To remove
-            if (index == _questionDialogs.length) {
-              return ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _questionDialogs =
-                        []; //TODO To remove when "reinitialiser" deleted
-                    _readJson();
-                  });
-                },
-                child: Text("reinitialiser"),
-              );
-            }
-            return _questionDialogs[index];
-          },
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Diving quizz"),
+      ),
+      body: ListView.builder(
+        controller: _scrollController,
+        itemCount: _questionDialogs.length + 1,
+        itemBuilder: (context, index) {
+          // TODO To remove
+          if (index == _questionDialogs.length) {
+            return ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _questionDialogs =
+                      []; //TODO To remove when "reinitialiser" deleted
+                  _readJson();
+                });
+              },
+              child: Text("reinitialiser"),
+            );
+          }
+          return _questionDialogs[index];
+        },
       ),
     );
   }

@@ -63,7 +63,7 @@ class _QuestionDialogState extends State<QuestionDialog> {
     setState(() {
       _answerWidget = Column(
         children: [
-          UserDialog(child: Text(answer)),
+          UserDialog(child: answer),
           BootDialog(child: Text(bootResponse))
         ],
       );

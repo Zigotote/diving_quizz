@@ -1,3 +1,4 @@
+import 'package:diving_quizz/theme/my_theme.dart';
 import 'package:flutter/material.dart';
 
 /// The list of possible answers for a question
@@ -21,8 +22,8 @@ class AnswerOptions extends StatelessWidget {
             onPressed: () => this.onAnswerSelected(answer),
             child: Text(answer),
             style: ElevatedButton.styleFrom(
-              onPrimary: Colors.black, //font and icon color
-              primary: Colors.white, //background color
+              onPrimary: MyTheme.userPrimaryColor, //font and icon color
+              primary: MyTheme.userSecondaryColor, //background color
               elevation: 10,
             ),
           ),
