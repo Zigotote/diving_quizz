@@ -1,17 +1,16 @@
+import 'package:diving_quizz/models/question.dart';
 import 'package:diving_quizz/widgets/answer_options.dart';
 import 'package:diving_quizz/widgets/boot_dialog.dart';
 import 'package:diving_quizz/widgets/user_dialog.dart';
 import 'package:flutter/material.dart';
 
 class QuestionDialog extends StatefulWidget {
-  final String image;
-  final String correctAnswer;
+  final Question question;
   final Set<String> answers;
   final ValueChanged<int> onQuestionFinished;
 
   QuestionDialog(
-      {@required this.image,
-      @required this.correctAnswer,
+      {@required this.question,
       @required this.answers,
       @required this.onQuestionFinished});
 
@@ -34,7 +33,7 @@ class _QuestionDialogState extends State<QuestionDialog> {
   void _handleAnswerSelected(String answer) {
     var bootResponse = "Non.";
     var score = 0;
-    if (answer == widget.correctAnswer) {
+    if (answer == widget.question.correctAnswer) {
       bootResponse = "Oui !";
       score = 1;
     }
@@ -59,7 +58,7 @@ class _QuestionDialogState extends State<QuestionDialog> {
           ),
           BootDialog(
             child: Image(
-              image: AssetImage("assets/images/signs/" + widget.image),
+              image: AssetImage("assets/images/signs/" + widget.question.image),
             ),
           ),
           AnimatedSwitcher(
