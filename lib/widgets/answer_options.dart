@@ -10,32 +10,24 @@ class AnswerOptions extends StatelessWidget {
 
   AnswerOptions({@required this.answers, @required this.onAnswerSelected});
 
-  /// Build the widget to display the answers
-  /// Each answer is a button. They are seperated by blank boxes
-  List<Widget> _buildAnswersWidget() {
-    List<Widget> answerWidgets = [];
-    this.answers.forEach((answer) {
-      answerWidgets.add(ElevatedButton(
-        onPressed: () => this.onAnswerSelected(answer),
-        child: Text(answer),
-        style: ElevatedButton.styleFrom(
-          onPrimary: Colors.black, //font and icon color
-          primary: Colors.white, //background color
-          elevation: 10,
-        ),
-      ));
-      answerWidgets.add(SizedBox(
-        width: 16.0,
-      ));
-    });
-    return answerWidgets;
-  }
-
   @override
   Widget build(BuildContext context) {
-    return new Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: _buildAnswersWidget(),
+    return Wrap(
+      alignment: WrapAlignment.center,
+      children: this.answers.map((answer) {
+        return Padding(
+          padding: EdgeInsets.fromLTRB(8.0, 4, 8.0, 0),
+          child: ElevatedButton(
+            onPressed: () => this.onAnswerSelected(answer),
+            child: Text(answer),
+            style: ElevatedButton.styleFrom(
+              onPrimary: Colors.black, //font and icon color
+              primary: Colors.white, //background color
+              elevation: 10,
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 }

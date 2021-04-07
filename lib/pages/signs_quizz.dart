@@ -51,7 +51,7 @@ class _SignsQuizzState extends State<SignsQuizz> {
           _questions.removeAt(randomNumber.nextInt(_questions.length));
       _questionDialogs.add(QuestionDialog(
         question: question,
-        answers: {question.correctAnswer, "Je ne sais pas"},
+        answers: {question.correctAnswer, "OKy", "Peut être", "Je ne sais pas"},
         onQuestionFinished: _handleQuestionFinished,
       ));
     }
