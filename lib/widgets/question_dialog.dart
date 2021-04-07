@@ -4,9 +4,16 @@ import 'package:diving_quizz/widgets/boot_dialog.dart';
 import 'package:diving_quizz/widgets/user_dialog.dart';
 import 'package:flutter/material.dart';
 
+/// A dialog for a question.
+/// The boot asks the question, the user can choose an answer and the boot says if it is the correct one
 class QuestionDialog extends StatefulWidget {
+  /// The question the boot asks
   final Question question;
+
+  /// The answers the boot proposes
   final Set<String> answers;
+
+  ///The function to call when the user has selected an answer
   final ValueChanged<int> onQuestionFinished;
 
   QuestionDialog(
@@ -19,6 +26,8 @@ class QuestionDialog extends StatefulWidget {
 }
 
 class _QuestionDialogState extends State<QuestionDialog> {
+  /// The widget which displays the answers. First it is an AnswerOptions widget.
+  /// It becomes an UserDialog when the user has selected his response.
   Widget _answerWidget;
 
   @override
@@ -30,6 +39,9 @@ class _QuestionDialogState extends State<QuestionDialog> {
     );
   }
 
+  /// Changes the AnswerOptions widget by a UserDialog when the user has selected his answer.
+  /// Generates the boot response, depending if the answer was correct or not.
+  /// Gives a score to the player.
   void _handleAnswerSelected(String answer) {
     var bootResponse = "Non.";
     var score = 0;

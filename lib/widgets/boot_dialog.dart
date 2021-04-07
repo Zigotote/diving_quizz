@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import "package:bubble/bubble.dart";
 
+/// A dialog box from a boot. Placed on the left of the screen.
 class BootDialog extends StatelessWidget {
-  BootDialog({this.child});
-
+  /// The widget to display in the bubble
   final Widget child;
+
+  BootDialog({this.child});
 
   @override
   Widget build(BuildContext context) {

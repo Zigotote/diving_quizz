@@ -38,7 +38,6 @@ class _SignsQuizzState extends State<SignsQuizz> {
       _questions = (data["questions"] as List)
           .map((element) => new Question.fromJson(element))
           .toList();
-      _questionDialogs = []; //TODO To remove when "reinitialiser" deleted
       _addRandomQuestion();
     });
   }
@@ -50,7 +49,6 @@ class _SignsQuizzState extends State<SignsQuizz> {
       var randomNumber = new Random();
       Question question =
           _questions.removeAt(randomNumber.nextInt(_questions.length));
-      print(question.image);
       _questionDialogs.add(QuestionDialog(
         question: question,
         answers: {question.correctAnswer, "Je ne sais pas"},
@@ -100,6 +98,8 @@ class _SignsQuizzState extends State<SignsQuizz> {
               return ElevatedButton(
                 onPressed: () {
                   setState(() {
+                    _questionDialogs =
+                        []; //TODO To remove when "reinitialiser" deleted
                     _readJson();
                   });
                 },

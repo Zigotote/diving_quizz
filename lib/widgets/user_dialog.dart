@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import "package:bubble/bubble.dart";
 
+/// A dialog box from the user. Placed on the right of the screen.
 class UserDialog extends StatelessWidget {
-  UserDialog({this.child});
-
+  /// The widget to display in the bubble
   final Widget child;
+
+  UserDialog({this.child});
 
   @override
   Widget build(BuildContext context) {
