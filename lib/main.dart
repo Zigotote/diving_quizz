@@ -1,5 +1,4 @@
 import 'package:diving_quizz/pages/signs_quizz.dart';
-import 'package:diving_quizz/widgets/question.dart';
 import 'package:flutter/material.dart';
 
 void main() {
