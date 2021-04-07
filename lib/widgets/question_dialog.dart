@@ -33,6 +33,17 @@ class _QuestionDialogState extends State<QuestionDialog> {
   @override
   void initState() {
     super.initState();
+    _initAnswerWidget();
+  }
+
+  @override
+  void didUpdateWidget(QuestionDialog oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _initAnswerWidget();
+  }
+
+  /// Inits the answer widget by setting it to an AnswerOption
+  void _initAnswerWidget() {
     _answerWidget = AnswerOptions(
       onAnswerSelected: _handleAnswerSelected,
       answers: widget.answers,
