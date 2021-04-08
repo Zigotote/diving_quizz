@@ -118,7 +118,25 @@ class _SignsQuizzState extends State<SignsQuizz> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: Text("Diving quizz"),
+        title: Row(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(right: 8),
+              child: Container(
+                width: 45,
+                height: 45,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: AssetImage("assets/images/teachers/axolotl.png"),
+                  ),
+                ),
+              ),
+            ),
+            Text("Professeur Axolotl"),
+          ],
+        ),
       ),
       body: ListView.builder(
         controller: _scrollController,

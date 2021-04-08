@@ -17,7 +17,10 @@ class AnswerOptions extends StatelessWidget {
       alignment: WrapAlignment.center,
       children: this.answers.map((answer) {
         return Padding(
-          padding: EdgeInsets.fromLTRB(8.0, 4, 8.0, 0),
+          padding: EdgeInsets.symmetric(
+            horizontal: 6,
+            vertical: 2,
+          ),
           child: ElevatedButton(
             onPressed: () => this.onAnswerSelected(answer),
             child: Text(answer),
