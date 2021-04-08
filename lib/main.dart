@@ -1,4 +1,4 @@
-import 'package:diving_quizz/pages/signs_quizz.dart';
+import 'package:diving_quizz/pages/home.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -8,8 +8,6 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: SignsQuizz(),
-    );
+    return MaterialApp(home: Home());
   }
 }
