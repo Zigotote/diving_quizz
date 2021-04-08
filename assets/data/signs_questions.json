@@ -2,7 +2,8 @@
   "questions": [
     {
       "image": "ok.png",
-      "correctAnswer": "OK"
+      "correctAnswer": "OK",
+      "suggestedAnswers": ["On monte"]
     },
     {
       "image": "ca_va_pas.png",

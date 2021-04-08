@@ -18,6 +18,9 @@ class _SignsQuizzState extends State<SignsQuizz> {
   /// The list of questions asked by the boot
   List<QuestionDialog> _questionDialogs = [];
 
+  /// The list of the answers that can be proposed to the user
+  List<String> _possibleAnswers = [];
+
   /// The scroll controller for the page, to scroll automatically when height is overseized
   final ScrollController _scrollController = ScrollController();
   bool _needScroll = false;
@@ -38,6 +41,9 @@ class _SignsQuizzState extends State<SignsQuizz> {
       _questions = (data["questions"] as List)
           .map((element) => new Question.fromJson(element))
           .toList();
+      _possibleAnswers = (data["questions"] as List)
+          .map((element) => element["correctAnswer"].toString())
+          .toList();
       _addRandomQuestion();
     });
   }
@@ -46,15 +52,36 @@ class _SignsQuizzState extends State<SignsQuizz> {
   /// Removes it and creates a dialog
   void _addRandomQuestion() {
     if (_questions.isNotEmpty) {
-      var randomNumber = new Random();
+      Random randomNumber = new Random();
       Question question =
           _questions.removeAt(randomNumber.nextInt(_questions.length));
+      List<String> possibleAnswers = _createAnswersList(question);
       _questionDialogs.add(QuestionDialog(
         question: question,
-        answers: {question.correctAnswer, "OKy", "Peut être", "Je ne sais pas"},
+        answers: possibleAnswers.toSet(),
         onQuestionFinished: _handleQuestionFinished,
       ));
     }
+  }
+
+  /// Creates the list of the proposed answers for a question
+  /// Takes the correct answer and the suggestions. Adds some random answers from the other questions
+  /// Shuffles the list to randomize the order of the answers
+  List<String> _createAnswersList(Question question) {
+    Random randomNumber = new Random();
+    List<String> possibleAnswers = [
+      question.correctAnswer,
+      ...question.suggestedAnswers
+    ];
+    while (possibleAnswers.length < 4) {
+      var answer = _possibleAnswers
+          .where((answer) => !possibleAnswers.contains(answer))
+          .elementAt(randomNumber
+              .nextInt(_possibleAnswers.length - possibleAnswers.length));
+      possibleAnswers.add(answer);
+    }
+    possibleAnswers.shuffle();
+    return possibleAnswers;
   }
 
   /// Adds a question to the queue when current question has been answered
