@@ -16,6 +16,13 @@ class QuestionDialog extends StatefulWidget {
   ///The function to call when the user has selected an answer
   final ValueChanged<int> onQuestionFinished;
 
+  /// The answers the user has selected, saved in order to display it if the widget has to be reloaded
+  /// (if the user wants to scroll back to previous answers)
+  String _userAnswer;
+
+  /// The boot's reaction to the user's answer, saved in order to display it if the widget has to be reloaded
+  String _bootResponse;
+
   QuestionDialog(
       {@required this.question,
       @required this.answers,
@@ -33,41 +40,52 @@ class _QuestionDialogState extends State<QuestionDialog> {
   @override
   void initState() {
     super.initState();
-    _initAnswerWidget();
+    if (widget._userAnswer == null) {
+      _initAnswerOptionsWidget();
+    } else {
+      _initUserAnswerWidget();
+    }
   }
 
   @override
   void didUpdateWidget(QuestionDialog oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _initAnswerWidget();
+    _initAnswerOptionsWidget();
   }
 
   /// Inits the answer widget by setting it to an AnswerOption
-  void _initAnswerWidget() {
+  void _initAnswerOptionsWidget() {
     _answerWidget = AnswerOptions(
       onAnswerSelected: _handleAnswerSelected,
       answers: widget.answers,
     );
   }
 
+  /// Inits the answer widget by setting it to a dialog widget, if the user has answered the question
+  void _initUserAnswerWidget() {
+    setState(() {
+      _answerWidget = Column(
+        children: [
+          UserDialog(child: widget._userAnswer),
+          BootDialog(child: Text(widget._bootResponse))
+        ],
+      );
+    });
+  }
+
   /// Changes the AnswerOptions widget by a UserDialog when the user has selected his answer.
   /// Generates the boot response, depending if the answer was correct or not.
   /// Gives a score to the player.
   void _handleAnswerSelected(String answer) {
-    String bootResponse = "Non.";
+    widget._userAnswer = answer;
     int score = 0;
-    if (answer == widget.question.correctAnswer) {
+    String bootResponse = "Non.";
+    if (widget._userAnswer == widget.question.correctAnswer) {
       bootResponse = "Oui !";
       score = 1;
     }
-    setState(() {
-      _answerWidget = Column(
-        children: [
-          UserDialog(child: answer),
-          BootDialog(child: Text(bootResponse))
-        ],
-      );
-    });
+    widget._bootResponse = bootResponse;
+    _initUserAnswerWidget();
     widget.onQuestionFinished(score);
   }
 
