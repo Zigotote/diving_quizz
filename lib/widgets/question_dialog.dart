@@ -54,8 +54,8 @@ class _QuestionDialogState extends State<QuestionDialog> {
   /// Generates the boot response, depending if the answer was correct or not.
   /// Gives a score to the player.
   void _handleAnswerSelected(String answer) {
-    var bootResponse = "Non.";
-    var score = 0;
+    String bootResponse = "Non.";
+    int score = 0;
     if (answer == widget.question.correctAnswer) {
       bootResponse = "Oui !";
       score = 1;
