@@ -41,9 +41,9 @@ class _SignsQuizzState extends State<SignsQuizz> {
       _questions = (data["questions"] as List)
           .map((element) => new Question.fromJson(element))
           .toList();
-      _possibleAnswers = (data["questions"] as List)
-          .map((element) => element["correctAnswer"].toString())
-          .toList();
+      _possibleAnswers = [];
+      _questions.forEach(
+          (question) => _possibleAnswers.addAll(question.correctAnswers));
       _addRandomQuestion();
     });
   }
@@ -69,13 +69,19 @@ class _SignsQuizzState extends State<SignsQuizz> {
   /// Shuffles the list to randomize the order of the answers
   List<String> _createAnswersList(Question question) {
     Random randomNumber = new Random();
+    // Randomly choose one of the correct answers
+    String correctAnswer = question.correctAnswers
+        .elementAt(randomNumber.nextInt(question.correctAnswers.length));
     List<String> possibleAnswers = [
-      question.correctAnswer,
+      correctAnswer,
       ...question.suggestedAnswers
     ];
+    // Choose some incorrect answers to fill the list
     while (possibleAnswers.length < 4) {
       var answer = _possibleAnswers
-          .where((answer) => !possibleAnswers.contains(answer))
+          .where((answer) =>
+              !possibleAnswers.contains(answer) &&
+              !question.correctAnswers.contains(answer))
           .elementAt(randomNumber
               .nextInt(_possibleAnswers.length - possibleAnswers.length));
       possibleAnswers.add(answer);

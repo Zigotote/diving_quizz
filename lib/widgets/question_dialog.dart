@@ -80,7 +80,7 @@ class _QuestionDialogState extends State<QuestionDialog> {
     widget._userAnswer = answer;
     int score = 0;
     String bootResponse = "Non.";
-    if (widget._userAnswer == widget.question.correctAnswer) {
+    if (widget.question.correctAnswers.contains(widget._userAnswer)) {
       bootResponse = "Oui !";
       score = 1;
     }
