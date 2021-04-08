@@ -13,5 +13,7 @@ class Question {
   Question.fromJson(Map<String, dynamic> json)
       : image = json["image"],
         correctAnswer = json["correctAnswer"],
-        suggestedAnswers = json["suggestedAnswers"];
+        suggestedAnswers = json["suggestedAnswers"] != null
+            ? Set.from(json["suggestedAnswers"])
+            : {};
 }
