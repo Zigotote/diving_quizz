@@ -15,7 +15,7 @@ class _SignsQuizzState extends State<SignsQuizz> {
   /// The list of available questions
   List<Question> _questions = [];
 
-  /// The list of questions asked by the boot
+  /// The list of questions asked by the bot
   List<QuestionDialog> _questionDialogs = [];
 
   /// The list of the answers that can be proposed to the user

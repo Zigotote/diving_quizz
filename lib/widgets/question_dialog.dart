@@ -1,16 +1,16 @@
 import 'package:diving_quizz/models/question.dart';
 import 'package:diving_quizz/widgets/answer_options.dart';
-import 'package:diving_quizz/widgets/boot_dialog.dart';
+import 'package:diving_quizz/widgets/bot_dialog.dart';
 import 'package:diving_quizz/widgets/user_dialog.dart';
 import 'package:flutter/material.dart';
 
 /// A dialog for a question.
-/// The boot asks the question, the user can choose an answer and the boot says if it is the correct one
+/// The bot asks the question, the user can choose an answer and the bot says if it is the correct one
 class QuestionDialog extends StatefulWidget {
-  /// The question the boot asks
+  /// The question the bot asks
   final Question question;
 
-  /// The answers the boot proposes
+  /// The answers the bot proposes
   final Set<String> answers;
 
   ///The function to call when the user has selected an answer
@@ -20,8 +20,8 @@ class QuestionDialog extends StatefulWidget {
   /// (if the user wants to scroll back to previous answers)
   String _userAnswer;
 
-  /// The boot's reaction to the user's answer, saved in order to display it if the widget has to be reloaded
-  String _bootResponse;
+  /// The bot's reaction to the user's answer, saved in order to display it if the widget has to be reloaded
+  String _botResponse;
 
   QuestionDialog(
       {@required this.question,
@@ -67,24 +67,24 @@ class _QuestionDialogState extends State<QuestionDialog> {
       _answerWidget = Column(
         children: [
           UserDialog(child: widget._userAnswer),
-          BootDialog(child: Text(widget._bootResponse))
+          BotDialog(child: Text(widget._botResponse))
         ],
       );
     });
   }
 
   /// Changes the AnswerOptions widget by a UserDialog when the user has selected his answer.
-  /// Generates the boot response, depending if the answer was correct or not.
+  /// Generates the bot response, depending if the answer was correct or not.
   /// Gives a score to the player.
   void _handleAnswerSelected(String answer) {
     widget._userAnswer = answer;
     int score = 0;
-    String bootResponse = "Non.";
+    String botResponse = "Non.";
     if (widget.question.correctAnswers.contains(widget._userAnswer)) {
-      bootResponse = "Oui !";
+      botResponse = "Oui !";
       score = 1;
     }
-    widget._bootResponse = bootResponse;
+    widget._botResponse = botResponse;
     _initUserAnswerWidget();
     widget.onQuestionFinished(score);
   }
@@ -94,10 +94,10 @@ class _QuestionDialogState extends State<QuestionDialog> {
     return Container(
       child: Column(
         children: [
-          BootDialog(
+          BotDialog(
             child: Text("Que signifie ce signe ?"),
           ),
-          BootDialog(
+          BotDialog(
             child: Image(
               image: AssetImage("assets/images/signs/" + widget.question.image),
             ),
