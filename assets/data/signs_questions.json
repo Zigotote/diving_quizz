@@ -1,0 +1,29 @@
+{
+  "questions": [
+    {
+      "image": "ok.png",
+      "correctAnswer": "OK",
+      "suggestedAnswers": ["On monte"]
+    },
+    {
+      "image": "ca_va_pas.png",
+      "correctAnswer": "Ca ne va pas"
+    },
+    {
+      "image": "demi_bouteille.gif",
+      "correctAnswer": "Mi-pression de ma bouteille"
+    },
+    {
+      "image": "montre_manometre.png",
+      "correctAnswer": "Montre ton manomètre"
+    },
+    {
+      "image": "panne_dair.gif",
+      "correctAnswer": "Je n'ai plus d'air"
+    },
+    {
+      "image": "sur_reserve.gif",
+      "correctAnswer": "Je suis sur la réserve"
+    }
+  ]
+}
