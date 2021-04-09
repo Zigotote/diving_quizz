@@ -4,9 +4,9 @@ import 'package:diving_quizz/widgets/bot_dialog.dart';
 import 'package:diving_quizz/widgets/user_dialog.dart';
 import 'package:flutter/material.dart';
 
-/// A dialog for a question.
+/// A dialog for a question about the meaning of a sign.
 /// The bot asks the question, the user can choose an answer and the bot says if it is the correct one
-class QuestionDialog extends StatefulWidget {
+class SignQuestion extends StatefulWidget {
   /// The question the bot asks
   final Question question;
 
@@ -23,16 +23,16 @@ class QuestionDialog extends StatefulWidget {
   /// The bot's reaction to the user's answer, saved in order to display it if the widget has to be reloaded
   String _botResponse;
 
-  QuestionDialog(
+  SignQuestion(
       {@required this.question,
       @required this.answers,
       @required this.onQuestionFinished});
 
   @override
-  _QuestionDialogState createState() => _QuestionDialogState();
+  _SignQuestionState createState() => _SignQuestionState();
 }
 
-class _QuestionDialogState extends State<QuestionDialog> {
+class _SignQuestionState extends State<SignQuestion> {
   /// The widget which displays the answers. First it is an AnswerOptions widget.
   /// It becomes an UserDialog when the user has selected his response.
   Widget _answerWidget;
@@ -48,7 +48,7 @@ class _QuestionDialogState extends State<QuestionDialog> {
   }
 
   @override
-  void didUpdateWidget(QuestionDialog oldWidget) {
+  void didUpdateWidget(SignQuestion oldWidget) {
     super.didUpdateWidget(oldWidget);
     _initAnswerOptionsWidget();
   }

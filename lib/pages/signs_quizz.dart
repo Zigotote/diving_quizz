@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:diving_quizz/models/question.dart';
-import 'package:diving_quizz/widgets/question_dialog.dart';
+import 'package:diving_quizz/widgets/sign_question.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -16,7 +16,7 @@ class _SignsQuizzState extends State<SignsQuizz> {
   List<Question> _questions = [];
 
   /// The list of questions asked by the bot
-  List<QuestionDialog> _questionDialogs = [];
+  List<SignQuestion> _signQuestions = [];
 
   /// The list of the answers that can be proposed to the user
   List<String> _possibleAnswers = [];
@@ -56,7 +56,7 @@ class _SignsQuizzState extends State<SignsQuizz> {
       Question question =
           _questions.removeAt(randomNumber.nextInt(_questions.length));
       List<String> possibleAnswers = _createAnswersList(question);
-      _questionDialogs.add(QuestionDialog(
+      _signQuestions.add(SignQuestion(
         question: question,
         answers: possibleAnswers.toSet(),
         onQuestionFinished: _handleQuestionFinished,
@@ -140,14 +140,14 @@ class _SignsQuizzState extends State<SignsQuizz> {
       ),
       body: ListView.builder(
         controller: _scrollController,
-        itemCount: _questionDialogs.length + 1,
+        itemCount: _signQuestions.length + 1,
         itemBuilder: (context, index) {
           // TODO To remove
-          if (index == _questionDialogs.length) {
+          if (index == _signQuestions.length) {
             return ElevatedButton(
               onPressed: () {
                 setState(() {
-                  _questionDialogs =
+                  _signQuestions =
                       []; //TODO To remove when "reinitialiser" deleted
                   _readJson();
                 });
@@ -155,7 +155,7 @@ class _SignsQuizzState extends State<SignsQuizz> {
               child: Text("reinitialiser"),
             );
           }
-          return _questionDialogs[index];
+          return _signQuestions[index];
         },
       ),
     );
