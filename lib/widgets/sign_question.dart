@@ -1,8 +1,10 @@
 import 'package:diving_quizz/models/question.dart';
+import 'package:diving_quizz/providers/question_pool.dart';
 import 'package:diving_quizz/widgets/answer_options.dart';
 import 'package:diving_quizz/widgets/bot_dialog.dart';
 import 'package:diving_quizz/widgets/user_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 /// A dialog for a question about the meaning of a sign.
 /// The bot asks the question, the user can choose an answer and the bot says if it is the correct one
@@ -28,6 +30,14 @@ class SignQuestion extends StatefulWidget {
       @required this.answers,
       @required this.onQuestionFinished});
 
+  set userAnswer(String answer) {
+    _userAnswer = answer;
+  }
+
+  set botResponse(String botResponse) {
+    _botResponse = botResponse;
+  }
+
   @override
   _SignQuestionState createState() => _SignQuestionState();
 }
@@ -47,6 +57,7 @@ class _SignQuestionState extends State<SignQuestion> {
     }
   }
 
+  /// Rebuilds the widget when the user scrolls back to it
   @override
   void didUpdateWidget(SignQuestion oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -77,14 +88,12 @@ class _SignQuestionState extends State<SignQuestion> {
   /// Generates the bot response, depending if the answer was correct or not.
   /// Gives a score to the player.
   void _handleAnswerSelected(String answer) {
-    widget._userAnswer = answer;
     int score = 0;
-    String botResponse = "Non.";
     if (widget.question.correctAnswers.contains(widget._userAnswer)) {
-      botResponse = "Oui !";
       score = 1;
     }
-    widget._botResponse = botResponse;
+    Provider.of<QuestionPool>(context, listen: false)
+        .answerQuestion(widget, answer);
     _initUserAnswerWidget();
     widget.onQuestionFinished(score);
   }
