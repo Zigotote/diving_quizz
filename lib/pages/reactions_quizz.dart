@@ -2,17 +2,18 @@ import 'dart:convert';
 
 import 'package:diving_quizz/models/question.dart';
 import 'package:diving_quizz/providers/question_pool.dart';
+import 'package:diving_quizz/widgets/reaction_question.dart';
 import 'package:diving_quizz/widgets/sign_question.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-class SignsQuizz extends StatefulWidget {
+class ReactionsQuizz extends StatefulWidget {
   @override
-  _SignsQuizzState createState() => _SignsQuizzState();
+  _ReactionsQuizzState createState() => _ReactionsQuizzState();
 }
 
-class _SignsQuizzState extends State<SignsQuizz> {
+class _ReactionsQuizzState extends State<ReactionsQuizz> {
   /// The scroll controller for the page, to scroll automatically when height is overseized
   final ScrollController _scrollController = ScrollController();
   bool _needScroll = false;
@@ -28,22 +29,45 @@ class _SignsQuizzState extends State<SignsQuizz> {
   /// Initializes the current question's list with one question
   Future<void> _readJson() async {
     final String response =
-        await rootBundle.loadString("assets/data/signs_questions.json");
+        await rootBundle.loadString("assets/data/reactions_questions.json");
     final data = await json.decode(response);
-    final List<SignQuestionModel> questions = (data["questions"] as List)
+    final List<SignQuestionModel> signQuestions = (data["questions"] as List)
         .map((element) => new SignQuestionModel.fromJson(element))
         .toList();
     Set<String> possibleAnswers = {};
-    questions
+    signQuestions
         .forEach((question) => possibleAnswers.addAll(question.correctAnswers));
+    final List<ReactionQuestionModel> reactionQuestions =
+        (data["questions"] as List)
+            .map((element) => new ReactionQuestionModel.fromJson(element))
+            .toList();
+    Set<String> possibleReactions = {};
+    final manifestJson =
+        await DefaultAssetBundle.of(context).loadString("AssetManifest.json");
+    possibleReactions = json
+        .decode(manifestJson)
+        .keys
+        .where((String key) => key.startsWith("assets/images/signs"))
+        .toSet();
     setState(() {
-      Provider.of<QuestionPool>(context, listen: false)
-          .initQuestions(questions, possibleAnswers);
+      Provider.of<QuestionPool>(context, listen: false).initQuestions(
+          [...reactionQuestions, ...signQuestions],
+          possibleAnswers,
+          possibleReactions);
     });
   }
 
-  /// Adds a question to the queue when current question has been answered
-  void _handleQuestionFinished(int score) {
+  /// Adds a reaction question to the queue when current question has been answered
+  void _handleSignQuestionFinished(int score) {
+    setState(() {
+      Provider.of<QuestionPool>(context, listen: false)
+          .addRandomQuestion<ReactionQuestionModel>();
+      _needScroll = true;
+    });
+  }
+
+  /// Adds a sign question to the queue when current question has been answered
+  void _handleReactionQuestionFinished(int score) {
     setState(() {
       Provider.of<QuestionPool>(context, listen: false)
           .addRandomQuestion<SignQuestionModel>();
@@ -95,13 +119,25 @@ class _SignsQuizzState extends State<SignsQuizz> {
           Consumer<QuestionPool>(builder: (context, questionPool, child) {
             return Expanded(
               child: ListView.builder(
-                controller: _scrollController,
-                itemCount: questionPool.questions.length,
-                itemBuilder: (context, index) => SignQuestion(
-                  question: questionPool.questions[index],
-                  onQuestionFinished: _handleQuestionFinished,
-                ),
-              ),
+                  controller: _scrollController,
+                  itemCount: questionPool.questions.length,
+                  itemBuilder: (context, index) {
+                    Widget child;
+                    if (questionPool.questions[index] is SignQuestionModel) {
+                      child = SignQuestion(
+                        question: questionPool.questions[index],
+                        onQuestionFinished: _handleSignQuestionFinished,
+                      );
+                    } else {
+                      child = ReactionQuestion(
+                        question: questionPool.questions[index],
+                        onQuestionFinished: _handleReactionQuestionFinished,
+                      );
+                    }
+                    return Column(
+                      children: [child],
+                    );
+                  }),
             );
           }),
           ElevatedButton(

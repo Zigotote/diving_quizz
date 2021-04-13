@@ -15,29 +15,40 @@ class QuestionPool with ChangeNotifier {
   /// Answers the bot can propose
   Set<String> _possibleAnswers = {};
 
+  /// Reactions the bot can propose
+  Set<String> _possibleReactions = {};
+
   UnmodifiableListView<QuestionModel> get questions =>
       UnmodifiableListView(_questions);
 
   /// Initializes the pool with a list of available question and the possible answers
   /// Adds a random question to the _question list to start the quizz
   void initQuestions(
-    List<QuestionModel> availableQuestions,
-    Set<String> possibleAnswers,
-  ) {
+      List<QuestionModel> availableQuestions, Set<String> possibleAnswers,
+      [Set<String> possibleReactions]) {
     _availableQuestions = availableQuestions;
     _possibleAnswers = possibleAnswers;
+    _possibleReactions = possibleReactions;
     _questions = [];
-    this.addRandomQuestion();
+    this.addRandomQuestion<SignQuestionModel>();
   }
 
   /// Chooses a random question and adds it to the _question list
   /// Creates a list of proposed answers for this question
-  void addRandomQuestion() {
-    if (_availableQuestions.isNotEmpty) {
+  void addRandomQuestion<T extends QuestionModel>() {
+    List<T> filteredQuestions = _availableQuestions.whereType<T>().toList();
+    if (filteredQuestions.isNotEmpty) {
       Random randomNumber = new Random();
-      SignQuestionModel question = _availableQuestions
-          .removeAt(randomNumber.nextInt(_availableQuestions.length));
-      Set<String> possibleAnswers = _createAnswersList(question).toSet();
+      T question = filteredQuestions
+          .removeAt(randomNumber.nextInt(filteredQuestions.length));
+      _availableQuestions.remove(question);
+      Set<String> possibleAnswers = {};
+      if (question is SignQuestionModel) {
+        possibleAnswers = _createAnswersList(question).toSet();
+      }
+      if (question is ReactionQuestionModel) {
+        possibleAnswers = _createReactionsList(question).toSet();
+      }
       question.proposedAnswers = possibleAnswers;
       _questions.add(question);
     }
@@ -47,7 +58,7 @@ class QuestionPool with ChangeNotifier {
   /// Creates the list of the proposed answers for a question
   /// Takes the correct answer and the suggestions. Adds some random answers from the other questions
   /// Shuffles the list to randomize the order of the answers
-  List<String> _createAnswersList(QuestionModel question) {
+  List<String> _createAnswersList(SignQuestionModel question) {
     Random randomNumber = new Random();
     // Randomly choose one of the correct answers
     String correctAnswer = question.correctAnswers
@@ -69,6 +80,25 @@ class QuestionPool with ChangeNotifier {
     // Randomizes the answer's order
     possibleAnswers.shuffle();
     return possibleAnswers;
+  }
+
+  /// Creates the list of the proposed reactions for a question
+  /// Takes the correct reaction and adds some random answers from the other questions
+  /// Shuffles the list to randomize the order of the answers
+  List<String> _createReactionsList(ReactionQuestionModel question) {
+    Random randomNumber = new Random();
+    List<String> possibleReactions = [question.correctReaction];
+    // Choose some incorrect answers to fill the list
+    while (possibleReactions.length < 4) {
+      var answer = _possibleReactions
+          .where((answer) => !possibleReactions.contains(answer))
+          .elementAt(randomNumber
+              .nextInt(_possibleReactions.length - possibleReactions.length));
+      possibleReactions.add(answer);
+    }
+    // Randomizes the answer's order
+    possibleReactions.shuffle();
+    return possibleReactions;
   }
 
   /// Answers a question and returns true if it is the correct one

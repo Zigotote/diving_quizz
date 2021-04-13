@@ -1,0 +1,35 @@
+{
+  "questions": [
+    {
+      "image": "ok.png",
+      "correctAnswers": ["OK", "Ca va"],
+      "suggestedAnswers": ["On monte"],
+      "correctReaction": "ok.png"
+    },
+    {
+      "image": "ca_va_pas.png",
+      "correctAnswers": ["Ca ne va pas"],
+      "correctReaction": "ok.png"
+    },
+    {
+      "image": "demi_bouteille.gif",
+      "correctAnswers": ["Mi-pression de ma bouteille"],
+      "correctReaction": "ok.png"
+    },
+    {
+      "image": "montre_manometre.png",
+      "correctAnswers": ["Montre ton manomètre"],
+      "correctReaction": "ok.png"
+    },
+    {
+      "image": "panne_dair.gif",
+      "correctAnswers": ["Je n'ai plus d'air"],
+      "correctReaction": "ok.png"
+    },
+    {
+      "image": "sur_reserve.gif",
+      "correctAnswers": ["Je suis sur la réserve"],
+      "correctReaction": "ok.png"
+    }
+  ]
+}
