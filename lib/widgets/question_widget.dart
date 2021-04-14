@@ -54,7 +54,7 @@ abstract class QuestionWidgetState<T extends QuestionModel>
   /// Adapts the bot's response if the user answered correctly or not
   void _initUserAnswerWidget() {
     String botResponse = "Non.";
-    if (widget.question.isCorrectAnswer()) {
+    if (widget.question.isCorrectlyAnswered()) {
       botResponse = "Oui !";
     }
     setState(() {

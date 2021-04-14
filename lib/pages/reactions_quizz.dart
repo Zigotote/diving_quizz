@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:diving_quizz/models/question.dart';
+import 'package:diving_quizz/pages/base_quizz.dart';
 import 'package:diving_quizz/providers/question_pool.dart';
 import 'package:diving_quizz/widgets/reaction_question.dart';
 import 'package:diving_quizz/widgets/sign_question.dart';
@@ -8,26 +9,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-class ReactionsQuizz extends StatefulWidget {
+class ReactionsQuizz extends BaseQuizz {
   @override
   _ReactionsQuizzState createState() => _ReactionsQuizzState();
 }
 
-class _ReactionsQuizzState extends State<ReactionsQuizz> {
-  /// The scroll controller for the page, to scroll automatically when height is overseized
-  final ScrollController _scrollController = ScrollController();
-  bool _needScroll = false;
-
+class _ReactionsQuizzState extends BaseQuizzState {
   @override
-  void initState() {
-    super.initState();
-    _readJson();
-  }
-
-  /// Reads the json file which contains all the available questions
-  /// Initializes the lists used to build the questions
-  /// Initializes the current question's list with one question
-  Future<void> _readJson() async {
+  Future<void> readJson() async {
     final String response =
         await rootBundle.loadString("assets/data/reactions_questions.json");
     final data = await json.decode(response);
@@ -57,95 +46,41 @@ class _ReactionsQuizzState extends State<ReactionsQuizz> {
     });
   }
 
-  /// Adds a reaction question to the queue when current question has been answered
-  void _handleSignQuestionFinished(int score) {
+  @override
+  String botImage() {
+    return "assets/images/bots/axolotl.png";
+  }
+
+  @override
+  String botName() {
+    return "Professeur Axel";
+  }
+
+  /// Adds a ReactionQuestion to the queue when current question has been answered
+  /// The added question's type is from the type of U
+  void _addReactionQuestion(int score) {
     setState(() {
       Provider.of<QuestionPool>(context, listen: false)
           .addRandomQuestion<ReactionQuestionModel>();
-      _needScroll = true;
-    });
-  }
-
-  /// Adds a sign question to the queue when current question has been answered
-  void _handleReactionQuestionFinished(int score) {
-    setState(() {
-      Provider.of<QuestionPool>(context, listen: false)
-          .addRandomQuestion<SignQuestionModel>();
-      _needScroll = true;
-    });
-  }
-
-  /// Scrolls to the bottom of the screen after everything has been rendered
-  void _scrollToBottom() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: Duration(milliseconds: 200),
-        curve: Curves.easeInOut,
-      );
+      needScroll = true;
     });
   }
 
   @override
-  Widget build(BuildContext context) {
-    if (_needScroll) {
-      _scrollToBottom();
-      _needScroll = false;
+  Widget buildQuestion(QuestionPool questionPool, int index) {
+    QuestionModel question = questionPool.questions[index];
+    if (question is SignQuestionModel) {
+      return SignQuestion(
+        question: questionPool.questions[index],
+        onQuestionFinished: _addReactionQuestion,
+      );
     }
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(right: 8),
-              child: Container(
-                width: 45,
-                height: 45,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: AssetImage("assets/images/teachers/axolotl.png"),
-                  ),
-                ),
-              ),
-            ),
-            Text("Professeur Axolotl"),
-          ],
-        ),
-      ),
-      body: Column(
-        children: [
-          Consumer<QuestionPool>(builder: (context, questionPool, child) {
-            return Expanded(
-              child: ListView.builder(
-                  controller: _scrollController,
-                  itemCount: questionPool.questions.length,
-                  itemBuilder: (context, index) {
-                    Widget child;
-                    if (questionPool.questions[index] is SignQuestionModel) {
-                      child = SignQuestion(
-                        question: questionPool.questions[index],
-                        onQuestionFinished: _handleSignQuestionFinished,
-                      );
-                    } else {
-                      child = ReactionQuestion(
-                        question: questionPool.questions[index],
-                        onQuestionFinished: _handleReactionQuestionFinished,
-                      );
-                    }
-                    return Column(
-                      children: [child],
-                    );
-                  }),
-            );
-          }),
-          ElevatedButton(
-            onPressed: () => this._readJson(),
-            child: Text("Réinitialiser"),
-          )
-        ],
-      ),
-    );
+    if (question is ReactionQuestionModel) {
+      return ReactionQuestion(
+        question: questionPool.questions[index],
+        onQuestionFinished: addSignQuestion,
+      );
+    }
+    return Container();
   }
 }

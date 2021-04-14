@@ -44,10 +44,19 @@ class QuestionPool with ChangeNotifier {
       _availableQuestions.remove(question);
       Set<String> possibleAnswers = {};
       if (question is SignQuestionModel) {
-        possibleAnswers = _createAnswersList(question).toSet();
+        // Randomly choose one of the correct answers
+        String correctAnswer = question.correctAnswers
+            .elementAt(randomNumber.nextInt(question.correctAnswers.length));
+        List<String> baseAnswers = [
+          correctAnswer,
+          ...question.suggestedAnswers
+        ];
+        possibleAnswers =
+            _createAnswersList(question, baseAnswers, _possibleAnswers);
       }
       if (question is ReactionQuestionModel) {
-        possibleAnswers = _createReactionsList(question).toSet();
+        possibleAnswers = _createAnswersList(
+            question, [question.correctReaction], _possibleReactions);
       }
       question.proposedAnswers = possibleAnswers;
       _questions.add(question);
@@ -58,47 +67,22 @@ class QuestionPool with ChangeNotifier {
   /// Creates the list of the proposed answers for a question
   /// Takes the correct answer and the suggestions. Adds some random answers from the other questions
   /// Shuffles the list to randomize the order of the answers
-  List<String> _createAnswersList(SignQuestionModel question) {
+  Set<String> _createAnswersList(QuestionModel question,
+      List<String> possibleAnswers, Set<String> availableAnswers) {
     Random randomNumber = new Random();
-    // Randomly choose one of the correct answers
-    String correctAnswer = question.correctAnswers
-        .elementAt(randomNumber.nextInt(question.correctAnswers.length));
-    List<String> possibleAnswers = [
-      correctAnswer,
-      ...question.suggestedAnswers
-    ];
     // Choose some incorrect answers to fill the list
     while (possibleAnswers.length < 4) {
-      var answer = _possibleAnswers
+      var answer = availableAnswers
           .where((answer) =>
               !possibleAnswers.contains(answer) &&
-              !question.correctAnswers.contains(answer))
+              !question.isCorrectAnswer(answer))
           .elementAt(randomNumber
-              .nextInt(_possibleAnswers.length - possibleAnswers.length));
+              .nextInt(availableAnswers.length - possibleAnswers.length));
       possibleAnswers.add(answer);
     }
     // Randomizes the answer's order
     possibleAnswers.shuffle();
-    return possibleAnswers;
-  }
-
-  /// Creates the list of the proposed reactions for a question
-  /// Takes the correct reaction and adds some random answers from the other questions
-  /// Shuffles the list to randomize the order of the answers
-  List<String> _createReactionsList(ReactionQuestionModel question) {
-    Random randomNumber = new Random();
-    List<String> possibleReactions = [question.correctReaction];
-    // Choose some incorrect answers to fill the list
-    while (possibleReactions.length < 4) {
-      var answer = _possibleReactions
-          .where((answer) => !possibleReactions.contains(answer))
-          .elementAt(randomNumber
-              .nextInt(_possibleReactions.length - possibleReactions.length));
-      possibleReactions.add(answer);
-    }
-    // Randomizes the answer's order
-    possibleReactions.shuffle();
-    return possibleReactions;
+    return possibleAnswers.toSet();
   }
 
   /// Answers a question and returns true if it is the correct one
@@ -106,6 +90,6 @@ class QuestionPool with ChangeNotifier {
     final int questionIndex = _questions.indexOf(question);
     _questions[questionIndex].userAnswer = answer;
     notifyListeners();
-    return question.isCorrectAnswer();
+    return question.isCorrectlyAnswered();
   }
 }

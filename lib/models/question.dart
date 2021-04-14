@@ -14,8 +14,11 @@ abstract class QuestionModel {
       : image = "assets/images/signs/" + json["image"],
         proposedAnswers = {};
 
+  /// Checks if the answer is correct
+  bool isCorrectAnswer(String answer);
+
   /// Checks if the user has correctly answered the question
-  bool isCorrectAnswer();
+  bool isCorrectlyAnswered();
 }
 
 /// A QuestionModel to learn the meaning of a sign
@@ -37,7 +40,10 @@ class SignQuestionModel extends QuestionModel {
         super.fromJson(json);
 
   @override
-  bool isCorrectAnswer() => this.correctAnswers.contains(this.userAnswer);
+  bool isCorrectlyAnswered() => this.correctAnswers.contains(this.userAnswer);
+
+  @override
+  bool isCorrectAnswer(String answer) => this.correctAnswers.contains(answer);
 }
 
 /// A QuestionModel to learn the meaning of a sign and the reaction to apply to it
@@ -55,5 +61,8 @@ class ReactionQuestionModel extends QuestionModel {
         super.fromJson(json);
 
   @override
-  bool isCorrectAnswer() => this.userAnswer == this.correctReaction;
+  bool isCorrectlyAnswered() => this.userAnswer == this.correctReaction;
+
+  @override
+  bool isCorrectAnswer(String answer) => answer == this.correctReaction;
 }
