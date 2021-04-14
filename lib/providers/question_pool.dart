@@ -47,16 +47,15 @@ class QuestionPool with ChangeNotifier {
         // Randomly choose one of the correct answers
         String correctAnswer = question.correctAnswers
             .elementAt(randomNumber.nextInt(question.correctAnswers.length));
-        List<String> baseAnswers = [
-          correctAnswer,
-          ...question.suggestedAnswers
-        ];
+        List<String> baseAnswers = [correctAnswer, ...question.trickAnswers];
         possibleAnswers =
             _createAnswersList(question, baseAnswers, _possibleAnswers);
       }
       if (question is ReactionQuestionModel) {
         possibleAnswers = _createAnswersList(
-            question, [question.correctReaction], _possibleReactions);
+            question,
+            [question.correctReaction, ...question.trickReactions],
+            _possibleReactions);
       }
       question.proposedAnswers = possibleAnswers;
       _questions.add(question);

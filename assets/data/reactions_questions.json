@@ -3,8 +3,9 @@
     {
       "image": "ok.png",
       "correctAnswers": ["OK", "Ca va"],
-      "suggestedAnswers": ["On monte"],
-      "correctReaction": "ok.png"
+      "trickAnswers": ["On monte"],
+      "correctReaction": "ok.png",
+      "trickReactions": ["montre_manometre.png"]
     },
     {
       "image": "ca_va_pas.png",

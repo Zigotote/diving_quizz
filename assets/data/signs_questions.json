@@ -3,7 +3,7 @@
     {
       "image": "ok.png",
       "correctAnswers": ["OK", "Ca va"],
-      "suggestedAnswers": ["On monte"]
+      "trickAnswers": ["On monte"]
     },
     {
       "image": "ca_va_pas.png",

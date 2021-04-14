@@ -1,4 +1,6 @@
 abstract class QuestionModel {
+  static const String _IMAGE_FOLDER = "assets/images/signs/";
+
   /// The image the user has to know
   final String image;
 
@@ -11,7 +13,7 @@ abstract class QuestionModel {
   QuestionModel(this.image);
 
   QuestionModel.fromJson(Map<String, dynamic> json)
-      : image = "assets/images/signs/" + json["image"],
+      : image = _IMAGE_FOLDER + json["image"],
         proposedAnswers = {};
 
   /// Checks if the answer is correct
@@ -26,17 +28,16 @@ class SignQuestionModel extends QuestionModel {
   /// The expected answers
   final Set<String> correctAnswers;
 
-  /// The suggested answer, if the sign is similar to others their meaning can be added to this Set to make the QuestionModel harder
-  final Set<String> suggestedAnswers;
+  /// The trick answer, if the sign is similar to others their meaning can be added to this Set to make the QuestionModel harder
+  final Set<String> trickAnswers;
 
-  SignQuestionModel(String image, this.correctAnswers, this.suggestedAnswers)
+  SignQuestionModel(String image, this.correctAnswers, this.trickAnswers)
       : super(image);
 
   SignQuestionModel.fromJson(Map<String, dynamic> json)
       : correctAnswers = Set.from(json["correctAnswers"]),
-        suggestedAnswers = json["suggestedAnswers"] != null
-            ? Set.from(json["suggestedAnswers"])
-            : {},
+        trickAnswers =
+            json["trickAnswers"] != null ? Set.from(json["trickAnswers"]) : {},
         super.fromJson(json);
 
   @override
@@ -51,13 +52,18 @@ class ReactionQuestionModel extends QuestionModel {
   /// The expected reaction to produce after the sign
   final String correctReaction;
 
-  ReactionQuestionModel(
-    String image,
-    this.correctReaction,
-  ) : super(image);
+  /// The trick reaction, if the sign is similar to others their reactions can be added to this Set to make the QuestionModel harder
+  final Set<String> trickReactions;
+
+  ReactionQuestionModel(String image, this.correctReaction, this.trickReactions)
+      : super(image);
 
   ReactionQuestionModel.fromJson(Map<String, dynamic> json)
-      : correctReaction = "assets/images/signs/" + json["correctReaction"],
+      : correctReaction = QuestionModel._IMAGE_FOLDER + json["correctReaction"],
+        trickReactions = json["trickReactions"] != null
+            ? Set.from(json["trickReactions"]
+                .map((image) => QuestionModel._IMAGE_FOLDER + image))
+            : {},
         super.fromJson(json);
 
   @override
