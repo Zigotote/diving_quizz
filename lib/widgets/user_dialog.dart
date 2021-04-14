@@ -5,7 +5,7 @@ import "package:bubble/bubble.dart";
 /// A dialog box from the user. Placed on the right of the screen.
 class UserDialog extends StatelessWidget {
   /// The widget to display in the bubble
-  final String child;
+  final Widget child;
 
   UserDialog({this.child});
 
@@ -19,12 +19,7 @@ class UserDialog extends StatelessWidget {
         margin: BubbleEdges.only(top: 4),
         alignment: Alignment.topRight,
       ),
-      child: Text(
-        this.child,
-        style: TextStyle(
-          color: MyTheme.userSecondaryColor,
-        ),
-      ),
+      child: this.child,
     );
   }
 }
