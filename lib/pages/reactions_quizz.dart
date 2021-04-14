@@ -48,12 +48,12 @@ class _ReactionsQuizzState extends BaseQuizzState {
 
   @override
   String botImage() {
-    return "assets/images/bots/axolotl.png";
+    return "assets/images/bots/shark.jpg";
   }
 
   @override
   String botName() {
-    return "Professeur Axel";
+    return "Professeur Sharky";
   }
 
   /// Adds a ReactionQuestion to the queue when current question has been answered
