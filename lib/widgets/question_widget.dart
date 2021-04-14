@@ -21,7 +21,7 @@ abstract class QuestionWidgetState<T extends QuestionModel>
   Widget answerWidget;
 
   /// Builds bubbles to display the user's answer and the bot's reponse
-  Widget buildUserAnswerWidget(String botResponse);
+  Widget buildUserAnswerWidget();
 
   /// Builds a widget to display the available answers
   Widget buildAnswerOptions();
@@ -53,12 +53,8 @@ abstract class QuestionWidgetState<T extends QuestionModel>
   /// Inits the answer widget by setting it to a dialog widget
   /// Adapts the bot's response if the user answered correctly or not
   void _initUserAnswerWidget() {
-    String botResponse = "Non.";
-    if (widget.question.isCorrectlyAnswered()) {
-      botResponse = "Oui !";
-    }
     setState(() {
-      answerWidget = buildUserAnswerWidget(botResponse);
+      answerWidget = buildUserAnswerWidget();
     });
   }
 

@@ -25,8 +25,8 @@ class _SignsQuizzState extends BaseQuizzState {
         .map((element) => new SignQuestionModel.fromJson(element))
         .toList();
     Set<String> possibleAnswers = {};
-    questions
-        .forEach((question) => possibleAnswers.addAll(question.correctAnswers));
+    questions.forEach(
+        (question) => possibleAnswers.addAll(question.correctMeanings));
     setState(() {
       Provider.of<QuestionPool>(context, listen: false)
           .initQuestions(questions, possibleAnswers);

@@ -13,7 +13,7 @@ class QuestionPool with ChangeNotifier {
   List<QuestionModel> _availableQuestions = [];
 
   /// Answers the bot can propose
-  Set<String> _possibleAnswers = {};
+  Set<String> _possibleMeanings = {};
 
   /// Reactions the bot can propose
   Set<String> _possibleReactions = {};
@@ -27,7 +27,7 @@ class QuestionPool with ChangeNotifier {
       List<QuestionModel> availableQuestions, Set<String> possibleAnswers,
       [Set<String> possibleReactions]) {
     _availableQuestions = availableQuestions;
-    _possibleAnswers = possibleAnswers;
+    _possibleMeanings = possibleAnswers;
     _possibleReactions = possibleReactions;
     _questions = [];
     this.addRandomQuestion<SignQuestionModel>();
@@ -45,11 +45,11 @@ class QuestionPool with ChangeNotifier {
       Set<String> possibleAnswers = {};
       if (question is SignQuestionModel) {
         // Randomly choose one of the correct answers
-        String correctAnswer = question.correctAnswers
-            .elementAt(randomNumber.nextInt(question.correctAnswers.length));
-        List<String> baseAnswers = [correctAnswer, ...question.trickAnswers];
+        String correctMeaning = question.correctMeanings
+            .elementAt(randomNumber.nextInt(question.correctMeanings.length));
+        List<String> baseAnswers = [correctMeaning, ...question.trickMeanings];
         possibleAnswers =
-            _createAnswersList(question, baseAnswers, _possibleAnswers);
+            _createAnswersList(question, baseAnswers, _possibleMeanings);
       }
       if (question is ReactionQuestionModel) {
         possibleAnswers = _createAnswersList(

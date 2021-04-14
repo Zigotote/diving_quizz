@@ -2,28 +2,34 @@
   "questions": [
     {
       "image": "ok.png",
-      "correctAnswers": ["OK", "Ca va"],
-      "trickAnswers": ["On monte"]
+      "signification": "OK ou \"est-ce que ça va ?\"",
+      "correctMeanings": ["OK", "Ca va"],
+      "trickMeanings": ["On monte"]
     },
     {
       "image": "ca_va_pas.png",
-      "correctAnswers": ["Ca ne va pas"]
+      "signification": "ça va pas",
+      "correctMeanings": ["Ca ne va pas"]
     },
     {
       "image": "demi_bouteille.gif",
-      "correctAnswers": ["Mi-pression de ma bouteille"]
+      "signification": "mi-pression bouteille",
+      "correctMeanings": ["Mi-pression de ma bouteille"]
     },
     {
       "image": "montre_manometre.png",
-      "correctAnswers": ["Montre ton manomètre"]
+      "signification": "montre ton manomètre",
+      "correctMeanings": ["Montre ton manomètre"]
     },
     {
       "image": "panne_dair.gif",
-      "correctAnswers": ["Je n'ai plus d'air"]
+      "signification": "panne d'air",
+      "correctMeanings": ["Je n'ai plus d'air"]
     },
     {
       "image": "sur_reserve.gif",
-      "correctAnswers": ["Je suis sur la réserve"]
+      "signification": "sur la réserve",
+      "correctMeanings": ["Je suis sur la réserve"]
     }
   ]
 }

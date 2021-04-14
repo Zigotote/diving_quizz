@@ -24,8 +24,8 @@ class _ReactionsQuizzState extends BaseQuizzState {
         .map((element) => new SignQuestionModel.fromJson(element))
         .toList();
     Set<String> possibleAnswers = {};
-    signQuestions
-        .forEach((question) => possibleAnswers.addAll(question.correctAnswers));
+    signQuestions.forEach(
+        (question) => possibleAnswers.addAll(question.correctMeanings));
     final List<ReactionQuestionModel> reactionQuestions =
         (data["questions"] as List)
             .map((element) => new ReactionQuestionModel.fromJson(element))

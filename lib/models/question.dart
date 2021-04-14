@@ -25,26 +25,32 @@ abstract class QuestionModel {
 
 /// A QuestionModel to learn the meaning of a sign
 class SignQuestionModel extends QuestionModel {
+  /// The explained signification of the sign
+  final String signification;
+
   /// The expected answers
-  final Set<String> correctAnswers;
+  final Set<String> correctMeanings;
 
   /// The trick answer, if the sign is similar to others their meaning can be added to this Set to make the QuestionModel harder
-  final Set<String> trickAnswers;
+  final Set<String> trickMeanings;
 
-  SignQuestionModel(String image, this.correctAnswers, this.trickAnswers)
+  SignQuestionModel(String image, this.signification, this.correctMeanings,
+      this.trickMeanings)
       : super(image);
 
   SignQuestionModel.fromJson(Map<String, dynamic> json)
-      : correctAnswers = Set.from(json["correctAnswers"]),
-        trickAnswers =
-            json["trickAnswers"] != null ? Set.from(json["trickAnswers"]) : {},
+      : correctMeanings = Set.from(json["correctMeanings"]),
+        trickMeanings = json["trickMeanings"] != null
+            ? Set.from(json["trickMeanings"])
+            : {},
+        signification = json["signification"],
         super.fromJson(json);
 
   @override
-  bool isCorrectlyAnswered() => this.correctAnswers.contains(this.userAnswer);
+  bool isCorrectlyAnswered() => this.correctMeanings.contains(this.userAnswer);
 
   @override
-  bool isCorrectAnswer(String answer) => this.correctAnswers.contains(answer);
+  bool isCorrectAnswer(String answer) => this.correctMeanings.contains(answer);
 }
 
 /// A QuestionModel to learn the meaning of a sign and the reaction to apply to it
