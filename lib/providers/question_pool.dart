@@ -27,7 +27,12 @@ class QuestionPool with ChangeNotifier {
   /// Initializes the lists used to build the questions
   /// Initializes the current question's list with one question
   void initQuizz() async {
-    await readQuestionsJson();
+    final String response =
+        await rootBundle.loadString("assets/data/questions.json");
+    final data = await json.decode(response);
+    _availableQuestions = (data["questions"] as List)
+        .map((element) => new SignQuestionModel.fromJson(element))
+        .toList();
     _askedQuestions = [];
     if (_possibleMeanings.isEmpty && _possibleReactions.isEmpty) {
       _availableQuestions.forEach((question) {
@@ -41,22 +46,12 @@ class QuestionPool with ChangeNotifier {
           .where((String key) => key.startsWith("assets/images/signs"))
           .toSet();
     }
-    addRandomQuestion();
-  }
-
-  /// Reads the json which contains all the questions, to fill the _availableQuestions list
-  Future readQuestionsJson() async {
-    final String response =
-        await rootBundle.loadString("assets/data/questions.json");
-    final data = await json.decode(response);
-    _availableQuestions = (data["questions"] as List)
-        .map((element) => new SignQuestionModel.fromJson(element))
-        .toList();
+    addRandomSignQuestion();
   }
 
   /// Chooses a random sign question and adds it to the _question list
   /// Creates a list of proposed answers for this question
-  void addRandomQuestion() {
+  void addRandomSignQuestion() {
     if (_availableQuestions.isNotEmpty) {
       Random randomNumber = new Random();
       SignQuestionModel question = _availableQuestions
@@ -78,6 +73,40 @@ class QuestionPool with ChangeNotifier {
       _askedQuestions.add(question);
     }
     notifyListeners();
+  }
+
+  /// Creates a random ReactionQuestion from the expected answer to the last SignQuestion.
+  /// If the answer didn't need reaction, it creates a SignQuestion
+  /// Otherwise it choose one of the expected reactions and creates a question with it
+  void addRandomReactionQuestion() {
+    SignQuestionModel lastQuestion = _askedQuestions.last;
+    String correctAnswer = lastQuestion.proposedAnswers
+        .firstWhere((answer) => lastQuestion.isCorrectAnswer(answer));
+    List<ReactionQuestionModel> reactions =
+        lastQuestion.associatedReactions[correctAnswer];
+
+    /// Puts the signQuestion in the _availableQuestions list without the previous selected meaning as an answer
+    _availableQuestions.add(lastQuestion.duplicate(correctAnswer));
+    if (reactions.isEmpty) {
+      addRandomSignQuestion();
+    } else {
+      Random randomNumber = new Random();
+      ReactionQuestionModel question =
+          reactions.removeAt(randomNumber.nextInt(reactions.length));
+      // Randomly choose one of the correct answers
+      String correctMeaning = question.correctReaction;
+      List<String> baseAnswers = [correctMeaning, ...question.trickReactions];
+      Set<String> possibleAnswers = _createAnswersList(
+          question,
+          baseAnswers,
+          _possibleReactions
+              .where((answer) =>
+                  !baseAnswers.contains(answer) &&
+                  !question.isCorrectAnswer(answer))
+              .toList());
+      question.proposedAnswers = possibleAnswers;
+      _askedQuestions.add(question);
+    }
   }
 
   /// Creates the list of the proposed answers for a question

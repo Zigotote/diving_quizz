@@ -20,6 +20,9 @@ abstract class QuestionModel {
 
   /// Checks if the user has correctly answered the question
   bool isCorrectlyAnswered();
+
+  /// Returns the answer the user should have selected
+  String get expectedAnswer;
 }
 
 /// A QuestionModel to learn the meaning of a sign
@@ -32,6 +35,15 @@ class SignQuestionModel extends QuestionModel {
 
   /// The trick answer, if the sign is similar to others their meaning can be added to this Set to make the QuestionModel harder
   final Set<String> trickMeanings;
+
+  /// Returns the correct meanings for the question
+  Set<String> get correctMeanings => associatedReactions.keys.toSet();
+
+  @override
+  String get expectedAnswer {
+    return proposedAnswers
+        .firstWhere((meaning) => correctMeanings.contains(meaning));
+  }
 
   SignQuestionModel(this.image, String signification, this.associatedReactions,
       this.trickMeanings)
@@ -57,14 +69,24 @@ class SignQuestionModel extends QuestionModel {
             : {},
         super.fromJson(json);
 
-  /// Returns the correct meanings for the question
-  Set<String> get correctMeanings => associatedReactions.keys.toSet();
-
   @override
   bool isCorrectlyAnswered() => this.correctMeanings.contains(this.userAnswer);
 
   @override
   bool isCorrectAnswer(String answer) => this.correctMeanings.contains(answer);
+
+  /// Creates a new SignQuestionModel with the meaning in parameter
+  SignQuestionModel duplicate(String meaning) {
+    SignQuestionModel newQuestion = new SignQuestionModel(
+        this.image,
+        this.signification,
+        Map.fromEntries(this
+            .associatedReactions
+            .entries
+            .where((element) => element.key != meaning)),
+        this.trickMeanings);
+    return newQuestion;
+  }
 
   @override
   String toString() {
@@ -72,6 +94,7 @@ class SignQuestionModel extends QuestionModel {
     this.associatedReactions.forEach((key, value) {
       str += "$key : [${value.join(",")}] \n";
     });
+    str += "Proposed answers : {${this.proposedAnswers.join(",")}}";
     return str;
   }
 }
@@ -83,6 +106,9 @@ class ReactionQuestionModel extends QuestionModel {
 
   /// The trick reaction, if the sign is similar to others their reactions can be added to this Set to make the QuestionModel harder
   final Set<String> trickReactions;
+
+  @override
+  String get expectedAnswer => correctReaction;
 
   ReactionQuestionModel(
       String signification, this.correctReaction, this.trickReactions)

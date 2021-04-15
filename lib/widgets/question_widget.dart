@@ -1,5 +1,7 @@
 import 'package:diving_quizz/models/question.dart';
 import 'package:diving_quizz/providers/question_pool.dart';
+import 'package:diving_quizz/widgets/bot_dialog.dart';
+import 'package:diving_quizz/widgets/user_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,11 +22,17 @@ abstract class QuestionWidgetState<T extends QuestionModel>
   /// The widget which displays the available answers or the user's response, depending on the question's state
   Widget answerWidget;
 
-  /// Builds bubbles to display the user's answer and the bot's reponse
-  Widget buildUserAnswerWidget(String botResponse);
+  /// Builds the question the bot asks
+  List<Widget> buildQuestion();
 
   /// Builds a widget to display the available answers
   Widget buildAnswerOptions();
+
+  /// Builds the answer the user has selected
+  Widget buildUserAnswer();
+
+  /// Builds the bot's responses to the user's answer
+  List<Widget> buildBotResponses();
 
   @override
   void initState() {
@@ -53,12 +61,13 @@ abstract class QuestionWidgetState<T extends QuestionModel>
   /// Inits the answer widget by setting it to a dialog widget
   /// Adapts the bot's response if the user answered correctly or not
   void _initUserAnswerWidget() {
-    String botResponse = "Oui !";
-    if (!widget.question.isCorrectlyAnswered()) {
-      botResponse = "Non, il s'agit de ${widget.question.signification}";
-    }
     setState(() {
-      answerWidget = buildUserAnswerWidget(botResponse);
+      answerWidget = Column(
+        children: [
+          UserDialog(child: buildUserAnswer()),
+          ...buildBotResponses().map((response) => BotDialog(child: response)),
+        ],
+      );
     });
   }
 
@@ -74,5 +83,26 @@ abstract class QuestionWidgetState<T extends QuestionModel>
     }
     _initUserAnswerWidget();
     widget.onQuestionFinished(score);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: [
+          ...buildQuestion().map((question) => BotDialog(child: question)),
+          AnimatedSwitcher(
+            duration: Duration(milliseconds: 300),
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return ScaleTransition(
+                child: child,
+                scale: animation,
+              );
+            },
+            child: answerWidget,
+          ),
+        ],
+      ),
+    );
   }
 }

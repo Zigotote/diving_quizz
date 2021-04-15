@@ -10,14 +10,10 @@ class SignsQuizz extends BaseQuizz {
 
 class _SignsQuizzState extends BaseQuizzState {
   @override
-  String botImage() {
-    return "assets/images/bots/axolotl.png";
-  }
+  String get botImage => "assets/images/bots/axolotl.png";
 
   @override
-  String botName() {
-    return "Professeur Axel";
-  }
+  String get botName => "Professeur Axel";
 
   @override
   Widget buildQuestion(QuestionPool questionPool, int index) {

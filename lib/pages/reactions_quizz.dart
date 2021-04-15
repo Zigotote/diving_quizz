@@ -13,20 +13,16 @@ class ReactionsQuizz extends BaseQuizz {
 
 class _ReactionsQuizzState extends BaseQuizzState {
   @override
-  String botImage() {
-    return "assets/images/bots/shark.jpg";
-  }
+  String get botImage => "assets/images/bots/shark.jpg";
 
   @override
-  String botName() {
-    return "Professeur Sharky";
-  }
+  String get botName => "Professeur Sharky";
 
   /// Adds a ReactionQuestion to the queue when current question has been answered
-  /// The added question's type is from the type of U
   void _addReactionQuestion(int score) {
     setState(() {
-      Provider.of<QuestionPool>(context, listen: false).addRandomQuestion();
+      Provider.of<QuestionPool>(context, listen: false)
+          .addRandomReactionQuestion();
       needScroll = true;
     });
   }

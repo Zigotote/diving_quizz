@@ -16,10 +16,10 @@ abstract class BaseQuizzState extends State<BaseQuizz> {
   }
 
   /// Returns the name of the bot for the current quizz
-  String botName();
+  String get botName;
 
   /// Returns the picture of the bot
-  String botImage();
+  String get botImage;
 
   /// Builds the quizz widget for the question at the given index of the questionPool
   Widget buildQuestion(QuestionPool questionPool, int index);
@@ -28,7 +28,7 @@ abstract class BaseQuizzState extends State<BaseQuizz> {
   /// The added question's type is from the type of U
   void addSignQuestion(int score) {
     setState(() {
-      Provider.of<QuestionPool>(context, listen: false).addRandomQuestion();
+      Provider.of<QuestionPool>(context, listen: false).addRandomSignQuestion();
       needScroll = true;
     });
   }
@@ -63,12 +63,12 @@ abstract class BaseQuizzState extends State<BaseQuizz> {
                   shape: BoxShape.circle,
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: AssetImage(this.botImage()),
+                    image: AssetImage(this.botImage),
                   ),
                 ),
               ),
             ),
-            Text(this.botName()),
+            Text(this.botName),
           ],
         ),
       ),
