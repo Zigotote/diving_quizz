@@ -1,0 +1,54 @@
+{
+  "questions": [
+    {
+      "image": "ok.png",
+      "signification": "OK ou \"est-ce que ça va ?\"",
+      "trickMeanings": ["On monte"],
+      "meanings": [
+        {
+          "text": "Ca va ?",
+          "trickReactions": ["panne_dair.gif"],
+          "reactions": [
+            {
+              "image": "ok.png",
+              "signification": "tout va bien"
+            },
+            {
+              "image": "ca_va_pas.png",
+              "signification": "quelque chose ne va pas"
+            }
+          ]
+        },
+        {
+          "text": "OK"
+        },
+        {
+          "text": "Test bidon",
+          "trickReactions": ["montre_manometre.png"],
+          "reactions": [
+            {
+              "image": "ok.png",
+              "signification": "tout va bien"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "image": "ca_va_pas.png",
+      "signification": "\"ça ne va pas\"",
+      "trickMeanings": ["On monte"],
+      "meanings": [
+        {
+          "text": "Ca ne va pas"
+        },
+        {
+          "text": "Il y a un problème"
+        },
+        {
+          "text": "HELP"
+        }
+      ]
+    }
+  ]
+}

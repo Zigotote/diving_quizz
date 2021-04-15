@@ -1,20 +1,19 @@
 abstract class QuestionModel {
   static const String _IMAGE_FOLDER = "assets/images/signs/";
 
-  /// The image the user has to know
-  final String image;
+  /// The explained signification of the expected answer
+  final String signification;
 
   /// The answers the bot proposes
-  Set<String> proposedAnswers;
+  Set<String> proposedAnswers = {};
 
   /// The answer the user has selected
   String userAnswer;
 
-  QuestionModel(this.image);
+  QuestionModel(this.signification);
 
   QuestionModel.fromJson(Map<String, dynamic> json)
-      : image = _IMAGE_FOLDER + json["image"],
-        proposedAnswers = {};
+      : signification = json["signification"];
 
   /// Checks if the answer is correct
   bool isCorrectAnswer(String answer);
@@ -25,32 +24,56 @@ abstract class QuestionModel {
 
 /// A QuestionModel to learn the meaning of a sign
 class SignQuestionModel extends QuestionModel {
-  /// The explained signification of the sign
-  final String signification;
+  /// The image the user has to know
+  final String image;
 
-  /// The expected answers
-  final Set<String> correctMeanings;
+  /// The different meanings of the sign, linked to their associated reactions
+  final Map<String, List<ReactionQuestionModel>> associatedReactions;
 
   /// The trick answer, if the sign is similar to others their meaning can be added to this Set to make the QuestionModel harder
   final Set<String> trickMeanings;
 
-  SignQuestionModel(String image, this.signification, this.correctMeanings,
+  SignQuestionModel(this.image, String signification, this.associatedReactions,
       this.trickMeanings)
-      : super(image);
+      : super(signification);
 
   SignQuestionModel.fromJson(Map<String, dynamic> json)
-      : correctMeanings = Set.from(json["correctMeanings"]),
+      : image = QuestionModel._IMAGE_FOLDER + json["image"],
+        associatedReactions =
+            Map<String, List<ReactionQuestionModel>>.fromIterable(
+          json["meanings"],
+          key: (meaning) => meaning["text"],
+          value: (meaning) => meaning["reactions"] == null
+              ? []
+              : List.of(meaning["reactions"]).map(
+                  (reaction) {
+                    reaction["trickReactions"] = meaning["trickReactions"];
+                    return ReactionQuestionModel.fromJson(reaction);
+                  },
+                ).toList(),
+        ),
         trickMeanings = json["trickMeanings"] != null
             ? Set.from(json["trickMeanings"])
             : {},
-        signification = json["signification"],
         super.fromJson(json);
+
+  /// Returns the correct meanings for the question
+  Set<String> get correctMeanings => associatedReactions.keys.toSet();
 
   @override
   bool isCorrectlyAnswered() => this.correctMeanings.contains(this.userAnswer);
 
   @override
   bool isCorrectAnswer(String answer) => this.correctMeanings.contains(answer);
+
+  @override
+  String toString() {
+    String str = "${this.image} -> ${this.userAnswer} \n";
+    this.associatedReactions.forEach((key, value) {
+      str += "$key : [${value.join(",")}] \n";
+    });
+    return str;
+  }
 }
 
 /// A QuestionModel to learn the meaning of a sign and the reaction to apply to it
@@ -61,11 +84,12 @@ class ReactionQuestionModel extends QuestionModel {
   /// The trick reaction, if the sign is similar to others their reactions can be added to this Set to make the QuestionModel harder
   final Set<String> trickReactions;
 
-  ReactionQuestionModel(String image, this.correctReaction, this.trickReactions)
-      : super(image);
+  ReactionQuestionModel(
+      String signification, this.correctReaction, this.trickReactions)
+      : super(signification);
 
   ReactionQuestionModel.fromJson(Map<String, dynamic> json)
-      : correctReaction = QuestionModel._IMAGE_FOLDER + json["correctReaction"],
+      : correctReaction = QuestionModel._IMAGE_FOLDER + json["image"],
         trickReactions = json["trickReactions"] != null
             ? Set.from(json["trickReactions"]
                 .map((image) => QuestionModel._IMAGE_FOLDER + image))
@@ -77,4 +101,7 @@ class ReactionQuestionModel extends QuestionModel {
 
   @override
   bool isCorrectAnswer(String answer) => answer == this.correctReaction;
+
+  @override
+  String toString() => "${this.correctReaction} (${this.signification})";
 }

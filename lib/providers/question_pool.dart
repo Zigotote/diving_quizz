@@ -1,16 +1,18 @@
 import 'dart:collection';
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:diving_quizz/models/question.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 
 /// A provider for each dialog, to manage the question pool
 class QuestionPool with ChangeNotifier {
   /// Questions asked by the bot and answered by the user
-  List<QuestionModel> _questions = [];
+  List<QuestionModel> _askedQuestions = [];
 
-  /// Questions the bot can ask
-  List<QuestionModel> _availableQuestions = [];
+  /// Questions the bot hasn't already asked
+  List<SignQuestionModel> _availableQuestions = [];
 
   /// Answers the bot can propose
   Set<String> _possibleMeanings = {};
@@ -19,46 +21,61 @@ class QuestionPool with ChangeNotifier {
   Set<String> _possibleReactions = {};
 
   UnmodifiableListView<QuestionModel> get questions =>
-      UnmodifiableListView(_questions);
+      UnmodifiableListView(_askedQuestions);
 
-  /// Initializes the pool with a list of available question and the possible answers
-  /// Adds a random question to the _question list to start the quizz
-  void initQuestions(
-      List<QuestionModel> availableQuestions, Set<String> possibleAnswers,
-      [Set<String> possibleReactions]) {
-    _availableQuestions = availableQuestions;
-    _possibleMeanings = possibleAnswers;
-    _possibleReactions = possibleReactions;
-    _questions = [];
-    this.addRandomQuestion<SignQuestionModel>();
+  /// Reads the json file which contains all the available questions
+  /// Initializes the lists used to build the questions
+  /// Initializes the current question's list with one question
+  void initQuizz() async {
+    await readQuestionsJson();
+    _askedQuestions = [];
+    if (_possibleMeanings.isEmpty && _possibleReactions.isEmpty) {
+      _availableQuestions.forEach((question) {
+        _possibleMeanings.addAll(question.correctMeanings);
+        _possibleMeanings.addAll(question.trickMeanings);
+      });
+      final manifestJson = await rootBundle.loadString("AssetManifest.json");
+      _possibleReactions = json
+          .decode(manifestJson)
+          .keys
+          .where((String key) => key.startsWith("assets/images/signs"))
+          .toSet();
+    }
+    addRandomQuestion();
   }
 
-  /// Chooses a random question and adds it to the _question list
+  /// Reads the json which contains all the questions, to fill the _availableQuestions list
+  Future readQuestionsJson() async {
+    final String response =
+        await rootBundle.loadString("assets/data/questions.json");
+    final data = await json.decode(response);
+    _availableQuestions = (data["questions"] as List)
+        .map((element) => new SignQuestionModel.fromJson(element))
+        .toList();
+  }
+
+  /// Chooses a random sign question and adds it to the _question list
   /// Creates a list of proposed answers for this question
-  void addRandomQuestion<T extends QuestionModel>() {
-    List<T> filteredQuestions = _availableQuestions.whereType<T>().toList();
-    if (filteredQuestions.isNotEmpty) {
+  void addRandomQuestion() {
+    if (_availableQuestions.isNotEmpty) {
       Random randomNumber = new Random();
-      T question = filteredQuestions
-          .removeAt(randomNumber.nextInt(filteredQuestions.length));
+      SignQuestionModel question = _availableQuestions
+          .removeAt(randomNumber.nextInt(_availableQuestions.length));
       _availableQuestions.remove(question);
-      Set<String> possibleAnswers = {};
-      if (question is SignQuestionModel) {
-        // Randomly choose one of the correct answers
-        String correctMeaning = question.correctMeanings
-            .elementAt(randomNumber.nextInt(question.correctMeanings.length));
-        List<String> baseAnswers = [correctMeaning, ...question.trickMeanings];
-        possibleAnswers =
-            _createAnswersList(question, baseAnswers, _possibleMeanings);
-      }
-      if (question is ReactionQuestionModel) {
-        possibleAnswers = _createAnswersList(
-            question,
-            [question.correctReaction, ...question.trickReactions],
-            _possibleReactions);
-      }
+      // Randomly choose one of the correct answers
+      String correctMeaning = question.correctMeanings
+          .elementAt(randomNumber.nextInt(question.correctMeanings.length));
+      List<String> baseAnswers = [correctMeaning, ...question.trickMeanings];
+      Set<String> possibleAnswers = _createAnswersList(
+          question,
+          baseAnswers,
+          _possibleMeanings
+              .where((answer) =>
+                  !baseAnswers.contains(answer) &&
+                  !question.isCorrectAnswer(answer))
+              .toList());
       question.proposedAnswers = possibleAnswers;
-      _questions.add(question);
+      _askedQuestions.add(question);
     }
     notifyListeners();
   }
@@ -67,16 +84,12 @@ class QuestionPool with ChangeNotifier {
   /// Takes the correct answer and the suggestions. Adds some random answers from the other questions
   /// Shuffles the list to randomize the order of the answers
   Set<String> _createAnswersList(QuestionModel question,
-      List<String> possibleAnswers, Set<String> availableAnswers) {
+      List<String> possibleAnswers, List<String> availableAnswers) {
     Random randomNumber = new Random();
     // Choose some incorrect answers to fill the list
     while (possibleAnswers.length < 4) {
       var answer = availableAnswers
-          .where((answer) =>
-              !possibleAnswers.contains(answer) &&
-              !question.isCorrectAnswer(answer))
-          .elementAt(randomNumber
-              .nextInt(availableAnswers.length - possibleAnswers.length));
+          .removeAt(randomNumber.nextInt(availableAnswers.length));
       possibleAnswers.add(answer);
     }
     // Randomizes the answer's order
@@ -86,8 +99,8 @@ class QuestionPool with ChangeNotifier {
 
   /// Answers a question and returns true if it is the correct one
   bool answerQuestion(QuestionModel question, String answer) {
-    final int questionIndex = _questions.indexOf(question);
-    _questions[questionIndex].userAnswer = answer;
+    final int questionIndex = _askedQuestions.indexOf(question);
+    _askedQuestions[questionIndex].userAnswer = answer;
     notifyListeners();
     return question.isCorrectlyAnswered();
   }

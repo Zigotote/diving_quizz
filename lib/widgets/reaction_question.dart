@@ -26,11 +26,7 @@ class _ReactionQuestionState
   }
 
   @override
-  Widget buildUserAnswerWidget() {
-    String botResponse = "Oui !";
-    if (!widget.question.isCorrectlyAnswered()) {
-      botResponse = "Non.";
-    }
+  Widget buildUserAnswerWidget(String botResponse) {
     return Column(
       children: [
         UserDialog(

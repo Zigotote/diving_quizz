@@ -1,4 +1,3 @@
-import 'package:diving_quizz/models/question.dart';
 import 'package:diving_quizz/providers/question_pool.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +12,7 @@ abstract class BaseQuizzState extends State<BaseQuizz> {
   @override
   void initState() {
     super.initState();
-    readJson();
+    Provider.of<QuestionPool>(context, listen: false).initQuizz();
   }
 
   /// Returns the name of the bot for the current quizz
@@ -22,11 +21,6 @@ abstract class BaseQuizzState extends State<BaseQuizz> {
   /// Returns the picture of the bot
   String botImage();
 
-  /// Reads the json file which contains all the available questions
-  /// Initializes the lists used to build the questions
-  /// Initializes the current question's list with one question
-  Future<void> readJson();
-
   /// Builds the quizz widget for the question at the given index of the questionPool
   Widget buildQuestion(QuestionPool questionPool, int index);
 
@@ -34,8 +28,7 @@ abstract class BaseQuizzState extends State<BaseQuizz> {
   /// The added question's type is from the type of U
   void addSignQuestion(int score) {
     setState(() {
-      Provider.of<QuestionPool>(context, listen: false)
-          .addRandomQuestion<SignQuestionModel>();
+      Provider.of<QuestionPool>(context, listen: false).addRandomQuestion();
       needScroll = true;
     });
   }
@@ -92,7 +85,8 @@ abstract class BaseQuizzState extends State<BaseQuizz> {
             );
           }),
           ElevatedButton(
-            onPressed: () => this.readJson(),
+            onPressed:
+                Provider.of<QuestionPool>(context, listen: false).initQuizz,
             child: Text("Réinitialiser"),
           )
         ],

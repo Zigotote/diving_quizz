@@ -26,12 +26,7 @@ class _SignQuestionState extends QuestionWidgetState<SignQuestionModel> {
   }
 
   @override
-  Widget buildUserAnswerWidget() {
-    String botResponse = "Oui !";
-    if (!widget.question.isCorrectlyAnswered()) {
-      botResponse =
-          "Non, il s'agit de ${(widget.question as SignQuestionModel).signification}";
-    }
+  Widget buildUserAnswerWidget(String botResponse) {
     return Column(
       children: [
         UserDialog(
@@ -57,7 +52,7 @@ class _SignQuestionState extends QuestionWidgetState<SignQuestionModel> {
           ),
           BotDialog(
             child: Image(
-              image: AssetImage(widget.question.image),
+              image: AssetImage((widget.question as SignQuestionModel).image),
             ),
           ),
           AnimatedSwitcher(
