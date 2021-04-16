@@ -84,12 +84,16 @@ class QuestionPool with ChangeNotifier {
         .firstWhere((answer) => lastQuestion.isCorrectAnswer(answer));
     List<ReactionQuestionModel> reactions =
         lastQuestion.associatedReactions[correctAnswer];
+    Set<String> reactionAnswers =
+        reactions.map((reaction) => reaction.correctReaction).toSet();
 
-    /// Puts the signQuestion in the _availableQuestions list without the previous selected meaning as an answer
-    _availableQuestions.add(lastQuestion.duplicate(correctAnswer));
     if (reactions.isEmpty) {
       addRandomSignQuestion();
     } else {
+      /// Puts the signQuestion in the _availableQuestions list without the previous selected meaning as an answer
+      if (lastQuestion.associatedReactions.length > 1) {
+        _availableQuestions.add(lastQuestion.duplicate(correctAnswer));
+      }
       Random randomNumber = new Random();
       ReactionQuestionModel question =
           reactions.removeAt(randomNumber.nextInt(reactions.length));
@@ -102,7 +106,7 @@ class QuestionPool with ChangeNotifier {
           _possibleReactions
               .where((answer) =>
                   !baseAnswers.contains(answer) &&
-                  !question.isCorrectAnswer(answer))
+                  !reactionAnswers.contains(answer))
               .toList());
       question.proposedAnswers = possibleAnswers;
       _askedQuestions.add(question);

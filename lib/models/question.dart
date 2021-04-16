@@ -33,6 +33,9 @@ class SignQuestionModel extends QuestionModel {
   /// The different meanings of the sign, linked to their associated reactions
   final Map<String, List<ReactionQuestionModel>> associatedReactions;
 
+  /// The meanings which have already been asked, corresponding to the keys which have been deleted from associatedReactions during a duplicate()
+  final Set<String> deletedMeanings;
+
   /// The trick answer, if the sign is similar to others their meaning can be added to this Set to make the QuestionModel harder
   final Set<String> trickMeanings;
 
@@ -46,7 +49,7 @@ class SignQuestionModel extends QuestionModel {
   }
 
   SignQuestionModel(this.image, String signification, this.associatedReactions,
-      this.trickMeanings)
+      this.trickMeanings, this.deletedMeanings)
       : super(signification);
 
   SignQuestionModel.fromJson(Map<String, dynamic> json)
@@ -67,24 +70,29 @@ class SignQuestionModel extends QuestionModel {
         trickMeanings = json["trickMeanings"] != null
             ? Set.from(json["trickMeanings"])
             : {},
+        deletedMeanings = {},
         super.fromJson(json);
 
   @override
   bool isCorrectlyAnswered() => this.correctMeanings.contains(this.userAnswer);
 
   @override
-  bool isCorrectAnswer(String answer) => this.correctMeanings.contains(answer);
+  bool isCorrectAnswer(String answer) =>
+      this.correctMeanings.contains(answer) ||
+      this.deletedMeanings.contains(answer);
 
   /// Creates a new SignQuestionModel with the meaning in parameter
   SignQuestionModel duplicate(String meaning) {
     SignQuestionModel newQuestion = new SignQuestionModel(
-        this.image,
-        this.signification,
-        Map.fromEntries(this
-            .associatedReactions
-            .entries
-            .where((element) => element.key != meaning)),
-        this.trickMeanings);
+      this.image,
+      this.signification,
+      Map.fromEntries(this
+          .associatedReactions
+          .entries
+          .where((element) => element.key != meaning)),
+      this.trickMeanings,
+      {meaning, ...this.deletedMeanings},
+    );
     return newQuestion;
   }
 
