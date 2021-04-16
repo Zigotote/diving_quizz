@@ -1,8 +1,6 @@
 import 'package:diving_quizz/widgets/options_widget.dart';
 import 'package:diving_quizz/widgets/question_widget.dart';
 import 'package:diving_quizz/models/question.dart';
-import 'package:diving_quizz/widgets/bot_dialog.dart';
-import 'package:diving_quizz/widgets/user_dialog.dart';
 import 'package:flutter/material.dart';
 
 /// A dialog for a question about the reaction to apply to a sign.
@@ -18,6 +16,11 @@ class ReactionQuestion extends QuestionWidget {
 class _ReactionQuestionState
     extends QuestionWidgetState<ReactionQuestionModel> {
   @override
+  List<Widget> buildQuestion() {
+    return [Text("Comment y réagir ?")];
+  }
+
+  @override
   Widget buildAnswerOptions() {
     return ReactionOptions(
       onAnswerSelected: handleAnswerSelected,
@@ -26,39 +29,25 @@ class _ReactionQuestionState
   }
 
   @override
-  Widget buildUserAnswerWidget(String botResponse) {
-    return Column(
-      children: [
-        UserDialog(
-          child: Image(
-            image: AssetImage(widget.question.userAnswer),
-          ),
-        ),
-        BotDialog(child: Text(botResponse))
-      ],
+  Widget buildUserAnswer() {
+    return Image(
+      image: AssetImage(widget.question.userAnswer),
     );
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          BotDialog(
-            child: Text("Comment y réagir ?"),
-          ),
-          AnimatedSwitcher(
-            duration: Duration(milliseconds: 300),
-            transitionBuilder: (Widget child, Animation<double> animation) {
-              return ScaleTransition(
-                child: child,
-                scale: animation,
-              );
-            },
-            child: answerWidget,
-          ),
-        ],
-      ),
-    );
+  List<Widget> buildBotResponses() {
+    List<Widget> botResponses = [Text("Oui !")];
+    if (!widget.question.isCorrectlyAnswered()) {
+      botResponses = [
+        Text(
+          "Non, il fallait répondre \"${widget.question.signification}\" avec ce signe :",
+        ),
+        Image(
+          image: AssetImage(widget.question.expectedAnswer),
+        )
+      ];
+    }
+    return botResponses;
   }
 }

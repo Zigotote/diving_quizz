@@ -1,5 +1,4 @@
 import 'package:diving_quizz/theme/my_theme.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// A list of possible options for a question
