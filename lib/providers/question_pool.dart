@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:diving_quizz/models/question.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 /// A provider for each dialog, to manage the question pool
@@ -87,13 +87,13 @@ class QuestionPool with ChangeNotifier {
     Set<String> reactionAnswers =
         reactions.map((reaction) => reaction.correctReaction).toSet();
 
+    /// Puts the signQuestion in the _availableQuestions list without the previous selected meaning as an answer
+    if (lastQuestion.associatedReactions.length > 1) {
+      _availableQuestions.add(lastQuestion.duplicate(correctAnswer));
+    }
     if (reactions.isEmpty) {
       addRandomSignQuestion();
     } else {
-      /// Puts the signQuestion in the _availableQuestions list without the previous selected meaning as an answer
-      if (lastQuestion.associatedReactions.length > 1) {
-        _availableQuestions.add(lastQuestion.duplicate(correctAnswer));
-      }
       Random randomNumber = new Random();
       ReactionQuestionModel question =
           reactions.removeAt(randomNumber.nextInt(reactions.length));
