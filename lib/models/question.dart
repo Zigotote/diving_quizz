@@ -1,3 +1,5 @@
+import 'package:diving_quizz/models/meaning.dart';
+
 abstract class QuestionModel {
   static const String _IMAGE_FOLDER = "assets/images/signs/";
 
@@ -31,43 +33,32 @@ class SignQuestionModel extends QuestionModel {
   final String image;
 
   /// The different meanings of the sign, linked to their associated reactions
-  final Map<String, List<ReactionQuestionModel>> associatedReactions;
+  final List<Meaning> meanings;
 
-  /// The meanings which have already been asked, corresponding to the keys which have been deleted from associatedReactions during a duplicate()
+  /// The meanings which have already been asked, corresponding to the elements which have been deleted from meanings during a duplicate()
   final Set<String> deletedMeanings;
 
   /// The trick answer, if the sign is similar to others their meaning can be added to this Set to make the QuestionModel harder
-  final Set<String> trickMeanings;
+  final Set<String> tricks;
 
   /// Returns the correct meanings for the question
-  Set<String> get correctMeanings => associatedReactions.keys.toSet();
+  Set<String> get correctMeanings =>
+      meanings.map((meaning) => meaning.meaning).toSet();
 
   @override
-  String get expectedAnswer {
-    return proposedAnswers
-        .firstWhere((meaning) => correctMeanings.contains(meaning));
-  }
+  String get expectedAnswer => proposedAnswers
+      .firstWhere((meaning) => correctMeanings.contains(meaning));
 
-  SignQuestionModel(this.image, String signification, this.associatedReactions,
-      this.trickMeanings, this.deletedMeanings)
+  SignQuestionModel(this.image, String signification, this.meanings,
+      this.tricks, this.deletedMeanings)
       : super(signification);
 
   SignQuestionModel.fromJson(Map<String, dynamic> json)
       : image = QuestionModel._IMAGE_FOLDER + json["image"],
-        associatedReactions =
-            Map<String, List<ReactionQuestionModel>>.fromIterable(
-          json["meanings"],
-          key: (meaning) => meaning["text"],
-          value: (meaning) => meaning["reactions"] == null
-              ? []
-              : List.of(meaning["reactions"]).map(
-                  (reaction) {
-                    reaction["trickReactions"] = meaning["trickReactions"];
-                    return ReactionQuestionModel.fromJson(reaction);
-                  },
-                ).toList(),
-        ),
-        trickMeanings = json["trickMeanings"] != null
+        meanings = (json["meanings"] as List)
+            .map((meaning) => Meaning.fromJson(meaning))
+            .toList(),
+        tricks = json["trickMeanings"] != null
             ? Set.from(json["trickMeanings"])
             : {},
         deletedMeanings = {},
@@ -81,16 +72,18 @@ class SignQuestionModel extends QuestionModel {
       this.correctMeanings.contains(answer) ||
       this.deletedMeanings.contains(answer);
 
+  /// Returns the Meaning from the meanings list representing the meaning in parameter
+  Meaning getMeaning(String meaning) {
+    return this.meanings.firstWhere((element) => element.meaning == meaning);
+  }
+
   /// Creates a new SignQuestionModel with the meaning in parameter
   SignQuestionModel duplicate(String meaning) {
     SignQuestionModel newQuestion = new SignQuestionModel(
       this.image,
       this.signification,
-      Map.fromEntries(this
-          .associatedReactions
-          .entries
-          .where((element) => element.key != meaning)),
-      this.trickMeanings,
+      List.from(this.meanings.where((element) => element.meaning != meaning)),
+      this.tricks,
       {meaning, ...this.deletedMeanings},
     );
     return newQuestion;
@@ -99,9 +92,7 @@ class SignQuestionModel extends QuestionModel {
   @override
   String toString() {
     String str = "${this.image} -> ${this.userAnswer} \n";
-    this.associatedReactions.forEach((key, value) {
-      str += "$key : [${value.join(",")}] \n";
-    });
+    str += meanings.join("\n");
     str += "Proposed answers : {${this.proposedAnswers.join(",")}}";
     return str;
   }
@@ -113,18 +104,17 @@ class ReactionQuestionModel extends QuestionModel {
   final String correctReaction;
 
   /// The trick reaction, if the sign is similar to others their reactions can be added to this Set to make the QuestionModel harder
-  final Set<String> trickReactions;
+  final Set<String> tricks;
 
   @override
   String get expectedAnswer => correctReaction;
 
-  ReactionQuestionModel(
-      String signification, this.correctReaction, this.trickReactions)
+  ReactionQuestionModel(String signification, this.correctReaction, this.tricks)
       : super(signification);
 
   ReactionQuestionModel.fromJson(Map<String, dynamic> json)
       : correctReaction = QuestionModel._IMAGE_FOLDER + json["image"],
-        trickReactions = json["trickReactions"] != null
+        tricks = json["trickReactions"] != null
             ? Set.from(json["trickReactions"]
                 .map((image) => QuestionModel._IMAGE_FOLDER + image))
             : {},

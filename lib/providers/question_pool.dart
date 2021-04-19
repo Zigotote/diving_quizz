@@ -37,7 +37,7 @@ class QuestionPool with ChangeNotifier {
     if (_possibleMeanings.isEmpty && _possibleReactions.isEmpty) {
       _availableQuestions.forEach((question) {
         _possibleMeanings.addAll(question.correctMeanings);
-        _possibleMeanings.addAll(question.trickMeanings);
+        _possibleMeanings.addAll(question.tricks);
       });
       final manifestJson = await rootBundle.loadString("AssetManifest.json");
       _possibleReactions = json
@@ -60,7 +60,7 @@ class QuestionPool with ChangeNotifier {
       // Randomly choose one of the correct answers
       String correctMeaning = question.correctMeanings
           .elementAt(randomNumber.nextInt(question.correctMeanings.length));
-      List<String> baseAnswers = [correctMeaning, ...question.trickMeanings];
+      List<String> baseAnswers = [correctMeaning, ...question.tricks];
       Set<String> possibleAnswers = _createAnswersList(
           question,
           baseAnswers,
@@ -83,12 +83,12 @@ class QuestionPool with ChangeNotifier {
     String correctAnswer = lastQuestion.proposedAnswers
         .firstWhere((answer) => lastQuestion.isCorrectAnswer(answer));
     List<ReactionQuestionModel> reactions =
-        lastQuestion.associatedReactions[correctAnswer];
+        lastQuestion.getMeaning(correctAnswer).reactions;
     Set<String> reactionAnswers =
         reactions.map((reaction) => reaction.correctReaction).toSet();
 
     /// Puts the signQuestion in the _availableQuestions list without the previous selected meaning as an answer
-    if (lastQuestion.associatedReactions.length > 1) {
+    if (lastQuestion.meanings.length > 1) {
       _availableQuestions.add(lastQuestion.duplicate(correctAnswer));
     }
     if (reactions.isEmpty) {
@@ -99,7 +99,7 @@ class QuestionPool with ChangeNotifier {
           reactions.removeAt(randomNumber.nextInt(reactions.length));
       // Randomly choose one of the correct answers
       String correctMeaning = question.correctReaction;
-      List<String> baseAnswers = [correctMeaning, ...question.trickReactions];
+      List<String> baseAnswers = [correctMeaning, ...question.tricks];
       Set<String> possibleAnswers = _createAnswersList(
           question,
           baseAnswers,
