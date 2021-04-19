@@ -6,7 +6,7 @@
       "trickMeanings": ["On monte"],
       "meanings": [
         {
-          "text": "Ca va ?",
+          "text": ["Ca va ?", "Est ce que ça va ?", "Comment te sens-tu ?"],
           "trickReactions": ["panne_dair.gif"],
           "reactions": [
             {
@@ -20,10 +20,10 @@
           ]
         },
         {
-          "text": "OK"
+          "text": ["OK", "D'accord"]
         },
         {
-          "text": "Oui",
+          "text": ["Oui"],
           "trickReactions": ["montre_manometre.png"],
           "reactions": [
             {
@@ -40,13 +40,7 @@
       "trickMeanings": ["On monte"],
       "meanings": [
         {
-          "text": "Ca ne va pas"
-        },
-        {
-          "text": "Il y a un problème"
-        },
-        {
-          "text": "HELP"
+          "text": ["Ca ne va pas", "Il y a un problème", "HELP"]
         }
       ]
     }

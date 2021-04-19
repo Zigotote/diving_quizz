@@ -42,8 +42,10 @@ class SignQuestionModel extends QuestionModel {
   final Set<String> tricks;
 
   /// Returns the correct meanings for the question
-  Set<String> get correctMeanings =>
-      meanings.map((meaning) => meaning.meaning).toSet();
+  Set<String> get correctMeanings => meanings
+      .map((element) => element.meanings)
+      .expand((meaning) => meaning)
+      .toSet();
 
   @override
   String get expectedAnswer => proposedAnswers
@@ -74,17 +76,20 @@ class SignQuestionModel extends QuestionModel {
 
   /// Returns the Meaning from the meanings list representing the meaning in parameter
   Meaning getMeaning(String meaning) {
-    return this.meanings.firstWhere((element) => element.meaning == meaning);
+    return this
+        .meanings
+        .firstWhere((element) => element.meanings.contains(meaning));
   }
 
-  /// Creates a new SignQuestionModel with the meaning in parameter
+  /// Creates a new SignQuestionModel without the meaning in parameter
   SignQuestionModel duplicate(String meaning) {
+    Meaning toDelete = this.getMeaning(meaning);
     SignQuestionModel newQuestion = new SignQuestionModel(
       this.image,
       this.signification,
-      List.from(this.meanings.where((element) => element.meaning != meaning)),
+      List.from(this.meanings.where((element) => element != toDelete)),
       this.tricks,
-      {meaning, ...this.deletedMeanings},
+      {...toDelete.meanings, ...this.deletedMeanings},
     );
     return newQuestion;
   }
