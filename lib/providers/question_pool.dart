@@ -24,25 +24,33 @@ class QuestionPool with ChangeNotifier {
   UnmodifiableListView<QuestionModel> get questions =>
       UnmodifiableListView(_askedQuestions);
 
+  QuestionPool() {
+    _fillPossibleMeanings();
+    _fillPossibleReactions();
+  }
+
+  /// Fills the _possibleMeanings list with the meanings of all the questions
+  Future _fillPossibleMeanings() async {
+    _possibleMeanings = await DatabaseProvider.instance.getMeanings();
+  }
+
+  /// Fills the _possibleReactions list with the signs saved in the assets folder
+  Future _fillPossibleReactions() async {
+    final String manifestJson =
+        await rootBundle.loadString("AssetManifest.json");
+    _possibleReactions = json
+        .decode(manifestJson)
+        .keys
+        .where((String key) => key.startsWith("assets/images/signs"))
+        .toSet();
+  }
+
   /// Reads the json file which contains all the available questions
   /// Initializes the lists used to build the questions
   /// Initializes the current question's list with one question
   void initQuizz() async {
-    _availableQuestions = await DatabaseProvider.instance.getSignQuestion();
+    _availableQuestions = await DatabaseProvider.instance.getSignQuestions();
     _askedQuestions = [];
-    if (_possibleMeanings.isEmpty && _possibleReactions.isEmpty) {
-      _availableQuestions.forEach((question) {
-        _possibleMeanings.addAll(question.correctMeanings);
-        _possibleMeanings.addAll(question.tricks);
-      });
-      final String manifestJson =
-          await rootBundle.loadString("AssetManifest.json");
-      _possibleReactions = json
-          .decode(manifestJson)
-          .keys
-          .where((String key) => key.startsWith("assets/images/signs"))
-          .toSet();
-    }
     addRandomSignQuestion();
   }
 

@@ -7,9 +7,6 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 /// A provider to manage the SQLite database
-/// https://flutter.dev/docs/cookbook/persistence/sqlite
-/// https://pusher.com/tutorials/local-data-flutter
-/// https://www.google.fr/imgres?imgurl=https%3A%2F%2Fi.ebayimg.com%2Fimages%2Fg%2FsxwAAOSwgv5ZU~gp%2Fs-l300.jpg&imgrefurl=https%3A%2F%2Fwww.ebay.fr%2Fitm%2FPersonalised-Disney-Ticket-Style-Disneyland-Paris-Invites-inc-Envelopes-A7-%2F192231312658&tbnid=iUfh9ID8dwWeSM&vet=12ahUKEwjNgu-cx4zwAhWK34UKHVffBHQQMygJegUIARDPAQ..i&docid=q-FE8gbMAvHqLM&w=300&h=200&q=ticket%20disneyland%20paris&hl=fr&ved=2ahUKEwjNgu-cx4zwAhWK34UKHVffBHQQMygJegUIARDPAQ
 class DatabaseProvider {
   /// The connection to the database
   static Database _database;
@@ -84,8 +81,21 @@ class DatabaseProvider {
     return idSignQuestion;
   }
 
+  /// Retrieves the meanings stored in the database
+  Future<Set<String>> getMeanings() async {
+    final Database db = await database;
+    List<Map<String, Object>> res = await db.query(
+      "Meaning",
+      columns: ["meanings"],
+    );
+    return res
+        .map((e) => List<String>.from(jsonDecode(e["meanings"])))
+        .expand((element) => element)
+        .toSet();
+  }
+
   /// Retrieves all the SignQuestion stored in the databse
-  Future<List<SignQuestionModel>> getSignQuestion() async {
+  Future<List<SignQuestionModel>> getSignQuestions() async {
     final Database db = await database;
     List<Map<String, Object>> resSignQuestions = await db.query("SignQuestion");
     List<SignQuestionModel> signQuestions = [];
