@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:diving_quizz/models/question.dart';
 
 // A meaning for a SignQuestionModel object
@@ -14,9 +16,16 @@ class Meaning {
       : meanings = Set.from(json["text"]),
         reactions = json["reactions"] == null
             ? []
-            : (json["reactions"] as List)
-                .map((reaction) => ReactionQuestionModel.fromJson(reaction))
-                .toList();
+            : (json["reactions"] as List).map((reaction) {
+                reaction["trickReactions"] = json["trickReactions"];
+                return ReactionQuestionModel.fromJson(reaction);
+              }).toList();
+
+  /// Converts a Meaning to a json format with the database id of the related SignQuestion
+  Map<String, dynamic> toJson(int idSignQuestion) => {
+        "idSignQuestion": idSignQuestion,
+        "meanings": jsonEncode(this.meanings.toList()),
+      };
 
   @override
   String toString() {

@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:diving_quizz/models/meaning.dart';
 
 abstract class QuestionModel {
   static const String _IMAGE_FOLDER = "assets/images/signs/";
+
+  /// The id of the database object
+  final int id;
 
   /// The explained signification of the expected answer
   final String signification;
@@ -12,10 +17,17 @@ abstract class QuestionModel {
   /// The answer the user has selected
   String userAnswer;
 
-  QuestionModel(this.signification);
+  QuestionModel(this.id, this.signification);
 
+  /// Creates a QuestionModel from a json object
   QuestionModel.fromJson(Map<String, dynamic> json)
-      : signification = json["signification"];
+      : signification = json["signification"],
+        id = 0;
+
+  /// Creates a QuestionModel from a json object comming from the database
+  QuestionModel.fromDatabase(Map<String, dynamic> json)
+      : signification = json["signification"],
+        id = json["id"];
 
   /// Checks if the answer is correct
   bool isCorrectAnswer(String answer);
@@ -51,10 +63,11 @@ class SignQuestionModel extends QuestionModel {
   String get expectedAnswer => proposedAnswers
       .firstWhere((meaning) => correctMeanings.contains(meaning));
 
-  SignQuestionModel(this.image, String signification, this.meanings,
+  SignQuestionModel(int id, this.image, String signification, this.meanings,
       this.tricks, this.deletedMeanings)
-      : super(signification);
+      : super(id, signification);
 
+  @override
   SignQuestionModel.fromJson(Map<String, dynamic> json)
       : image = QuestionModel._IMAGE_FOLDER + json["image"],
         meanings = (json["meanings"] as List)
@@ -65,6 +78,22 @@ class SignQuestionModel extends QuestionModel {
             : {},
         deletedMeanings = {},
         super.fromJson(json);
+
+  @override
+  SignQuestionModel.fromDatabase(
+      Map<String, dynamic> json, List<Meaning> meanings)
+      : image = json["image"],
+        meanings = meanings,
+        tricks = Set.from(jsonDecode(json["tricks"])),
+        deletedMeanings = {},
+        super.fromDatabase(json);
+
+  /// Converts a SignQuestion to a json format
+  Map<String, dynamic> toJson() => {
+        "image": this.image,
+        "signification": this.signification,
+        "tricks": jsonEncode(this.tricks.toList()),
+      };
 
   @override
   bool isCorrectlyAnswered() => this.correctMeanings.contains(this.userAnswer);
@@ -85,6 +114,7 @@ class SignQuestionModel extends QuestionModel {
   SignQuestionModel duplicate(String meaning) {
     Meaning toDelete = this.getMeaning(meaning);
     SignQuestionModel newQuestion = new SignQuestionModel(
+      this.id,
       this.image,
       this.signification,
       List.from(this.meanings.where((element) => element != toDelete)),
@@ -97,7 +127,8 @@ class SignQuestionModel extends QuestionModel {
   @override
   String toString() {
     String str = "${this.image} -> ${this.userAnswer} \n";
-    str += meanings.join("\n");
+    str += "Tricks : [${this.tricks.join(",")}]\n";
+    str += this.meanings.join("\n");
     str += "Proposed answers : {${this.proposedAnswers.join(",")}}";
     return str;
   }
@@ -114,9 +145,11 @@ class ReactionQuestionModel extends QuestionModel {
   @override
   String get expectedAnswer => correctReaction;
 
-  ReactionQuestionModel(String signification, this.correctReaction, this.tricks)
-      : super(signification);
+  ReactionQuestionModel(
+      int id, String signification, this.correctReaction, this.tricks)
+      : super(id, signification);
 
+  @override
   ReactionQuestionModel.fromJson(Map<String, dynamic> json)
       : correctReaction = QuestionModel._IMAGE_FOLDER + json["image"],
         tricks = json["trickReactions"] != null
@@ -126,11 +159,26 @@ class ReactionQuestionModel extends QuestionModel {
         super.fromJson(json);
 
   @override
+  ReactionQuestionModel.fromDatabase(Map<String, dynamic> json)
+      : correctReaction = json["image"],
+        tricks = Set.from(jsonDecode(json["tricks"])),
+        super.fromDatabase(json);
+
+  /// Converts a ReactionQuestion to a json format with the database id of the related Meaning
+  Map<String, dynamic> toJson(int idMeaning) => {
+        "idMeaning": idMeaning,
+        "signification": this.signification,
+        "image": this.correctReaction,
+        "tricks": jsonEncode(this.tricks.toList()),
+      };
+
+  @override
   bool isCorrectlyAnswered() => this.userAnswer == this.correctReaction;
 
   @override
   bool isCorrectAnswer(String answer) => answer == this.correctReaction;
 
   @override
-  String toString() => "${this.correctReaction} (${this.signification})";
+  String toString() =>
+      "${this.correctReaction} (${this.signification}) [${this.tricks.join(",")}]";
 }

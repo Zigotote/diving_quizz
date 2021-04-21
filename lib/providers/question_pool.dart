@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:diving_quizz/models/question.dart';
+import 'package:diving_quizz/providers/db_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -27,19 +28,15 @@ class QuestionPool with ChangeNotifier {
   /// Initializes the lists used to build the questions
   /// Initializes the current question's list with one question
   void initQuizz() async {
-    final String response =
-        await rootBundle.loadString("assets/data/questions.json");
-    final data = await json.decode(response);
-    _availableQuestions = (data["questions"] as List)
-        .map((element) => new SignQuestionModel.fromJson(element))
-        .toList();
+    _availableQuestions = await DatabaseProvider.instance.getSignQuestion();
     _askedQuestions = [];
     if (_possibleMeanings.isEmpty && _possibleReactions.isEmpty) {
       _availableQuestions.forEach((question) {
         _possibleMeanings.addAll(question.correctMeanings);
         _possibleMeanings.addAll(question.tricks);
       });
-      final manifestJson = await rootBundle.loadString("AssetManifest.json");
+      final String manifestJson =
+          await rootBundle.loadString("AssetManifest.json");
       _possibleReactions = json
           .decode(manifestJson)
           .keys
