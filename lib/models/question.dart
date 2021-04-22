@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:diving_quizz/models/meaning.dart';
+import 'package:diving_quizz/providers/db_provider.dart';
 
 abstract class QuestionModel {
   static const String _IMAGE_FOLDER = "assets/images/signs/";
@@ -11,13 +12,23 @@ abstract class QuestionModel {
   /// The explained signification of the expected answer
   final String signification;
 
+  /// The number of times the question has been asked
+  int nbTry = 0;
+
+  /// The number of times the question has been answered badly
+  int nbFail = 0;
+
   /// The answers the bot proposes
   Set<String> proposedAnswers = {};
 
   /// The answer the user has selected
   String userAnswer;
 
-  QuestionModel(this.id, this.signification);
+  /// Returns the failure rate of the question
+  int get failureRate =>
+      this.nbTry == 0 ? 100 : (this.nbFail / this.nbTry * 100).round();
+
+  QuestionModel(this.id, this.signification, this.nbTry, this.nbFail);
 
   /// Creates a QuestionModel from a json object
   QuestionModel.fromJson(Map<String, dynamic> json)
@@ -27,7 +38,25 @@ abstract class QuestionModel {
   /// Creates a QuestionModel from a json object comming from the database
   QuestionModel.fromDatabase(Map<String, dynamic> json)
       : signification = json["signification"],
-        id = json["id"];
+        id = json["id"],
+        nbTry = json["nbTry"],
+        nbFail = json["nbFail"];
+
+  /// Converts a QuestionModel to a json object
+  Map<String, dynamic> toJson([int idMeaning]) => {
+        "signification": this.signification,
+        "nbTry": this.nbTry,
+        "nbFail": this.nbFail
+      };
+
+  /// Sets the user answer and updates the failure rate
+  void setUserAnswer(String userAnswer) {
+    this.userAnswer = userAnswer;
+    this.nbTry++;
+    if (!isCorrectlyAnswered()) {
+      this.nbFail++;
+    }
+  }
 
   /// Checks if the answer is correct
   bool isCorrectAnswer(String answer);
@@ -64,8 +93,8 @@ class SignQuestionModel extends QuestionModel {
       .firstWhere((meaning) => correctMeanings.contains(meaning));
 
   SignQuestionModel(int id, this.image, String signification, this.meanings,
-      this.tricks, this.deletedMeanings)
-      : super(id, signification);
+      this.tricks, this.deletedMeanings, int nbTry, int nbFail)
+      : super(id, signification, nbTry, nbFail);
 
   @override
   SignQuestionModel.fromJson(Map<String, dynamic> json)
@@ -89,11 +118,19 @@ class SignQuestionModel extends QuestionModel {
         super.fromDatabase(json);
 
   /// Converts a SignQuestion to a json format
-  Map<String, dynamic> toJson() => {
+  @override
+  Map<String, dynamic> toJson([int idMeaning]) => {
         "image": this.image,
-        "signification": this.signification,
         "tricks": jsonEncode(this.tricks.toList()),
+        ...super.toJson(),
       };
+
+  @override
+  void setUserAnswer(String userAnswer) {
+    super.setUserAnswer(userAnswer);
+    DatabaseProvider.instance
+        .updateQuestion(this, DatabaseProvider.TABLE_SIGNQUESTION);
+  }
 
   @override
   bool isCorrectlyAnswered() => this.correctMeanings.contains(this.userAnswer);
@@ -120,6 +157,8 @@ class SignQuestionModel extends QuestionModel {
       List.from(this.meanings.where((element) => element != toDelete)),
       this.tricks,
       {...toDelete.meanings, ...this.deletedMeanings},
+      this.nbTry,
+      this.nbFail,
     );
     return newQuestion;
   }
@@ -145,9 +184,9 @@ class ReactionQuestionModel extends QuestionModel {
   @override
   String get expectedAnswer => correctReaction;
 
-  ReactionQuestionModel(
-      int id, String signification, this.correctReaction, this.tricks)
-      : super(id, signification);
+  ReactionQuestionModel(int id, String signification, this.correctReaction,
+      this.tricks, int nbTry, int nbFail)
+      : super(id, signification, nbTry, nbFail);
 
   @override
   ReactionQuestionModel.fromJson(Map<String, dynamic> json)
@@ -165,12 +204,21 @@ class ReactionQuestionModel extends QuestionModel {
         super.fromDatabase(json);
 
   /// Converts a ReactionQuestion to a json format with the database id of the related Meaning
-  Map<String, dynamic> toJson(int idMeaning) => {
+  @override
+  Map<String, dynamic> toJson([int idMeaning]) => {
         "idMeaning": idMeaning,
         "signification": this.signification,
         "image": this.correctReaction,
         "tricks": jsonEncode(this.tricks.toList()),
+        ...super.toJson(),
       };
+
+  @override
+  void setUserAnswer(String userAnswer) {
+    super.setUserAnswer(userAnswer);
+    DatabaseProvider.instance
+        .updateQuestion(this, DatabaseProvider.TABLE_REACTIONQUESTION);
+  }
 
   @override
   bool isCorrectlyAnswered() => this.userAnswer == this.correctReaction;

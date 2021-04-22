@@ -58,11 +58,10 @@ class QuestionPool with ChangeNotifier {
   /// Creates a list of proposed answers for this question
   void addRandomSignQuestion() {
     if (_availableQuestions.isNotEmpty) {
-      Random randomNumber = new Random();
-      SignQuestionModel question = _availableQuestions
-          .removeAt(randomNumber.nextInt(_availableQuestions.length));
+      SignQuestionModel question = selectRandomQuestion(_availableQuestions);
       _availableQuestions.remove(question);
       // Randomly choose one of the correct answers
+      Random randomNumber = new Random();
       String correctMeaning = question.correctMeanings
           .elementAt(randomNumber.nextInt(question.correctMeanings.length));
       List<String> baseAnswers = [correctMeaning, ...question.tricks];
@@ -99,9 +98,7 @@ class QuestionPool with ChangeNotifier {
     if (reactions.isEmpty) {
       addRandomSignQuestion();
     } else {
-      Random randomNumber = new Random();
-      ReactionQuestionModel question =
-          reactions.removeAt(randomNumber.nextInt(reactions.length));
+      ReactionQuestionModel question = selectRandomQuestion(reactions);
       // Randomly choose one of the correct answers
       String correctMeaning = question.correctReaction;
       List<String> baseAnswers = [correctMeaning, ...question.tricks];
@@ -135,10 +132,29 @@ class QuestionPool with ChangeNotifier {
     return possibleAnswers.toSet();
   }
 
+  /// Randomly selects a question in the list, weight by the failure rates
+  QuestionModel selectRandomQuestion(List<QuestionModel> questions) {
+    int total = questions.fold(
+        0, (previousValue, element) => previousValue + element.failureRate);
+    Random randomNumber = new Random();
+    int index = -1;
+    if (total == 0) {
+      index = randomNumber.nextInt(questions.length);
+    } else {
+      int selectedIndex = randomNumber.nextInt(total);
+      int tmpSum = 0;
+      while (tmpSum < selectedIndex) {
+        index++;
+        tmpSum += questions.elementAt(index).failureRate;
+      }
+    }
+    return questions.elementAt(max(0, index));
+  }
+
   /// Answers a question and returns true if it is the correct one
   bool answerQuestion(QuestionModel question, String answer) {
     final int questionIndex = _askedQuestions.indexOf(question);
-    _askedQuestions[questionIndex].userAnswer = answer;
+    _askedQuestions[questionIndex].setUserAnswer(answer);
     notifyListeners();
     return question.isCorrectlyAnswered();
   }
