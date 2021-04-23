@@ -51,6 +51,13 @@ class DatabaseProvider {
     );
   }
 
+  /// Closes the connection, used in order not to lose data if incorrectly exited
+  Future<void> close() async {
+    final Database db = await database;
+    db.close();
+    _database = null;
+  }
+
   /// Creates the database tables
   Future _createDbScheme(Database db) async {
     await db.execute("DROP TABLE IF EXISTS $TABLE_SIGNQUESTION");
