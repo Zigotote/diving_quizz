@@ -141,26 +141,25 @@ class SignQuestionModel extends QuestionModel {
       this.deletedMeanings.contains(answer);
 
   /// Returns the Meaning from the meanings list representing the meaning in parameter
-  Meaning getMeaning(String meaning) {
+  Meaning getMeaningFromText(String meaning) {
     return this
         .meanings
         .firstWhere((element) => element.meanings.contains(meaning));
   }
 
-  /// Creates a new SignQuestionModel without the meaning in parameter
-  SignQuestionModel duplicate(String meaning) {
-    Meaning toDelete = this.getMeaning(meaning);
-    SignQuestionModel newQuestion = new SignQuestionModel(
-      this.id,
-      this.image,
-      this.signification,
-      List.from(this.meanings.where((element) => element != toDelete)),
-      this.tricks,
-      {...toDelete.meanings, ...this.deletedMeanings},
-      this.nbTry,
-      this.nbFail,
-    );
-    return newQuestion;
+  /// Returns the Meaning from the meanings list with the searched id
+  Meaning getMeaning(int id) {
+    return this.meanings.firstWhere((element) => element.id == id);
+  }
+
+  /// Removes the meanings whom ids are not in the meaningIds list
+  void removeMeanings(List<int> idsToKeep) {
+    this.deletedMeanings.addAll(this
+        .meanings
+        .where((element) => !idsToKeep.contains(element.id))
+        .map((e) => e.meanings)
+        .expand((element) => element));
+    this.meanings.removeWhere((element) => !idsToKeep.contains(element.id));
   }
 
   @override

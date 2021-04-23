@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:diving_quizz/models/meaning.dart';
 import 'package:diving_quizz/models/question.dart';
+import 'package:diving_quizz/providers/question_pool.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -40,7 +41,7 @@ class DatabaseProvider {
     final String path = join(await getDatabasesPath(), "questions.db");
     return await openDatabase(
       path,
-      version: 1,
+      version: 10,
       onCreate: (Database db, int version) async {
         await _createDbScheme(db);
       },
@@ -114,40 +115,60 @@ class DatabaseProvider {
         .toSet();
   }
 
-  /// Retrieves all the SignQuestion stored in the databse
-  Future<List<SignQuestionModel>> getSignQuestions() async {
+  /// Retrieves all the ids of the SignQuestion stored in the databse linked to their failure rate
+  Future<Map<int, int>> getSignQuestionIds() async {
     final Database db = await database;
-    List<Map<String, Object>> resSignQuestions =
-        await db.query(TABLE_SIGNQUESTION);
-    List<SignQuestionModel> signQuestions = [];
-    for (Map<String, Object> signQuestion in resSignQuestions) {
-      List<Map<String, Object>> resMeanings = await db.query(
-        TABLE_MEANING,
-        where: "idSignQuestion=?",
-        whereArgs: [signQuestion["id"]],
+    List<Map<String, Object>> res =
+        await db.query(TABLE_SIGNQUESTION, columns: ["id", "nbTry", "nbFail"]);
+    return Map.fromIterables(
+      res.map<int>((e) => e["id"]),
+      res.map<int>((e) {
+        if (e["nbTry"] == 0) {
+          return 100;
+        }
+        return ((e["nbFail"] as int) / (e["nbTry"] as int) * 100).round();
+      }),
+    );
+  }
+
+  /// Retrieves all the ids of the Meaning stored in the databse
+  Future<List<int>> getMeaningIds() async {
+    final Database db = await database;
+    List<Map<String, Object>> res =
+        await db.query(TABLE_MEANING, columns: ["id"]);
+    return res.map<int>((e) => e["id"]).toList();
+  }
+
+  /// Retrieves the SignQuestion with the corresponding id
+  Future<SignQuestionModel> getSignQuestion(int id) async {
+    final Database db = await database;
+    List<Map<String, Object>> resSignQuestion =
+        await db.query(TABLE_SIGNQUESTION, where: "id=?", whereArgs: [id]);
+    List<Map<String, Object>> resMeanings = await db.query(
+      TABLE_MEANING,
+      where: "idSignQuestion=?",
+      whereArgs: [id],
+    );
+    List<Meaning> meanings = [];
+    for (Map<String, Object> meaning in resMeanings) {
+      final List<Map<String, Object>> resReactions = await db.query(
+        TABLE_REACTIONQUESTION,
+        where: "idMeaning=?",
+        whereArgs: [meaning["id"]],
       );
-      List<Meaning> meanings = [];
-      for (Map<String, Object> meaning in resMeanings) {
-        final List<Map<String, Object>> resReactions = await db.query(
-          TABLE_REACTIONQUESTION,
-          where: "idMeaning=?",
-          whereArgs: [meaning["id"]],
-        );
-        List<ReactionQuestionModel> reactions = resReactions
-            .map((reaction) => ReactionQuestionModel.fromDatabase(reaction))
-            .toList();
-        meanings
-            .add(Meaning(Set.from(jsonDecode(meaning["meanings"])), reactions));
-      }
-      signQuestions.add(SignQuestionModel.fromDatabase(signQuestion, meanings));
+      List<ReactionQuestionModel> reactions = resReactions
+          .map((reaction) => ReactionQuestionModel.fromDatabase(reaction))
+          .toList();
+      meanings.add(Meaning(
+          meaning["id"], Set.from(jsonDecode(meaning["meanings"])), reactions));
     }
-    return signQuestions;
+    return SignQuestionModel.fromDatabase(resSignQuestion.first, meanings);
   }
 
   /// Updates the question saved in the table
   Future<void> updateQuestion(QuestionModel question, String table) async {
     final Database db = await database;
-    await db.update(table, question.toJson(),
+    await db.update(table, question.toJson(QuestionPool.lastMeaningId),
         where: "id=?", whereArgs: [question.id]);
   }
 }

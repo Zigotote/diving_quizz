@@ -12,8 +12,14 @@ class QuestionPool with ChangeNotifier {
   /// Questions asked by the bot and answered by the user
   List<QuestionModel> _askedQuestions = [];
 
-  /// Questions the bot hasn't already asked
-  List<SignQuestionModel> _availableQuestions = [];
+  /// The ids of the questions the bot hasn't already asked, linked to their failure rate
+  Map<int, int> _availableQuestionIds = {};
+
+  /// The ids of the meanings the bot hasn't already proposed (for the reaction questions)
+  List<int> _availableMeaningIds = [];
+
+  /// The id of the last asked meaning
+  static int lastMeaningId;
 
   /// Answers the bot can propose
   Set<String> _possibleMeanings = {};
@@ -49,21 +55,29 @@ class QuestionPool with ChangeNotifier {
   /// Initializes the lists used to build the questions
   /// Initializes the current question's list with one question
   void initQuizz() async {
-    _availableQuestions = await DatabaseProvider.instance.getSignQuestions();
     _askedQuestions = [];
+    _availableQuestionIds =
+        await DatabaseProvider.instance.getSignQuestionIds();
+    _availableMeaningIds = await DatabaseProvider.instance.getMeaningIds();
     addRandomSignQuestion();
   }
 
   /// Chooses a random sign question and adds it to the _question list
   /// Creates a list of proposed answers for this question
-  void addRandomSignQuestion() {
-    if (_availableQuestions.isNotEmpty) {
-      SignQuestionModel question = selectRandomQuestion(_availableQuestions);
-      _availableQuestions.remove(question);
+  void addRandomSignQuestion() async {
+    if (_availableQuestionIds.isNotEmpty) {
+      int questionId = _selectRandomQuestion(_availableQuestionIds.entries);
+      _availableQuestionIds.remove(questionId);
+      SignQuestionModel question =
+          await DatabaseProvider.instance.getSignQuestion(questionId);
+      question.removeMeanings(_availableMeaningIds);
       // Randomly choose one of the correct answers
       Random randomNumber = new Random();
       String correctMeaning = question.correctMeanings
           .elementAt(randomNumber.nextInt(question.correctMeanings.length));
+      lastMeaningId = question.getMeaningFromText(correctMeaning).id;
+      _availableMeaningIds.remove(lastMeaningId);
+
       List<String> baseAnswers = [correctMeaning, ...question.tricks];
       Set<String> possibleAnswers = _createAnswersList(
           question,
@@ -84,21 +98,22 @@ class QuestionPool with ChangeNotifier {
   /// Otherwise it choose one of the expected reactions and creates a question with it
   void addRandomReactionQuestion() {
     SignQuestionModel lastQuestion = _askedQuestions.last;
-    String correctAnswer = lastQuestion.proposedAnswers
-        .firstWhere((answer) => lastQuestion.isCorrectAnswer(answer));
     List<ReactionQuestionModel> reactions =
-        lastQuestion.getMeaning(correctAnswer).reactions;
+        lastQuestion.getMeaning(lastMeaningId).reactions;
     Set<String> reactionAnswers =
         reactions.map((reaction) => reaction.correctReaction).toSet();
 
-    /// Puts the signQuestion in the _availableQuestions list without the previous selected meaning as an answer
+    /// Puts the signQuestion in the _availableQuestions list with the updated failureRate
     if (lastQuestion.meanings.length > 1) {
-      _availableQuestions.add(lastQuestion.duplicate(correctAnswer));
+      _availableQuestionIds[lastQuestion.id] = lastQuestion.failureRate;
     }
     if (reactions.isEmpty) {
       addRandomSignQuestion();
     } else {
-      ReactionQuestionModel question = selectRandomQuestion(reactions);
+      int questionId = _selectRandomQuestion(
+          reactions.map((e) => MapEntry(e.id, e.failureRate)));
+      ReactionQuestionModel question =
+          reactions.firstWhere((reaction) => reaction.id == questionId);
       // Randomly choose one of the correct answers
       String correctMeaning = question.correctReaction;
       List<String> baseAnswers = [correctMeaning, ...question.tricks];
@@ -112,7 +127,16 @@ class QuestionPool with ChangeNotifier {
               .toList());
       question.proposedAnswers = possibleAnswers;
       _askedQuestions.add(question);
+      notifyListeners();
     }
+  }
+
+  /// Answers a question and returns true if it is the correct one
+  bool answerQuestion(QuestionModel question, String answer) {
+    final int questionIndex = _askedQuestions.indexOf(question);
+    _askedQuestions[questionIndex].setUserAnswer(answer);
+    notifyListeners();
+    return question.isCorrectlyAnswered();
   }
 
   /// Creates the list of the proposed answers for a question
@@ -133,9 +157,9 @@ class QuestionPool with ChangeNotifier {
   }
 
   /// Randomly selects a question in the list, weight by the failure rates
-  QuestionModel selectRandomQuestion(List<QuestionModel> questions) {
+  int _selectRandomQuestion(Iterable<MapEntry<int, int>> questions) {
     int total = questions.fold(
-        0, (previousValue, element) => previousValue + element.failureRate);
+        0, (previousValue, element) => previousValue + element.value);
     Random randomNumber = new Random();
     int index = -1;
     if (total == 0) {
@@ -145,17 +169,9 @@ class QuestionPool with ChangeNotifier {
       int tmpSum = 0;
       while (tmpSum < selectedIndex) {
         index++;
-        tmpSum += questions.elementAt(index).failureRate;
+        tmpSum += questions.elementAt(index).value;
       }
     }
-    return questions.elementAt(max(0, index));
-  }
-
-  /// Answers a question and returns true if it is the correct one
-  bool answerQuestion(QuestionModel question, String answer) {
-    final int questionIndex = _askedQuestions.indexOf(question);
-    _askedQuestions[questionIndex].setUserAnswer(answer);
-    notifyListeners();
-    return question.isCorrectlyAnswered();
+    return questions.elementAt(max(0, index)).key;
   }
 }
