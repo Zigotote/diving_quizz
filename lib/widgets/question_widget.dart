@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:diving_quizz/models/question.dart';
 import 'package:diving_quizz/providers/question_pool.dart';
 import 'package:diving_quizz/widgets/bot_dialog.dart';
@@ -83,6 +85,22 @@ abstract class QuestionWidgetState<T extends QuestionModel>
     }
     _initUserAnswerWidget();
     widget.onQuestionFinished(score);
+  }
+
+  /// Selects randomly a bot response when the user has selected the correct answer
+  String selectBotResponse() {
+    List<String> responses = [
+      "Oui !",
+      "Tout à fait.",
+      "Bravo !",
+      "Félicitations !",
+      "C'est ça.",
+      "Wahou, quel génie !",
+      "Impressionnant !"
+    ];
+    Random randomNumber = new Random();
+    int index = randomNumber.nextInt(responses.length);
+    return responses.elementAt(index);
   }
 
   @override

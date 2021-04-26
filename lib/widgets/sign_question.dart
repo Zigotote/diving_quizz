@@ -45,14 +45,14 @@ class _SignQuestionState extends QuestionWidgetState<SignQuestionModel> {
 
   @override
   List<Widget> buildBotResponses() {
-    List<Widget> botResponses = [Text("Oui !")];
+    List<Widget> botResponses = [Text(this.selectBotResponse())];
     if (!widget.question.isCorrectlyAnswered()) {
       botResponses = [
         Text(
           "Non, il s'agit de ${widget.question.signification}.",
         ),
         Text(
-          "La réponse attendue était donc : ${widget.question.expectedAnswer}",
+          "La réponse attendue était donc : ${widget.question.expectedAnswer}.",
         )
       ];
     }

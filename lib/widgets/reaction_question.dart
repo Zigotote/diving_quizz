@@ -37,7 +37,7 @@ class _ReactionQuestionState
 
   @override
   List<Widget> buildBotResponses() {
-    List<Widget> botResponses = [Text("Oui !")];
+    List<Widget> botResponses = [Text(this.selectBotResponse())];
     if (!widget.question.isCorrectlyAnswered()) {
       botResponses = [
         Text(
