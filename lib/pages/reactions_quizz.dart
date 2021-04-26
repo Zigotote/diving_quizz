@@ -28,17 +28,16 @@ class _ReactionsQuizzState extends BaseQuizzState {
   }
 
   @override
-  Widget buildQuestion(QuestionPool questionPool, int index) {
-    QuestionModel question = questionPool.questions[index];
+  Widget buildQuestion(QuestionModel question) {
     if (question is SignQuestionModel) {
       return SignQuestion(
-        question: questionPool.questions[index],
+        question: question,
         onQuestionFinished: _addReactionQuestion,
       );
     }
     if (question is ReactionQuestionModel) {
       return ReactionQuestion(
-        question: questionPool.questions[index],
+        question: question,
         onQuestionFinished: addSignQuestion,
       );
     }

@@ -1,4 +1,6 @@
+import 'package:diving_quizz/models/question.dart';
 import 'package:diving_quizz/providers/question_pool.dart';
+import 'package:diving_quizz/widgets/bot_dialog.dart';
 import 'package:diving_quizz/widgets/my_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,7 +9,7 @@ abstract class BaseQuizz extends StatefulWidget {}
 
 abstract class BaseQuizzState extends State<BaseQuizz> {
   /// The scroll controller for the page, to scroll automatically when height is overseized
-  final ScrollController scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   bool needScroll = false;
 
   @override
@@ -22,8 +24,8 @@ abstract class BaseQuizzState extends State<BaseQuizz> {
   /// Returns the picture of the bot
   String get botImage;
 
-  /// Builds the quizz widget for the question at the given index of the questionPool
-  Widget buildQuestion(QuestionPool questionPool, int index);
+  /// Builds the quizz widget for the given question
+  Widget buildQuestion(QuestionModel question);
 
   /// Adds a SignQuestion to the queue when current question has been answered
   /// The added question's type is from the type of U
@@ -37,8 +39,8 @@ abstract class BaseQuizzState extends State<BaseQuizz> {
   /// Scrolls to the bottom of the screen after everything has been rendered
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      scrollController.animateTo(
-        scrollController.position.maxScrollExtent,
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
         duration: Duration(milliseconds: 200),
         curve: Curves.easeInOut,
       );
@@ -66,24 +68,39 @@ abstract class BaseQuizzState extends State<BaseQuizz> {
           ],
         ),
       ),
-      body: Column(
-        children: [
-          Consumer<QuestionPool>(builder: (context, questionPool, child) {
-            return Expanded(
-              child: ListView.builder(
-                controller: scrollController,
-                itemCount: questionPool.questions.length,
-                itemBuilder: (context, index) =>
-                    buildQuestion(questionPool, index),
-              ),
-            );
-          }),
-          ElevatedButton(
-            onPressed:
-                Provider.of<QuestionPool>(context, listen: false).initQuizz,
-            child: Text("Réinitialiser"),
-          )
+      body: CustomScrollView(
+        controller: _scrollController,
+        slivers: [
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                BotDialog(child: Text("Bonjour")),
+                BotDialog(child: Text("Je suis " + botName)),
+              ],
+            ),
+          ),
+          Consumer<QuestionPool>(
+            builder: (context, questionPool, child) {
+              final questions = questionPool.questions;
+              return SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    if (index < questions.length) {
+                      return buildQuestion(
+                        questions.elementAt(index),
+                      );
+                    }
+                    return null;
+                  },
+                ),
+              );
+            },
+          ),
         ],
+      ),
+      bottomNavigationBar: ElevatedButton(
+        onPressed: Provider.of<QuestionPool>(context, listen: false).initQuizz,
+        child: Text("Réinitialiser"),
       ),
     );
   }
