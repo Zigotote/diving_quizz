@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:diving_quizz/models/question.dart';
+import 'package:diving_quizz/providers/db_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -11,8 +12,14 @@ class QuestionPool with ChangeNotifier {
   /// Questions asked by the bot and answered by the user
   List<QuestionModel> _askedQuestions = [];
 
-  /// Questions the bot hasn't already asked
-  List<SignQuestionModel> _availableQuestions = [];
+  /// The ids of the questions the bot hasn't already asked, linked to their failure rate
+  Map<int, int> _availableQuestionIds = {};
+
+  /// The ids of the meanings the bot hasn't already proposed (for the reaction questions)
+  List<int> _availableMeaningIds = [];
+
+  /// The id of the last asked meaning
+  static int lastMeaningId;
 
   /// Answers the bot can propose
   Set<String> _possibleMeanings = {};
@@ -23,44 +30,55 @@ class QuestionPool with ChangeNotifier {
   UnmodifiableListView<QuestionModel> get questions =>
       UnmodifiableListView(_askedQuestions);
 
+  QuestionPool() {
+    _fillPossibleMeanings();
+    _fillPossibleReactions();
+  }
+
+  /// Fills the _possibleMeanings list with the meanings of all the questions
+  Future _fillPossibleMeanings() async {
+    _possibleMeanings = await DatabaseProvider.instance.getMeanings();
+  }
+
+  /// Fills the _possibleReactions list with the signs saved in the assets folder
+  Future _fillPossibleReactions() async {
+    final String manifestJson =
+        await rootBundle.loadString("AssetManifest.json");
+    _possibleReactions = json
+        .decode(manifestJson)
+        .keys
+        .where((String key) => key.startsWith("assets/images/signs"))
+        .toSet();
+  }
+
   /// Reads the json file which contains all the available questions
   /// Initializes the lists used to build the questions
   /// Initializes the current question's list with one question
   void initQuizz() async {
-    final String response =
-        await rootBundle.loadString("assets/data/questions.json");
-    final data = await json.decode(response);
-    _availableQuestions = (data["questions"] as List)
-        .map((element) => new SignQuestionModel.fromJson(element))
-        .toList();
     _askedQuestions = [];
-    if (_possibleMeanings.isEmpty && _possibleReactions.isEmpty) {
-      _availableQuestions.forEach((question) {
-        _possibleMeanings.addAll(question.correctMeanings);
-        _possibleMeanings.addAll(question.trickMeanings);
-      });
-      final manifestJson = await rootBundle.loadString("AssetManifest.json");
-      _possibleReactions = json
-          .decode(manifestJson)
-          .keys
-          .where((String key) => key.startsWith("assets/images/signs"))
-          .toSet();
-    }
+    _availableQuestionIds =
+        await DatabaseProvider.instance.getSignQuestionIds();
+    _availableMeaningIds = await DatabaseProvider.instance.getMeaningIds();
     addRandomSignQuestion();
   }
 
   /// Chooses a random sign question and adds it to the _question list
   /// Creates a list of proposed answers for this question
-  void addRandomSignQuestion() {
-    if (_availableQuestions.isNotEmpty) {
-      Random randomNumber = new Random();
-      SignQuestionModel question = _availableQuestions
-          .removeAt(randomNumber.nextInt(_availableQuestions.length));
-      _availableQuestions.remove(question);
+  void addRandomSignQuestion() async {
+    if (_availableQuestionIds.isNotEmpty) {
+      int questionId = _selectRandomQuestion(_availableQuestionIds.entries);
+      _availableQuestionIds.remove(questionId);
+      SignQuestionModel question =
+          await DatabaseProvider.instance.getSignQuestion(questionId);
+      question.removeMeanings(_availableMeaningIds);
       // Randomly choose one of the correct answers
+      Random randomNumber = new Random();
       String correctMeaning = question.correctMeanings
           .elementAt(randomNumber.nextInt(question.correctMeanings.length));
-      List<String> baseAnswers = [correctMeaning, ...question.trickMeanings];
+      lastMeaningId = question.getMeaningFromText(correctMeaning).id;
+      _availableMeaningIds.remove(lastMeaningId);
+
+      List<String> baseAnswers = [correctMeaning, ...question.tricks];
       Set<String> possibleAnswers = _createAnswersList(
           question,
           baseAnswers,
@@ -80,26 +98,25 @@ class QuestionPool with ChangeNotifier {
   /// Otherwise it choose one of the expected reactions and creates a question with it
   void addRandomReactionQuestion() {
     SignQuestionModel lastQuestion = _askedQuestions.last;
-    String correctAnswer = lastQuestion.proposedAnswers
-        .firstWhere((answer) => lastQuestion.isCorrectAnswer(answer));
     List<ReactionQuestionModel> reactions =
-        lastQuestion.associatedReactions[correctAnswer];
+        lastQuestion.getMeaning(lastMeaningId).reactions;
     Set<String> reactionAnswers =
         reactions.map((reaction) => reaction.correctReaction).toSet();
 
-    /// Puts the signQuestion in the _availableQuestions list without the previous selected meaning as an answer
-    if (lastQuestion.associatedReactions.length > 1) {
-      _availableQuestions.add(lastQuestion.duplicate(correctAnswer));
+    /// Puts the signQuestion in the _availableQuestions list with the updated failureRate
+    if (lastQuestion.meanings.length > 1) {
+      _availableQuestionIds[lastQuestion.id] = lastQuestion.failureRate;
     }
     if (reactions.isEmpty) {
       addRandomSignQuestion();
     } else {
-      Random randomNumber = new Random();
+      int questionId = _selectRandomQuestion(
+          reactions.map((e) => MapEntry(e.id, e.failureRate)));
       ReactionQuestionModel question =
-          reactions.removeAt(randomNumber.nextInt(reactions.length));
+          reactions.firstWhere((reaction) => reaction.id == questionId);
       // Randomly choose one of the correct answers
       String correctMeaning = question.correctReaction;
-      List<String> baseAnswers = [correctMeaning, ...question.trickReactions];
+      List<String> baseAnswers = [correctMeaning, ...question.tricks];
       Set<String> possibleAnswers = _createAnswersList(
           question,
           baseAnswers,
@@ -110,7 +127,16 @@ class QuestionPool with ChangeNotifier {
               .toList());
       question.proposedAnswers = possibleAnswers;
       _askedQuestions.add(question);
+      notifyListeners();
     }
+  }
+
+  /// Answers a question and returns true if it is the correct one
+  bool answerQuestion(QuestionModel question, String answer) {
+    final int questionIndex = _askedQuestions.indexOf(question);
+    _askedQuestions[questionIndex].setUserAnswer(answer);
+    notifyListeners();
+    return question.isCorrectlyAnswered();
   }
 
   /// Creates the list of the proposed answers for a question
@@ -130,11 +156,22 @@ class QuestionPool with ChangeNotifier {
     return possibleAnswers.toSet();
   }
 
-  /// Answers a question and returns true if it is the correct one
-  bool answerQuestion(QuestionModel question, String answer) {
-    final int questionIndex = _askedQuestions.indexOf(question);
-    _askedQuestions[questionIndex].userAnswer = answer;
-    notifyListeners();
-    return question.isCorrectlyAnswered();
+  /// Randomly selects a question in the list, weight by the failure rates
+  int _selectRandomQuestion(Iterable<MapEntry<int, int>> questions) {
+    int total = questions.fold(
+        0, (previousValue, element) => previousValue + element.value);
+    Random randomNumber = new Random();
+    int index = -1;
+    if (total == 0) {
+      index = randomNumber.nextInt(questions.length);
+    } else {
+      int selectedIndex = randomNumber.nextInt(total);
+      int tmpSum = 0;
+      while (tmpSum < selectedIndex) {
+        index++;
+        tmpSum += questions.elementAt(index).value;
+      }
+    }
+    return questions.elementAt(max(0, index)).key;
   }
 }

@@ -10,8 +10,8 @@ abstract class BaseQuizzState extends State<BaseQuizz> {
   bool needScroll = false;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     Provider.of<QuestionPool>(context, listen: false).initQuizz();
   }
 
