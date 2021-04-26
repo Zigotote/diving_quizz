@@ -16,7 +16,7 @@ class _ReactionsQuizzState extends BaseQuizzState {
   String get botImage => "assets/images/bots/shark.jpg";
 
   @override
-  String get botName => "Professeur Sharky";
+  String get botName => "Sharky";
 
   /// Adds a ReactionQuestion to the queue when current question has been answered
   void _addReactionQuestion(int score) {

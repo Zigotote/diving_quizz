@@ -13,7 +13,7 @@ class _SignsQuizzState extends BaseQuizzState {
   String get botImage => "assets/images/bots/axolotl.png";
 
   @override
-  String get botName => "Professeur Axel";
+  String get botName => "Axel";
 
   @override
   Widget buildQuestion(QuestionModel question) {
