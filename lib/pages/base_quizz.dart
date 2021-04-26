@@ -1,4 +1,5 @@
 import 'package:diving_quizz/providers/question_pool.dart';
+import 'package:diving_quizz/widgets/my_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -56,16 +57,9 @@ abstract class BaseQuizzState extends State<BaseQuizz> {
           children: [
             Padding(
               padding: EdgeInsets.only(right: 8),
-              child: Container(
-                width: 45,
-                height: 45,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: AssetImage(this.botImage),
-                  ),
-                ),
+              child: MyIcon(
+                image: this.botImage,
+                diameter: 45,
               ),
             ),
             Text(this.botName),
