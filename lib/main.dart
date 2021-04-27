@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
       create: (context) => QuestionPool(),
       child: MaterialApp(
         home: Home(),
+        darkTheme: ThemeData.dark(),
       ),
     );
   }

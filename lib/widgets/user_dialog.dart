@@ -15,7 +15,7 @@ class UserDialog extends StatelessWidget {
       style: BubbleStyle(
         nip: BubbleNip.rightCenter,
         elevation: 4,
-        color: MyTheme.userPrimaryColor,
+        color: Theme.of(context).colorScheme.userPrimaryColor,
         margin: BubbleEdges.only(top: 4),
         alignment: Alignment.topRight,
       ),

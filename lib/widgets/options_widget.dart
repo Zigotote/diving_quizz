@@ -28,8 +28,12 @@ abstract class OptionsWidget extends StatelessWidget {
             onPressed: () => this.onAnswerSelected(answer),
             child: this.buildAnswer(answer),
             style: ElevatedButton.styleFrom(
-              onPrimary: MyTheme.userPrimaryColor, //font and icon color
-              primary: MyTheme.userSecondaryColor, //background color
+              onPrimary: Theme.of(context)
+                  .colorScheme
+                  .userPrimaryColor, //font and icon color
+              primary: Theme.of(context)
+                  .colorScheme
+                  .userSecondaryColor, //background color
               elevation: 10,
             ),
           ),

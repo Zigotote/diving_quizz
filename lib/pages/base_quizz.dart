@@ -79,7 +79,9 @@ abstract class BaseQuizzState extends State<BaseQuizz> {
         slivers: [
           SliverList(
             delegate: SliverChildListDelegate(
-              introDialog.map((text) => BotDialog(child: Text(text))).toList(),
+              introDialog
+                  .map((text) => BotDialog(child: BotText(text)))
+                  .toList(),
             ),
           ),
           Consumer<QuestionPool>(
