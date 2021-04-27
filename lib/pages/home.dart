@@ -39,40 +39,44 @@ class Home extends StatelessWidget {
       appBar: AppBar(
         title: Text("Quizz du plongeur"),
       ),
-      body: GridView.count(
-        crossAxisCount: 2,
-        crossAxisSpacing: 2,
-        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-        children: _menu
-            .map(
-              (item) => Container(
-                padding: EdgeInsets.all(8),
-                child: ElevatedButton(
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        MyIcon(
-                          image: item.image,
-                          diameter: 100,
+      body: OrientationBuilder(
+        builder: (context, orientation) {
+          return GridView.count(
+            crossAxisCount: orientation == Orientation.portrait ? 2 : 3,
+            crossAxisSpacing: 2,
+            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+            children: _menu
+                .map(
+                  (item) => Container(
+                    padding: EdgeInsets.all(8),
+                    child: ElevatedButton(
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            MyIcon(
+                              image: item.image,
+                              diameter: 100,
+                            ),
+                            Text(
+                              item.text,
+                              textAlign: TextAlign.center,
+                            )
+                          ],
                         ),
-                        Text(
-                          item.text,
-                          textAlign: TextAlign.center,
-                        )
-                      ],
+                      ),
+                      onPressed: () => this._navigateTo(context, item.page),
+                      style: ElevatedButton.styleFrom(
+                        //onPrimary: MyTheme.userPrimaryColor, //font and icon color
+                        primary: item.backgroundColor, //background color
+                        elevation: 10,
+                      ),
                     ),
                   ),
-                  onPressed: () => this._navigateTo(context, item.page),
-                  style: ElevatedButton.styleFrom(
-                    //onPrimary: MyTheme.userPrimaryColor, //font and icon color
-                    primary: item.backgroundColor, //background color
-                    elevation: 10,
-                  ),
-                ),
-              ),
-            )
-            .toList(),
+                )
+                .toList(),
+          );
+        },
       ),
     );
   }
