@@ -25,12 +25,9 @@ abstract class BaseQuizzState extends State<BaseQuizz> {
   String get botImage;
 
   /// Returns the text to put before the quizz
-  List<String> get _introDialog => [
+  List<String> get introDialog => [
         "Bonjour !",
         "Je suis ${this.botName}.",
-        "Nous allons travailler les signes de plongée ensemble.",
-        "Prêt ?",
-        "C'est parti !"
       ];
 
   /// Builds the quizz widget for the given question
@@ -82,7 +79,7 @@ abstract class BaseQuizzState extends State<BaseQuizz> {
         slivers: [
           SliverList(
             delegate: SliverChildListDelegate(
-              _introDialog.map((text) => BotDialog(child: Text(text))).toList(),
+              introDialog.map((text) => BotDialog(child: Text(text))).toList(),
             ),
           ),
           Consumer<QuestionPool>(

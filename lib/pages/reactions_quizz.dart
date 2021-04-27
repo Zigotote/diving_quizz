@@ -18,6 +18,15 @@ class _ReactionsQuizzState extends BaseQuizzState {
   @override
   String get botName => "Sharky";
 
+  @override
+  List<String> get introDialog => [
+        ...super.introDialog,
+        "Nous allons travailler les réactions aux signes de plongée.",
+        "Pour cela tu devras trouver la signification du signe, puis la réaction à y appliquer.",
+        "Prêt ?",
+        "C'est sharky !"
+      ];
+
   /// Adds a ReactionQuestion to the queue when current question has been answered
   void _addReactionQuestion(int score) {
     setState(() {
