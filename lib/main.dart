@@ -14,7 +14,15 @@ class MyApp extends StatelessWidget {
       create: (context) => QuestionPool(),
       child: MaterialApp(
         home: Home(),
-        darkTheme: ThemeData.dark(),
+        darkTheme: ThemeData.dark().copyWith(
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
+              backgroundColor:
+                  MaterialStateProperty.all<Color>(Colors.blueAccent.shade100),
+            ),
+          ),
+        ),
       ),
     );
   }

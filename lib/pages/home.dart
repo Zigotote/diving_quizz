@@ -1,3 +1,4 @@
+import 'package:diving_quizz/theme/my_theme.dart';
 import 'package:diving_quizz/pages/reactions_quizz.dart';
 import 'package:diving_quizz/pages/signs_quizz.dart';
 import 'package:diving_quizz/widgets/my_icon.dart';
@@ -13,13 +14,11 @@ class Home extends StatelessWidget {
       text: "Apprendre les signes",
       image: _IMAGE_FOLDER + "sign.jpg",
       page: SignsQuizz(),
-      backgroundColor: Colors.cyan,
     ),
     MenuItem(
       text: "Apprendre les réactions",
       image: _IMAGE_FOLDER + "reaction.jpg",
       page: ReactionsQuizz(),
-      backgroundColor: Colors.indigo, //Colors.lightBlue or blue
     )
   ];
 
@@ -35,6 +34,7 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colors = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
         title: Text("Quizz du plongeur"),
@@ -67,8 +67,8 @@ class Home extends StatelessWidget {
                       ),
                       onPressed: () => this._navigateTo(context, item.page),
                       style: ElevatedButton.styleFrom(
-                        //onPrimary: MyTheme.userPrimaryColor, //font and icon color
-                        primary: item.backgroundColor, //background color
+                        primary: colors
+                            .menuColors[_menu.indexOf(item)], //background color
                         elevation: 10,
                       ),
                     ),
@@ -93,8 +93,5 @@ class MenuItem {
   /// The page the item is related to
   final StatefulWidget page;
 
-  /// The background color of the item
-  final MaterialColor backgroundColor;
-
-  MenuItem({this.text, this.image, this.page, this.backgroundColor});
+  MenuItem({this.text, this.image, this.page});
 }
