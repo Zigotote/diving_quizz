@@ -18,3 +18,6 @@ samples, guidance on mobile development, and a full API reference.
 # Packages
 
 Bubble : https://pub.dev/packages/bubble
+Provider : https://pub.dev/packages/provider
+Sqflite : https://pub.dev/packages/sqflite
+Shared preferences : https://pub.dev/packages/shared_preferences

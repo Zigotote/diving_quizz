@@ -1,5 +1,6 @@
-import 'package:diving_quizz/theme/my_theme.dart';
+import 'package:diving_quizz/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 /// A list of possible options for a question
 abstract class OptionsWidget extends StatelessWidget {
@@ -16,30 +17,30 @@ abstract class OptionsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      alignment: WrapAlignment.center,
-      children: this.answers.map((answer) {
-        return Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 6,
-            vertical: 2,
-          ),
-          child: ElevatedButton(
-            onPressed: () => this.onAnswerSelected(answer),
-            child: this.buildAnswer(answer),
-            style: ElevatedButton.styleFrom(
-              onPrimary: Theme.of(context)
-                  .colorScheme
-                  .userPrimaryColor, //font and icon color
-              primary: Theme.of(context)
-                  .colorScheme
-                  .userSecondaryColor, //background color
-              elevation: 10,
+    return Consumer(builder: (context, ThemeProvider themeProvider, child) {
+      return Wrap(
+        alignment: WrapAlignment.center,
+        children: this.answers.map((answer) {
+          return Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 6,
+              vertical: 2,
             ),
-          ),
-        );
-      }).toList(),
-    );
+            child: ElevatedButton(
+              onPressed: () => this.onAnswerSelected(answer),
+              child: this.buildAnswer(answer),
+              style: ElevatedButton.styleFrom(
+                onPrimary:
+                    themeProvider.theme.userPrimaryColor, //font and icon color
+                primary:
+                    themeProvider.theme.userSecondaryColor, //background color
+                elevation: 10,
+              ),
+            ),
+          );
+        }).toList(),
+      );
+    });
   }
 }
 

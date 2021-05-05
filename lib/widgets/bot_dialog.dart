@@ -1,6 +1,7 @@
-import 'package:diving_quizz/theme/my_theme.dart';
+import 'package:diving_quizz/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import "package:bubble/bubble.dart";
+import 'package:provider/provider.dart';
 
 /// A dialog box from a bot. Placed on the left of the screen.
 class BotDialog extends StatelessWidget {
@@ -11,16 +12,18 @@ class BotDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Bubble(
-      style: BubbleStyle(
-        nip: BubbleNip.leftCenter,
-        color: Theme.of(context).colorScheme.botBackgroundColor,
-        elevation: 4,
-        margin: BubbleEdges.only(top: 8, right: 50),
-        alignment: Alignment.topLeft,
-      ),
-      child: this.child,
-    );
+    return Consumer(builder: (context, ThemeProvider themeProvider, child) {
+      return Bubble(
+        style: BubbleStyle(
+          nip: BubbleNip.leftCenter,
+          color: themeProvider.theme.botBackgroundColor,
+          elevation: 4,
+          margin: BubbleEdges.only(top: 8, right: 50),
+          alignment: Alignment.topLeft,
+        ),
+        child: this.child,
+      );
+    });
   }
 }
 
@@ -33,11 +36,13 @@ class BotText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      this.text,
-      style: TextStyle(
-        color: Theme.of(context).colorScheme.botFontColor,
-      ),
-    );
+    return Consumer(builder: (context, ThemeProvider themeProvider, child) {
+      return Text(
+        this.text,
+        style: TextStyle(
+          color: themeProvider.theme.botFontColor,
+        ),
+      );
+    });
   }
 }
