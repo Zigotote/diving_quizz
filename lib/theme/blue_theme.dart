@@ -7,6 +7,9 @@ class LightBlueTheme extends MyTheme {
   }
 
   @override
+  ThemeData get themeData => ThemeData.light();
+
+  @override
   Color get userPrimaryColor => Colors.blueAccent;
 
   @override
@@ -16,10 +19,8 @@ class LightBlueTheme extends MyTheme {
   Color get botBackgroundColor => Colors.lightBlue.shade50;
 
   @override
-  Color get botFontColor => Colors.black;
-
-  @override
-  List<Color> get menuColors => [Colors.cyan, Colors.indigo];
+  List<Color> get menuColors =>
+      [Colors.lightBlue.shade200, Colors.blueAccent.shade100];
 }
 
 class DarkBlueTheme extends MyTheme {
@@ -31,10 +32,13 @@ class DarkBlueTheme extends MyTheme {
   ThemeData get themeData => ThemeData.dark().copyWith(
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
-            foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
             backgroundColor:
-                MaterialStateProperty.all<Color>(Colors.blueAccent.shade100),
+                MaterialStateProperty.all<Color>(Colors.blueAccent.shade700),
           ),
+        ),
+        switchTheme: SwitchThemeData(
+          thumbColor: MaterialStateProperty.all<Color>(Colors.blue.shade400),
+          trackColor: MaterialStateProperty.all<Color>(Colors.blue.shade100),
         ),
       );
 
@@ -48,9 +52,5 @@ class DarkBlueTheme extends MyTheme {
   Color get botBackgroundColor => Colors.blue.shade800;
 
   @override
-  Color get botFontColor => Colors.white;
-
-  @override
-  List<Color> get menuColors =>
-      [Colors.lightBlue.shade200, Colors.indigo.shade200];
+  List<Color> get menuColors => [Colors.blue.shade700, Colors.indigo.shade400];
 }

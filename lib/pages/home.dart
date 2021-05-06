@@ -81,6 +81,7 @@ class Home extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           primary: themeProvider.theme.menuColors[
                               _menu.indexOf(item)], //background color
+                          onPrimary: themeProvider.theme.textColor,
                           elevation: 10,
                         ),
                       ),

@@ -40,7 +40,7 @@ class BotText extends StatelessWidget {
       return Text(
         this.text,
         style: TextStyle(
-          color: themeProvider.theme.botFontColor,
+          color: themeProvider.theme.textColor,
         ),
       );
     });

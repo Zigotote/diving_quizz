@@ -1,4 +1,5 @@
 import 'package:diving_quizz/providers/theme_provider.dart';
+import 'package:diving_quizz/theme/theme_preferences.dart';
 import 'package:diving_quizz/widgets/bot_dialog.dart';
 import 'package:diving_quizz/widgets/user_dialog.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,30 @@ class _MySettingsState extends State<MySettings> {
                 ),
                 Text("Thème $themeValue activé"),
               ],
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 10, top: 10),
+              child: Text("Couleur du thème :"),
+            ),
+            Row(
+              children: ColorThemes.values
+                  .map(
+                    (color) => ElevatedButton(
+                      onPressed: () {
+                        themeProvider.theme =
+                            color.getTheme(themeProvider.isDarkTheme);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: CircleBorder(),
+                        elevation: 2.0,
+                        primary: color.getTheme(false).themeData.primaryColor,
+                      ),
+                      child: color == themeProvider.theme.themeName
+                          ? Icon(Icons.done)
+                          : null,
+                    ),
+                  )
+                  .toList(),
             ),
             Padding(
               padding: EdgeInsets.only(left: 20, top: 30, bottom: 5),

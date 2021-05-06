@@ -1,4 +1,5 @@
 import 'package:diving_quizz/theme/blue_theme.dart';
+import 'package:diving_quizz/theme/red_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -45,16 +46,19 @@ class ThemePreferences {
 }
 
 /// List of the available color themes
-enum ColorThemes { Blue }
+enum ColorThemes { Blue, Red }
 
 /// Extension to link an enum value to a MyTheme class
 extension ColorThemesExtension on ColorThemes {
   /// Returns the right MyTheme class, depending if we want a light or dark theme
-  getTheme(bool isDarkTheme) {
+  MyTheme getTheme(bool isDarkTheme) {
     MyTheme theme;
     switch (this) {
       case ColorThemes.Blue:
         theme = isDarkTheme ? DarkBlueTheme() : LightBlueTheme();
+        break;
+      case ColorThemes.Red:
+        theme = isDarkTheme ? DarkRedTheme() : LightRedTheme();
         break;
     }
     return theme;
@@ -65,8 +69,11 @@ abstract class MyTheme {
   /// The name of the availableTheme linked to the theme
   ColorThemes themeName;
 
+  /// Returns the default font color for the text
+  Color get textColor => this.themeData.textTheme.bodyText1.color;
+
   /// Returns the light or dark theme
-  ThemeData get themeData => ThemeData.light();
+  ThemeData get themeData;
 
   /// Returns the background color of the user's dialog box
   Color get userPrimaryColor;
@@ -76,9 +83,6 @@ abstract class MyTheme {
 
   /// Returns the background color of the bot's dialog box
   Color get botBackgroundColor;
-
-  /// Returns the font color of the bot's dialog box
-  Color get botFontColor;
 
   /// Returns the list of the colors to use for the menu items
   List<Color> get menuColors;
