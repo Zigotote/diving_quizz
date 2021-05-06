@@ -19,6 +19,7 @@ class _MySettingsState extends State<MySettings> {
           title: Text("Paramètres"),
         ),
         body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
@@ -33,11 +34,36 @@ class _MySettingsState extends State<MySettings> {
                 Text("Thème $themeValue activé"),
               ],
             ),
-            BotDialog(
-              child: BotText("Bonjour, je suis le professeur X."),
+            Padding(
+              padding: EdgeInsets.only(left: 20, top: 30, bottom: 5),
+              child: Text(
+                "Exemple :",
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ),
             ),
-            UserDialog(
-              child: UserText("Démarrons le quizz !"),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Container(
+                padding: EdgeInsets.fromLTRB(10, 10, 10, 15),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: themeProvider.isDarkTheme
+                        ? Colors.white
+                        : themeProvider.theme.themeData.primaryColor,
+                  ),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Column(
+                  children: [
+                    BotDialog(
+                      child: BotText("Bonjour, je suis le professeur X."),
+                    ),
+                    UserDialog(
+                      child: UserText("Démarrons le quizz !"),
+                    )
+                  ],
+                ),
+              ),
             )
           ],
         ),

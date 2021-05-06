@@ -66,7 +66,7 @@ abstract class MyTheme {
   ColorThemes themeName;
 
   /// Returns the light or dark theme
-  ThemeData get themeBrightness => ThemeData.light();
+  ThemeData get themeData => ThemeData.light();
 
   /// Returns the background color of the user's dialog box
   Color get userPrimaryColor;

@@ -28,7 +28,7 @@ class DarkBlueTheme extends MyTheme {
   }
 
   @override
-  ThemeData get themeBrightness => ThemeData.dark().copyWith(
+  ThemeData get themeData => ThemeData.dark().copyWith(
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
             foregroundColor: MaterialStateProperty.all<Color>(Colors.black),

@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         builder: (context, ThemeProvider themeProvider, _) {
           return MaterialApp(
             home: Home(),
-            theme: themeProvider.theme.themeBrightness,
+            theme: themeProvider.theme.themeData,
           );
         },
       ),
