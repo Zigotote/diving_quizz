@@ -7,6 +7,9 @@ class ThemePreferences {
   /// The key of the saved color theme
   static const String _COLOR_THEME = "color_theme";
 
+  /// The key of the saved brightness
+  static const String _BRIGHTNESS = "brightness";
+
   /// Saves the theme to use in shared preferences
   Future<void> setTheme(MyTheme theme) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -18,36 +21,52 @@ class ThemePreferences {
   Future<MyTheme> getTheme() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String themeValue = sharedPreferences.getString(_COLOR_THEME);
-    MyTheme theme;
+    ColorThemes color;
     if (themeValue == null) {
-      theme = LightBlueTheme();
+      color = ColorThemes.Blue;
     } else {
-      theme = AvailableThemes.values
-          .firstWhere((element) => element.toString() == themeValue)
-          .theme;
+      color = ColorThemes.values
+          .firstWhere((element) => element.toString() == themeValue);
+    }
+    return color.getTheme(await getBrightness());
+  }
+
+  /// Saves the current brightness, true if it is dark, false otherwise
+  Future<void> setBrightness(bool isDark) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setBool(_BRIGHTNESS, isDark);
+  }
+
+  /// Gets the application brightness : true for dark theme, false otherwise
+  Future<bool> getBrightness() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getBool(_BRIGHTNESS) ?? false;
+  }
+}
+
+/// List of the available color themes
+enum ColorThemes { Blue }
+
+/// Extension to link an enum value to a MyTheme class
+extension ColorThemesExtension on ColorThemes {
+  /// Returns the right MyTheme class, depending if we want a light or dark theme
+  getTheme(bool isDarkTheme) {
+    MyTheme theme;
+    switch (this) {
+      case ColorThemes.Blue:
+        theme = isDarkTheme ? DarkBlueTheme() : LightBlueTheme();
+        break;
     }
     return theme;
   }
 }
 
-/// List of the available themes
-enum AvailableThemes { _from, LightBlue, DarkBlue }
-
-/// Extension to link an enum value to a MyTheme class
-extension AvailableThemesExtension on AvailableThemes {
-  /// Links the availableThemes values to the corresponding MyTheme classes
-  static final Map<AvailableThemes, MyTheme> themes = {
-    AvailableThemes.LightBlue: LightBlueTheme(),
-    AvailableThemes.DarkBlue: DarkBlueTheme(),
-  };
-
-  /// Gets a theme from a value
-  MyTheme get theme => themes[this];
-}
-
 abstract class MyTheme {
   /// The name of the availableTheme linked to the theme
-  AvailableThemes themeName;
+  ColorThemes themeName;
+
+  /// Returns the light or dark theme
+  ThemeData get themeBrightness => ThemeData.light();
 
   /// Returns the background color of the user's dialog box
   Color get userPrimaryColor;

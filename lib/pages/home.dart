@@ -1,7 +1,7 @@
+import 'package:diving_quizz/pages/settings.dart';
 import 'package:diving_quizz/providers/theme_provider.dart';
 import 'package:diving_quizz/pages/reactions_quizz.dart';
 import 'package:diving_quizz/pages/signs_quizz.dart';
-import 'package:diving_quizz/theme/theme_preferences.dart';
 import 'package:diving_quizz/widgets/my_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -36,11 +36,21 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colors = Theme.of(context).colorScheme;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Quizz du plongeur"),
-      ),
+    return Consumer(builder: (context, ThemeProvider themeProvider, child) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text("Quizz du plongeur"),
+          actions: [
+            IconButton(
+              icon: Icon(
+                Icons.settings,
+                semanticLabel: "Paramètres",
+              ),
+              iconSize: 35,
+              onPressed: () => _navigateTo(context, MySettings()),
+            ),
+          ],
+        ),
         body: OrientationBuilder(
           builder: (context, orientation) {
             return GridView.count(

@@ -26,3 +26,23 @@ class UserDialog extends StatelessWidget {
     });
   }
 }
+
+/// A text to display in a UserDialog
+class UserText extends StatelessWidget {
+  /// The text to display
+  final String text;
+
+  UserText(this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(builder: (context, ThemeProvider themeProvider, child) {
+      return Text(
+        this.text,
+        style: TextStyle(
+          color: themeProvider.theme.userSecondaryColor,
+        ),
+      );
+    });
+  }
+}

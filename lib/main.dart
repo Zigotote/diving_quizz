@@ -16,17 +16,13 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => QuestionPool()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
       ],
-      child: MaterialApp(
-        home: Home(),
-        darkTheme: ThemeData.dark().copyWith(
-          elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ButtonStyle(
-              foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
-              backgroundColor:
-                  MaterialStateProperty.all<Color>(Colors.blueAccent.shade100),
-            ),
-          ),
-        ),
+      child: Consumer(
+        builder: (context, ThemeProvider themeProvider, _) {
+          return MaterialApp(
+            home: Home(),
+            theme: themeProvider.theme.themeBrightness,
+          );
+        },
       ),
     );
   }

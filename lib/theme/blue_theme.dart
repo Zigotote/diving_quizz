@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class LightBlueTheme extends MyTheme {
   LightBlueTheme() {
-    this.themeName = AvailableThemes.LightBlue;
+    this.themeName = ColorThemes.Blue;
   }
 
   @override
@@ -24,8 +24,19 @@ class LightBlueTheme extends MyTheme {
 
 class DarkBlueTheme extends MyTheme {
   DarkBlueTheme() {
-    this.themeName = AvailableThemes.DarkBlue;
+    this.themeName = ColorThemes.Blue;
   }
+
+  @override
+  ThemeData get themeBrightness => ThemeData.dark().copyWith(
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ButtonStyle(
+            foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
+            backgroundColor:
+                MaterialStateProperty.all<Color>(Colors.blueAccent.shade100),
+          ),
+        ),
+      );
 
   @override
   Color get userPrimaryColor => Colors.blueAccent.shade100;

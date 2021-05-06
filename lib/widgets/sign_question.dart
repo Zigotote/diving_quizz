@@ -3,6 +3,7 @@ import 'package:diving_quizz/widgets/bot_dialog.dart';
 import 'package:diving_quizz/widgets/options_widget.dart';
 import 'package:diving_quizz/widgets/question_widget.dart';
 import 'package:diving_quizz/models/question.dart';
+import 'package:diving_quizz/widgets/user_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -38,11 +39,8 @@ class _SignQuestionState extends QuestionWidgetState<SignQuestionModel> {
   @override
   Widget buildUserAnswer() {
     return Consumer(builder: (context, ThemeProvider themeProvider, child) {
-      return Text(
+      return UserText(
         widget.question.userAnswer,
-        style: TextStyle(
-          color: themeProvider.theme.userSecondaryColor,
-        ),
       );
     });
   }
