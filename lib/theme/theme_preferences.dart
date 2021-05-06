@@ -1,5 +1,6 @@
 import 'package:diving_quizz/theme/blue_theme.dart';
 import 'package:diving_quizz/theme/brown_theme.dart';
+import 'package:diving_quizz/theme/green_theme.dart';
 import 'package:diving_quizz/theme/purple_theme.dart';
 import 'package:diving_quizz/theme/red_theme.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +49,7 @@ class ThemePreferences {
 }
 
 /// List of the available color themes
-enum ColorThemes { Blue, Red, Purple, Brown }
+enum ColorThemes { Blue, Red, Purple, Brown, Green }
 
 /// Extension to link an enum value to a MyTheme class
 extension ColorThemesExtension on ColorThemes {
@@ -67,6 +68,9 @@ extension ColorThemesExtension on ColorThemes {
         break;
       case ColorThemes.Brown:
         theme = isDarkTheme ? DarkBrownTheme() : LightBrownTheme();
+        break;
+      case ColorThemes.Green:
+        theme = isDarkTheme ? DarkGreenTheme() : LightGreenTheme();
         break;
     }
     return theme;
