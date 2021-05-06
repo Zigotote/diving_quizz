@@ -51,7 +51,7 @@ class DarkPurpleTheme extends MyTheme {
       );
 
   @override
-  Color get userPrimaryColor => Colors.purpleAccent.shade100;
+  Color get userPrimaryColor => Colors.purple.shade50;
 
   @override
   Color get userSecondaryColor => Colors.black87;

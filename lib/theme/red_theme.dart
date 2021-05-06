@@ -24,7 +24,7 @@ class LightRedTheme extends MyTheme {
   Color get userSecondaryColor => Colors.white;
 
   @override
-  Color get botBackgroundColor => Colors.red.shade50;
+  Color get botBackgroundColor => Colors.red.shade100;
 
   @override
   List<Color> get menuColors =>
@@ -51,7 +51,7 @@ class DarkRedTheme extends MyTheme {
       );
 
   @override
-  Color get userPrimaryColor => Colors.redAccent.shade100;
+  Color get userPrimaryColor => Colors.red.shade100;
 
   @override
   Color get userSecondaryColor => Colors.black87;

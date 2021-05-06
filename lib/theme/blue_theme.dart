@@ -43,13 +43,13 @@ class DarkBlueTheme extends MyTheme {
       );
 
   @override
-  Color get userPrimaryColor => Colors.blueAccent.shade100;
+  Color get userPrimaryColor => Colors.lightBlue.shade50;
 
   @override
   Color get userSecondaryColor => Colors.black87;
 
   @override
-  Color get botBackgroundColor => Colors.blue.shade800;
+  Color get botBackgroundColor => Colors.blueAccent;
 
   @override
   List<Color> get menuColors => [Colors.blue.shade700, Colors.indigo.shade400];
