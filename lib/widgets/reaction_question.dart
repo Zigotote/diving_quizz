@@ -1,11 +1,13 @@
-import 'package:diving_quizz/widgets/options_widget.dart';
-import 'package:diving_quizz/widgets/question_widget.dart';
 import 'package:diving_quizz/models/question.dart';
 import 'package:flutter/material.dart';
 
+import 'bot_dialog.dart';
+import 'options_widget.dart';
+import 'abstract_question.dart';
+
 /// A dialog for a question about the reaction to apply to a sign.
 /// The bot asks the question, the user can choose an answer and the bot says if it is the correct one
-class ReactionQuestion extends QuestionWidget {
+class ReactionQuestion extends AbstractQuestionWidget {
   ReactionQuestion({@required question, @required onQuestionFinished})
       : super(question: question, onQuestionFinished: onQuestionFinished);
 
@@ -14,10 +16,10 @@ class ReactionQuestion extends QuestionWidget {
 }
 
 class _ReactionQuestionState
-    extends QuestionWidgetState<ReactionQuestionModel> {
+    extends AbstractQuestionWidgetState<ReactionQuestionModel> {
   @override
   List<Widget> buildQuestion() {
-    return [Text("Comment y réagir ?")];
+    return [BotText("Comment y réagir ?")];
   }
 
   @override
@@ -37,10 +39,10 @@ class _ReactionQuestionState
 
   @override
   List<Widget> buildBotResponses() {
-    List<Widget> botResponses = [Text("Oui !")];
+    List<Widget> botResponses = [BotText(this.selectBotResponse())];
     if (!widget.question.isCorrectlyAnswered()) {
       botResponses = [
-        Text(
+        BotText(
           "Non, il fallait répondre \"${widget.question.signification}\" avec ce signe :",
         ),
         Image(

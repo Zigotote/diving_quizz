@@ -2,10 +2,11 @@ import 'dart:convert';
 
 import 'package:diving_quizz/models/meaning.dart';
 import 'package:diving_quizz/models/question.dart';
-import 'package:diving_quizz/providers/question_pool.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+
+import 'question_pool.dart';
 
 /// A provider to manage the SQLite database
 class DatabaseProvider {
@@ -159,7 +160,8 @@ class DatabaseProvider {
   }
 
   /// Updates the question saved in the table
-  Future<void> updateQuestion(QuestionModel question, String table) async {
+  Future<void> updateQuestion(
+      AbstractQuestionModel question, String table) async {
     final Database db = await database;
     await db.update(table, question.toJson(QuestionPool.lastMeaningId),
         where: "id=?", whereArgs: [question.id]);

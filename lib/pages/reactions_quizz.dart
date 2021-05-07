@@ -1,25 +1,36 @@
 import 'package:diving_quizz/models/question.dart';
-import 'package:diving_quizz/pages/base_quizz.dart';
 import 'package:diving_quizz/providers/question_pool.dart';
 import 'package:diving_quizz/widgets/reaction_question.dart';
 import 'package:diving_quizz/widgets/sign_question.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ReactionsQuizz extends BaseQuizz {
+import 'abstract_quizz.dart';
+
+class ReactionsQuizz extends AbstractQuizz {
   @override
   _ReactionsQuizzState createState() => _ReactionsQuizzState();
 }
 
-class _ReactionsQuizzState extends BaseQuizzState {
+class _ReactionsQuizzState extends AbstractQuizzState {
   @override
   String get botImage => "assets/images/bots/shark.jpg";
 
   @override
-  String get botName => "Professeur Sharky";
+  String get botName => "Sharky";
+
+  @override
+  List<String> get introDialog => [
+        ...super.introDialog,
+        "Nous allons travailler les réactions aux signes de plongée.",
+        "Pour cela tu devras trouver la signification du signe, puis la réaction à y appliquer.",
+        "Prêt ?",
+        "C'est sharky !"
+      ];
 
   /// Adds a ReactionQuestion to the queue when current question has been answered
   void _addReactionQuestion(int score) {
+    this.score += score;
     setState(() {
       Provider.of<QuestionPool>(context, listen: false)
           .addRandomReactionQuestion();
@@ -28,17 +39,16 @@ class _ReactionsQuizzState extends BaseQuizzState {
   }
 
   @override
-  Widget buildQuestion(QuestionPool questionPool, int index) {
-    QuestionModel question = questionPool.questions[index];
+  Widget buildQuestion(AbstractQuestionModel question) {
     if (question is SignQuestionModel) {
       return SignQuestion(
-        question: questionPool.questions[index],
+        question: question,
         onQuestionFinished: _addReactionQuestion,
       );
     }
     if (question is ReactionQuestionModel) {
       return ReactionQuestion(
-        question: questionPool.questions[index],
+        question: question,
         onQuestionFinished: addSignQuestion,
       );
     }

@@ -3,14 +3,15 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:diving_quizz/models/question.dart';
-import 'package:diving_quizz/providers/db_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'db_provider.dart';
 
 /// A provider for each dialog, to manage the question pool
 class QuestionPool with ChangeNotifier {
   /// Questions asked by the bot and answered by the user
-  List<QuestionModel> _askedQuestions = [];
+  List<AbstractQuestionModel> _askedQuestions = [];
 
   /// The ids of the questions the bot hasn't already asked, linked to their failure rate
   Map<int, int> _availableQuestionIds = {};
@@ -27,10 +28,17 @@ class QuestionPool with ChangeNotifier {
   /// Reactions the bot can propose
   Set<String> _possibleReactions = {};
 
-  UnmodifiableListView<QuestionModel> get questions =>
+  /// Indicates if the quizz is finished
+  bool _isFinished;
+
+  /// Returns the list of asked questions
+  UnmodifiableListView<AbstractQuestionModel> get questions =>
       UnmodifiableListView(_askedQuestions);
 
+  bool get isFinished => _isFinished;
+
   QuestionPool() {
+    _isFinished = false;
     _fillPossibleMeanings();
     _fillPossibleReactions();
   }
@@ -55,6 +63,7 @@ class QuestionPool with ChangeNotifier {
   /// Initializes the lists used to build the questions
   /// Initializes the current question's list with one question
   void initQuizz() async {
+    _isFinished = false;
     _askedQuestions = [];
     _availableQuestionIds =
         await DatabaseProvider.instance.getSignQuestionIds();
@@ -65,6 +74,7 @@ class QuestionPool with ChangeNotifier {
   /// Chooses a random sign question and adds it to the _question list
   /// Creates a list of proposed answers for this question
   void addRandomSignQuestion() async {
+    _isFinished = _availableQuestionIds.isEmpty;
     if (_availableQuestionIds.isNotEmpty) {
       int questionId = _selectRandomQuestion(_availableQuestionIds.entries);
       _availableQuestionIds.remove(questionId);
@@ -132,7 +142,7 @@ class QuestionPool with ChangeNotifier {
   }
 
   /// Answers a question and returns true if it is the correct one
-  bool answerQuestion(QuestionModel question, String answer) {
+  bool answerQuestion(AbstractQuestionModel question, String answer) {
     final int questionIndex = _askedQuestions.indexOf(question);
     _askedQuestions[questionIndex].setUserAnswer(answer);
     notifyListeners();
@@ -142,7 +152,7 @@ class QuestionPool with ChangeNotifier {
   /// Creates the list of the proposed answers for a question
   /// Takes the correct answer and the suggestions. Adds some random answers from the other questions
   /// Shuffles the list to randomize the order of the answers
-  Set<String> _createAnswersList(QuestionModel question,
+  Set<String> _createAnswersList(AbstractQuestionModel question,
       List<String> possibleAnswers, List<String> availableAnswers) {
     Random randomNumber = new Random();
     // Choose some incorrect answers to fill the list

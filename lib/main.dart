@@ -1,7 +1,9 @@
-import 'package:diving_quizz/pages/home.dart';
-import 'package:diving_quizz/providers/question_pool.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'pages/home.dart';
+import 'providers/question_pool.dart';
+import 'providers/theme_provider.dart';
 
 void main() {
   runApp(MyApp());
@@ -10,10 +12,18 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => QuestionPool(),
-      child: MaterialApp(
-        home: Home(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => QuestionPool()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+      ],
+      child: Consumer(
+        builder: (context, ThemeProvider themeProvider, _) {
+          return MaterialApp(
+            home: Home(),
+            theme: themeProvider.theme.themeData,
+          );
+        },
       ),
     );
   }

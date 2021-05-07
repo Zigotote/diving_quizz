@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:diving_quizz/models/question.dart';
+import 'question.dart';
 
 // A meaning for a SignQuestionModel object
 class Meaning {

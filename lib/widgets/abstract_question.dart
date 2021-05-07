@@ -1,24 +1,28 @@
+import 'dart:math';
+
 import 'package:diving_quizz/models/question.dart';
 import 'package:diving_quizz/providers/question_pool.dart';
-import 'package:diving_quizz/widgets/bot_dialog.dart';
-import 'package:diving_quizz/widgets/user_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'bot_dialog.dart';
+import 'user_dialog.dart';
+
 /// A widget to manage the question's widget behaviour
-abstract class QuestionWidget<T extends QuestionModel> extends StatefulWidget {
+abstract class AbstractQuestionWidget<T extends AbstractQuestionModel>
+    extends StatefulWidget {
   /// The question the bot asks
   final T question;
 
   ///The function to call when the user has selected an answer
   final ValueChanged<int> onQuestionFinished;
 
-  const QuestionWidget(
+  const AbstractQuestionWidget(
       {@required this.question, @required this.onQuestionFinished});
 }
 
-abstract class QuestionWidgetState<T extends QuestionModel>
-    extends State<QuestionWidget> {
+abstract class AbstractQuestionWidgetState<T extends AbstractQuestionModel>
+    extends State<AbstractQuestionWidget> {
   /// The widget which displays the available answers or the user's response, depending on the question's state
   Widget answerWidget;
 
@@ -42,7 +46,7 @@ abstract class QuestionWidgetState<T extends QuestionModel>
 
   /// Rebuilds the widget when the user scrolls back to it
   @override
-  void didUpdateWidget(QuestionWidget oldWidget) {
+  void didUpdateWidget(AbstractQuestionWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     _initAnswerWidget();
   }
@@ -83,6 +87,22 @@ abstract class QuestionWidgetState<T extends QuestionModel>
     }
     _initUserAnswerWidget();
     widget.onQuestionFinished(score);
+  }
+
+  /// Selects randomly a bot response when the user has selected the correct answer
+  String selectBotResponse() {
+    List<String> responses = [
+      "Oui !",
+      "Tout à fait.",
+      "Bravo !",
+      "Félicitations !",
+      "C'est ça.",
+      "Wahou, quel génie !",
+      "Impressionnant !"
+    ];
+    Random randomNumber = new Random();
+    int index = randomNumber.nextInt(responses.length);
+    return responses.elementAt(index);
   }
 
   @override
