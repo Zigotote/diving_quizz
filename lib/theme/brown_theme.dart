@@ -14,7 +14,7 @@ class BrownShadeColors extends AbstractShadeColors {
   Color get brightColor => Colors.orange.shade100;
 }
 
-class LightBrownTheme extends LightTheme {
+class LightBrownTheme extends AbstractLightTheme {
   @override
   AbstractShadeColors get shadeColorsCouple => BrownShadeColors();
 
@@ -25,7 +25,7 @@ class LightBrownTheme extends LightTheme {
   List<Color> get menuColors => [Colors.brown.shade200, Colors.orange.shade200];
 }
 
-class DarkBrownTheme extends DarkTheme {
+class DarkBrownTheme extends AbstractDarkTheme {
   @override
   AbstractShadeColors get shadeColorsCouple => BrownShadeColors();
 

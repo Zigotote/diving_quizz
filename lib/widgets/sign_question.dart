@@ -5,12 +5,12 @@ import 'package:provider/provider.dart';
 
 import 'bot_dialog.dart';
 import 'options_widget.dart';
-import 'question_widget.dart';
+import 'abstract_question.dart';
 import 'user_dialog.dart';
 
 /// A dialog for a question about the meaning of a sign.
 /// The bot asks the question, the user can choose an answer and the bot says if it is the correct one
-class SignQuestion extends QuestionWidget {
+class SignQuestion extends AbstractQuestionWidget {
   SignQuestion({@required question, @required onQuestionFinished})
       : super(question: question, onQuestionFinished: onQuestionFinished);
 
@@ -18,7 +18,8 @@ class SignQuestion extends QuestionWidget {
   _SignQuestionState createState() => _SignQuestionState();
 }
 
-class _SignQuestionState extends QuestionWidgetState<SignQuestionModel> {
+class _SignQuestionState
+    extends AbstractQuestionWidgetState<SignQuestionModel> {
   @override
   List<Widget> buildQuestion() {
     return [

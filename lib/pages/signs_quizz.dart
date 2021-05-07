@@ -2,14 +2,14 @@ import 'package:diving_quizz/models/question.dart';
 import 'package:diving_quizz/widgets/sign_question.dart';
 import 'package:flutter/material.dart';
 
-import 'base_quizz.dart';
+import 'abstract_quizz.dart';
 
-class SignsQuizz extends BaseQuizz {
+class SignsQuizz extends AbstractQuizz {
   @override
   _SignsQuizzState createState() => _SignsQuizzState();
 }
 
-class _SignsQuizzState extends BaseQuizzState {
+class _SignsQuizzState extends AbstractQuizzState {
   @override
   String get botImage => "assets/images/bots/axolotl.png";
 
@@ -24,7 +24,7 @@ class _SignsQuizzState extends BaseQuizzState {
       ];
 
   @override
-  Widget buildQuestion(QuestionModel question) {
+  Widget buildQuestion(AbstractQuestionModel question) {
     return SignQuestion(
       question: question,
       onQuestionFinished: addSignQuestion,

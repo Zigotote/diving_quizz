@@ -4,7 +4,7 @@ import 'package:diving_quizz/providers/db_provider.dart';
 
 import 'meaning.dart';
 
-abstract class QuestionModel {
+abstract class AbstractQuestionModel {
   static const String _IMAGE_FOLDER = "assets/images/signs/";
 
   /// The id of the database object
@@ -29,15 +29,15 @@ abstract class QuestionModel {
   int get failureRate =>
       this.nbTry == 0 ? 100 : (this.nbFail / this.nbTry * 100).round();
 
-  QuestionModel(this.id, this.signification, this.nbTry, this.nbFail);
+  AbstractQuestionModel(this.id, this.signification, this.nbTry, this.nbFail);
 
   /// Creates a QuestionModel from a json object
-  QuestionModel.fromJson(Map<String, dynamic> json)
+  AbstractQuestionModel.fromJson(Map<String, dynamic> json)
       : signification = json["signification"],
         id = 0;
 
   /// Creates a QuestionModel from a json object comming from the database
-  QuestionModel.fromDatabase(Map<String, dynamic> json)
+  AbstractQuestionModel.fromDatabase(Map<String, dynamic> json)
       : signification = json["signification"],
         id = json["id"],
         nbTry = json["nbTry"],
@@ -70,7 +70,7 @@ abstract class QuestionModel {
 }
 
 /// A QuestionModel to learn the meaning of a sign
-class SignQuestionModel extends QuestionModel {
+class SignQuestionModel extends AbstractQuestionModel {
   /// The image the user has to know
   final String image;
 
@@ -99,7 +99,7 @@ class SignQuestionModel extends QuestionModel {
 
   @override
   SignQuestionModel.fromJson(Map<String, dynamic> json)
-      : image = QuestionModel._IMAGE_FOLDER + json["image"],
+      : image = AbstractQuestionModel._IMAGE_FOLDER + json["image"],
         meanings = (json["meanings"] as List)
             .map((meaning) => Meaning.fromJson(meaning))
             .toList(),
@@ -174,7 +174,7 @@ class SignQuestionModel extends QuestionModel {
 }
 
 /// A QuestionModel to learn the meaning of a sign and the reaction to apply to it
-class ReactionQuestionModel extends QuestionModel {
+class ReactionQuestionModel extends AbstractQuestionModel {
   /// The expected reaction to produce after the sign
   final String correctReaction;
 
@@ -190,10 +190,10 @@ class ReactionQuestionModel extends QuestionModel {
 
   @override
   ReactionQuestionModel.fromJson(Map<String, dynamic> json)
-      : correctReaction = QuestionModel._IMAGE_FOLDER + json["image"],
+      : correctReaction = AbstractQuestionModel._IMAGE_FOLDER + json["image"],
         tricks = json["trickReactions"] != null
             ? Set.from(json["trickReactions"]
-                .map((image) => QuestionModel._IMAGE_FOLDER + image))
+                .map((image) => AbstractQuestionModel._IMAGE_FOLDER + image))
             : {},
         super.fromJson(json);
 

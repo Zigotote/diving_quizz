@@ -160,7 +160,8 @@ class DatabaseProvider {
   }
 
   /// Updates the question saved in the table
-  Future<void> updateQuestion(QuestionModel question, String table) async {
+  Future<void> updateQuestion(
+      AbstractQuestionModel question, String table) async {
     final Database db = await database;
     await db.update(table, question.toJson(QuestionPool.lastMeaningId),
         where: "id=?", whereArgs: [question.id]);

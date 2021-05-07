@@ -5,14 +5,14 @@ import 'package:diving_quizz/widgets/sign_question.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'base_quizz.dart';
+import 'abstract_quizz.dart';
 
-class ReactionsQuizz extends BaseQuizz {
+class ReactionsQuizz extends AbstractQuizz {
   @override
   _ReactionsQuizzState createState() => _ReactionsQuizzState();
 }
 
-class _ReactionsQuizzState extends BaseQuizzState {
+class _ReactionsQuizzState extends AbstractQuizzState {
   @override
   String get botImage => "assets/images/bots/shark.jpg";
 
@@ -38,7 +38,7 @@ class _ReactionsQuizzState extends BaseQuizzState {
   }
 
   @override
-  Widget buildQuestion(QuestionModel question) {
+  Widget buildQuestion(AbstractQuestionModel question) {
     if (question is SignQuestionModel) {
       return SignQuestion(
         question: question,

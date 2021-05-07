@@ -14,7 +14,7 @@ class BlueShadeColors extends AbstractShadeColors {
   Color get brightColor => Colors.lightBlue.shade50;
 }
 
-class LightBlueTheme extends LightTheme {
+class LightBlueTheme extends AbstractLightTheme {
   @override
   AbstractShadeColors get shadeColorsCouple => BlueShadeColors();
 
@@ -26,7 +26,7 @@ class LightBlueTheme extends LightTheme {
       [Colors.lightBlue.shade200, Colors.blueAccent.shade100];
 }
 
-class DarkBlueTheme extends DarkTheme {
+class DarkBlueTheme extends AbstractDarkTheme {
   @override
   AbstractShadeColors get shadeColorsCouple => BlueShadeColors();
 

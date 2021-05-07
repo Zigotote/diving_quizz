@@ -14,7 +14,7 @@ class GreenShadeColors extends AbstractShadeColors {
   Color get brightColor => Colors.lightGreen.shade50;
 }
 
-class LightGreenTheme extends LightTheme {
+class LightGreenTheme extends AbstractLightTheme {
   @override
   AbstractShadeColors get shadeColorsCouple => GreenShadeColors();
 
@@ -26,7 +26,7 @@ class LightGreenTheme extends LightTheme {
       [Colors.lightGreen.shade200, Colors.greenAccent.shade100];
 }
 
-class DarkGreenTheme extends DarkTheme {
+class DarkGreenTheme extends AbstractDarkTheme {
   @override
   AbstractShadeColors get shadeColorsCouple => GreenShadeColors();
 

@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 /// A list of possible options for a question
-abstract class OptionsWidget extends StatelessWidget {
+abstract class AbstractOptionsWidget extends StatelessWidget {
   /// The possible answers
   final Set<String> answers;
 
   /// The function to call when the user has selected an answer
   final ValueChanged<String> onAnswerSelected;
 
-  OptionsWidget({@required this.answers, @required this.onAnswerSelected});
+  AbstractOptionsWidget(
+      {@required this.answers, @required this.onAnswerSelected});
 
   /// Builds the Widget to display the answer
   Widget buildAnswer(String answer);
@@ -45,7 +46,7 @@ abstract class OptionsWidget extends StatelessWidget {
 }
 
 /// The list of possible answers for a question
-class AnswerOptions extends OptionsWidget {
+class AnswerOptions extends AbstractOptionsWidget {
   AnswerOptions({@required answers, @required onAnswerSelected})
       : super(answers: answers, onAnswerSelected: onAnswerSelected);
 
@@ -56,7 +57,7 @@ class AnswerOptions extends OptionsWidget {
 }
 
 /// The list of possible reactions for a question
-class ReactionOptions extends OptionsWidget {
+class ReactionOptions extends AbstractOptionsWidget {
   ReactionOptions({@required reactions, @required onAnswerSelected})
       : super(answers: reactions, onAnswerSelected: onAnswerSelected);
 

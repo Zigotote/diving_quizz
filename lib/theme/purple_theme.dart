@@ -14,7 +14,7 @@ class PurpleShadeColors extends AbstractShadeColors {
   Color get brightColor => Colors.purple.shade50;
 }
 
-class LightPurpleTheme extends LightTheme {
+class LightPurpleTheme extends AbstractLightTheme {
   @override
   AbstractShadeColors get shadeColorsCouple => PurpleShadeColors();
 
@@ -26,7 +26,7 @@ class LightPurpleTheme extends LightTheme {
       [Colors.purple.shade200, Colors.deepPurpleAccent.shade100];
 }
 
-class DarkPurpleTheme extends DarkTheme {
+class DarkPurpleTheme extends AbstractDarkTheme {
   @override
   AbstractShadeColors get shadeColorsCouple => PurpleShadeColors();
 

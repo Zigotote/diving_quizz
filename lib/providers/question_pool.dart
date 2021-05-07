@@ -11,7 +11,7 @@ import 'db_provider.dart';
 /// A provider for each dialog, to manage the question pool
 class QuestionPool with ChangeNotifier {
   /// Questions asked by the bot and answered by the user
-  List<QuestionModel> _askedQuestions = [];
+  List<AbstractQuestionModel> _askedQuestions = [];
 
   /// The ids of the questions the bot hasn't already asked, linked to their failure rate
   Map<int, int> _availableQuestionIds = {};
@@ -28,7 +28,7 @@ class QuestionPool with ChangeNotifier {
   /// Reactions the bot can propose
   Set<String> _possibleReactions = {};
 
-  UnmodifiableListView<QuestionModel> get questions =>
+  UnmodifiableListView<AbstractQuestionModel> get questions =>
       UnmodifiableListView(_askedQuestions);
 
   QuestionPool() {
@@ -133,7 +133,7 @@ class QuestionPool with ChangeNotifier {
   }
 
   /// Answers a question and returns true if it is the correct one
-  bool answerQuestion(QuestionModel question, String answer) {
+  bool answerQuestion(AbstractQuestionModel question, String answer) {
     final int questionIndex = _askedQuestions.indexOf(question);
     _askedQuestions[questionIndex].setUserAnswer(answer);
     notifyListeners();
@@ -143,7 +143,7 @@ class QuestionPool with ChangeNotifier {
   /// Creates the list of the proposed answers for a question
   /// Takes the correct answer and the suggestions. Adds some random answers from the other questions
   /// Shuffles the list to randomize the order of the answers
-  Set<String> _createAnswersList(QuestionModel question,
+  Set<String> _createAnswersList(AbstractQuestionModel question,
       List<String> possibleAnswers, List<String> availableAnswers) {
     Random randomNumber = new Random();
     // Choose some incorrect answers to fill the list

@@ -42,7 +42,7 @@ abstract class AbstractTheme {
   List<Color> get menuColors;
 }
 
-abstract class LightTheme extends AbstractTheme {
+abstract class AbstractLightTheme extends AbstractTheme {
   /// Returns the primary color of the theme
   @protected
   Color get primaryColor;
@@ -68,7 +68,7 @@ abstract class LightTheme extends AbstractTheme {
   Color get botBackgroundColor => this.shadeColorsCouple.brightColor;
 }
 
-abstract class DarkTheme extends AbstractTheme {
+abstract class AbstractDarkTheme extends AbstractTheme {
   /// Returns the color for the elevated buttons
   @protected
   Color get elevatedButtonColor;

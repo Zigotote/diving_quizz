@@ -5,9 +5,9 @@ import 'package:diving_quizz/widgets/my_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-abstract class BaseQuizz extends StatefulWidget {}
+abstract class AbstractQuizz extends StatefulWidget {}
 
-abstract class BaseQuizzState extends State<BaseQuizz> {
+abstract class AbstractQuizzState extends State<AbstractQuizz> {
   /// The scroll controller for the page, to scroll automatically when height is overseized
   final ScrollController _scrollController = ScrollController();
   bool needScroll = false;
@@ -31,7 +31,7 @@ abstract class BaseQuizzState extends State<BaseQuizz> {
       ];
 
   /// Builds the quizz widget for the given question
-  Widget buildQuestion(QuestionModel question);
+  Widget buildQuestion(AbstractQuestionModel question);
 
   /// Adds a SignQuestion to the queue when current question has been answered
   /// The added question's type is from the type of U
