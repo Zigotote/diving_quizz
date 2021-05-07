@@ -1,9 +1,9 @@
+import 'package:diving_quizz/theme/abstract_themes.dart';
 import 'package:diving_quizz/theme/blue_theme.dart';
 import 'package:diving_quizz/theme/brown_theme.dart';
 import 'package:diving_quizz/theme/green_theme.dart';
 import 'package:diving_quizz/theme/purple_theme.dart';
 import 'package:diving_quizz/theme/red_theme.dart';
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// A manager to save the theme preferences in the shared preferences
@@ -15,14 +15,14 @@ class ThemePreferences {
   static const String _BRIGHTNESS = "brightness";
 
   /// Saves the theme to use in shared preferences
-  Future<void> setTheme(MyTheme theme) async {
+  Future<void> setTheme(AbstractTheme theme) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setString(_COLOR_THEME, theme.themeName.toString());
   }
 
   /// Gets the theme to use from shared preferences.
   /// If no theme has been choosed by the user, the blue one is returned
-  Future<MyTheme> getTheme() async {
+  Future<AbstractTheme> getTheme() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String themeValue = sharedPreferences.getString(_COLOR_THEME);
     ColorThemes color;
@@ -54,8 +54,8 @@ enum ColorThemes { Blue, Red, Purple, Brown, Green }
 /// Extension to link an enum value to a MyTheme class
 extension ColorThemesExtension on ColorThemes {
   /// Returns the right MyTheme class, depending if we want a light or dark theme
-  MyTheme getTheme(bool isDarkTheme) {
-    MyTheme theme;
+  AbstractTheme getTheme(bool isDarkTheme) {
+    AbstractTheme theme;
     switch (this) {
       case ColorThemes.Blue:
         theme = isDarkTheme ? DarkBlueTheme() : LightBlueTheme();
@@ -75,27 +75,4 @@ extension ColorThemesExtension on ColorThemes {
     }
     return theme;
   }
-}
-
-abstract class MyTheme {
-  /// The name of the availableTheme linked to the theme
-  ColorThemes themeName;
-
-  /// Returns the default font color for the text
-  Color get textColor => this.themeData.textTheme.bodyText1.color;
-
-  /// Returns the light or dark theme
-  ThemeData get themeData;
-
-  /// Returns the background color of the user's dialog box
-  Color get userPrimaryColor;
-
-  /// Returns the font color of the user's dialog box
-  Color get userSecondaryColor;
-
-  /// Returns the background color of the bot's dialog box
-  Color get botBackgroundColor;
-
-  /// Returns the list of the colors to use for the menu items
-  List<Color> get menuColors;
 }

@@ -1,62 +1,43 @@
 import 'package:diving_quizz/theme/theme_preferences.dart';
 import 'package:flutter/material.dart';
 
-class LightBrownTheme extends MyTheme {
-  LightBrownTheme() {
-    this.themeName = ColorThemes.Brown;
-  }
+import 'abstract_themes.dart';
+
+class BrownShadeColors extends AbstractShadeColors {
+  @override
+  ColorThemes get themeName => ColorThemes.Brown;
 
   @override
-  ThemeData get themeData => ThemeData.light().copyWith(
-        primaryColor: Colors.brown,
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
-          ),
-        ),
-      );
+  Color get deepColor => Colors.brown;
 
   @override
-  Color get userPrimaryColor => Colors.brown;
+  Color get brightColor => Colors.orange.shade100;
+}
+
+class LightBrownTheme extends LightTheme {
+  @override
+  AbstractShadeColors get shadeColorsCouple => BrownShadeColors();
 
   @override
-  Color get userSecondaryColor => Colors.white;
-
-  @override
-  Color get botBackgroundColor => Colors.orange.shade100;
+  Color get primaryColor => Colors.brown;
 
   @override
   List<Color> get menuColors => [Colors.brown.shade200, Colors.orange.shade200];
 }
 
-class DarkBrownTheme extends MyTheme {
-  DarkBrownTheme() {
-    this.themeName = ColorThemes.Brown;
-  }
-
+class DarkBrownTheme extends DarkTheme {
   @override
-  ThemeData get themeData => ThemeData.dark().copyWith(
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ButtonStyle(
-            backgroundColor:
-                MaterialStateProperty.all<Color>(Colors.brown.shade700),
-          ),
-        ),
-        switchTheme: SwitchThemeData(
-          thumbColor: MaterialStateProperty.all<Color>(Colors.brown.shade400),
-          trackColor: MaterialStateProperty.all<Color>(Colors.brown.shade100),
-        ),
-      );
-
-  @override
-  Color get userPrimaryColor => Colors.orangeAccent.shade100;
-
-  @override
-  Color get userSecondaryColor => Colors.black87;
-
-  @override
-  Color get botBackgroundColor => Colors.brown.shade600;
+  AbstractShadeColors get shadeColorsCouple => BrownShadeColors();
 
   @override
   List<Color> get menuColors => [Colors.brown, Colors.orange.shade900];
+
+  @override
+  Color get elevatedButtonColor => Colors.brown.shade700;
+
+  @override
+  Color get switchThumbColor => Colors.brown.shade400;
+
+  @override
+  Color get switchTrackColor => Colors.brown.shade100;
 }

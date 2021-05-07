@@ -1,3 +1,4 @@
+import 'package:diving_quizz/theme/abstract_themes.dart';
 import 'package:diving_quizz/theme/blue_theme.dart';
 import 'package:diving_quizz/theme/theme_preferences.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,12 +9,12 @@ class ThemeProvider with ChangeNotifier {
   ThemePreferences _preferences;
 
   /// The current color theme
-  MyTheme _theme;
+  AbstractTheme _theme;
 
   /// The value is true if dark theme is selected, false otherwise
   bool _isDarkTheme;
 
-  MyTheme get theme => _theme;
+  AbstractTheme get theme => _theme;
 
   bool get isDarkTheme => _isDarkTheme;
 
@@ -26,7 +27,7 @@ class ThemeProvider with ChangeNotifier {
   }
 
   /// Sets the theme to the new value and saves it in the shared preferences
-  set theme(MyTheme value) {
+  set theme(AbstractTheme value) {
     _theme = value;
     _preferences.setTheme(_theme);
     notifyListeners();

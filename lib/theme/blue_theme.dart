@@ -1,56 +1,44 @@
 import 'package:diving_quizz/theme/theme_preferences.dart';
 import 'package:flutter/material.dart';
 
-class LightBlueTheme extends MyTheme {
-  LightBlueTheme() {
-    this.themeName = ColorThemes.Blue;
-  }
+import 'abstract_themes.dart';
+
+class BlueShadeColors extends AbstractShadeColors {
+  @override
+  ColorThemes get themeName => ColorThemes.Blue;
 
   @override
-  ThemeData get themeData => ThemeData.light();
+  Color get deepColor => Colors.blueAccent;
 
   @override
-  Color get userPrimaryColor => Colors.blueAccent;
+  Color get brightColor => Colors.lightBlue.shade50;
+}
+
+class LightBlueTheme extends LightTheme {
+  @override
+  AbstractShadeColors get shadeColorsCouple => BlueShadeColors();
 
   @override
-  Color get userSecondaryColor => Colors.white;
-
-  @override
-  Color get botBackgroundColor => Colors.lightBlue.shade50;
+  Color get primaryColor => Colors.blue;
 
   @override
   List<Color> get menuColors =>
       [Colors.lightBlue.shade200, Colors.blueAccent.shade100];
 }
 
-class DarkBlueTheme extends MyTheme {
-  DarkBlueTheme() {
-    this.themeName = ColorThemes.Blue;
-  }
-
+class DarkBlueTheme extends DarkTheme {
   @override
-  ThemeData get themeData => ThemeData.dark().copyWith(
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ButtonStyle(
-            backgroundColor:
-                MaterialStateProperty.all<Color>(Colors.blueAccent.shade700),
-          ),
-        ),
-        switchTheme: SwitchThemeData(
-          thumbColor: MaterialStateProperty.all<Color>(Colors.blue.shade400),
-          trackColor: MaterialStateProperty.all<Color>(Colors.blue.shade100),
-        ),
-      );
-
-  @override
-  Color get userPrimaryColor => Colors.lightBlue.shade50;
-
-  @override
-  Color get userSecondaryColor => Colors.black87;
-
-  @override
-  Color get botBackgroundColor => Colors.blueAccent;
+  AbstractShadeColors get shadeColorsCouple => BlueShadeColors();
 
   @override
   List<Color> get menuColors => [Colors.blue.shade700, Colors.indigo.shade400];
+
+  @override
+  Color get elevatedButtonColor => Colors.blueAccent.shade700;
+
+  @override
+  Color get switchThumbColor => Colors.blue.shade400;
+
+  @override
+  Color get switchTrackColor => Colors.blue.shade100;
 }
