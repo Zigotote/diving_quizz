@@ -28,10 +28,17 @@ class QuestionPool with ChangeNotifier {
   /// Reactions the bot can propose
   Set<String> _possibleReactions = {};
 
+  /// Indicates if the quizz is finished
+  bool _isFinished;
+
+  /// Returns the list of asked questions
   UnmodifiableListView<AbstractQuestionModel> get questions =>
       UnmodifiableListView(_askedQuestions);
 
+  bool get isFinished => _isFinished;
+
   QuestionPool() {
+    _isFinished = false;
     _fillPossibleMeanings();
     _fillPossibleReactions();
   }
@@ -56,6 +63,7 @@ class QuestionPool with ChangeNotifier {
   /// Initializes the lists used to build the questions
   /// Initializes the current question's list with one question
   void initQuizz() async {
+    _isFinished = false;
     _askedQuestions = [];
     _availableQuestionIds =
         await DatabaseProvider.instance.getSignQuestionIds();
@@ -66,6 +74,7 @@ class QuestionPool with ChangeNotifier {
   /// Chooses a random sign question and adds it to the _question list
   /// Creates a list of proposed answers for this question
   void addRandomSignQuestion() async {
+    _isFinished = _availableQuestionIds.isEmpty;
     if (_availableQuestionIds.isNotEmpty) {
       int questionId = _selectRandomQuestion(_availableQuestionIds.entries);
       _availableQuestionIds.remove(questionId);

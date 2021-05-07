@@ -12,6 +12,9 @@ abstract class AbstractQuizzState extends State<AbstractQuizz> {
   final ScrollController _scrollController = ScrollController();
   bool needScroll = false;
 
+  /// The score of the user
+  int score = 0;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -36,6 +39,7 @@ abstract class AbstractQuizzState extends State<AbstractQuizz> {
   /// Adds a SignQuestion to the queue when current question has been answered
   /// The added question's type is from the type of U
   void addSignQuestion(int score) {
+    this.score += score;
     setState(() {
       Provider.of<QuestionPool>(context, listen: false).addRandomSignQuestion();
       needScroll = true;
@@ -97,6 +101,29 @@ abstract class AbstractQuizzState extends State<AbstractQuizz> {
                     }
                     return null;
                   },
+                ),
+              );
+            },
+          ),
+          Consumer<QuestionPool>(
+            builder: (context, QuestionPool questionPool, child) {
+              int totalQuestions = questionPool.questions.length;
+              return SliverList(
+                delegate: SliverChildListDelegate(
+                  questionPool.isFinished
+                      ? [
+                          BotDialog(
+                            child: BotText(
+                              "Le quizz est maintenant fini.",
+                            ),
+                          ),
+                          BotDialog(
+                            child: BotText(
+                              "Ton score est de $score/$totalQuestions.",
+                            ),
+                          ),
+                        ]
+                      : [],
                 ),
               );
             },

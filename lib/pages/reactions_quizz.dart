@@ -30,6 +30,7 @@ class _ReactionsQuizzState extends AbstractQuizzState {
 
   /// Adds a ReactionQuestion to the queue when current question has been answered
   void _addReactionQuestion(int score) {
+    this.score += score;
     setState(() {
       Provider.of<QuestionPool>(context, listen: false)
           .addRandomReactionQuestion();
