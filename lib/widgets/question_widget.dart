@@ -2,10 +2,11 @@ import 'dart:math';
 
 import 'package:diving_quizz/models/question.dart';
 import 'package:diving_quizz/providers/question_pool.dart';
-import 'package:diving_quizz/widgets/bot_dialog.dart';
-import 'package:diving_quizz/widgets/user_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'bot_dialog.dart';
+import 'user_dialog.dart';
 
 /// A widget to manage the question's widget behaviour
 abstract class QuestionWidget<T extends QuestionModel> extends StatefulWidget {

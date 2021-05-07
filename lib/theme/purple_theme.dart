@@ -1,7 +1,7 @@
-import 'package:diving_quizz/theme/theme_preferences.dart';
 import 'package:flutter/material.dart';
 
 import 'abstract_themes.dart';
+import 'theme_preferences.dart';
 
 class PurpleShadeColors extends AbstractShadeColors {
   @override

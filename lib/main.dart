@@ -1,8 +1,9 @@
-import 'package:diving_quizz/pages/home.dart';
-import 'package:diving_quizz/providers/question_pool.dart';
-import 'package:diving_quizz/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'pages/home.dart';
+import 'providers/question_pool.dart';
+import 'providers/theme_provider.dart';
 
 void main() {
   runApp(MyApp());

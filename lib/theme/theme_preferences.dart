@@ -1,10 +1,11 @@
-import 'package:diving_quizz/theme/abstract_themes.dart';
-import 'package:diving_quizz/theme/blue_theme.dart';
-import 'package:diving_quizz/theme/brown_theme.dart';
-import 'package:diving_quizz/theme/green_theme.dart';
-import 'package:diving_quizz/theme/purple_theme.dart';
-import 'package:diving_quizz/theme/red_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'abstract_themes.dart';
+import 'blue_theme.dart';
+import 'brown_theme.dart';
+import 'green_theme.dart';
+import 'purple_theme.dart';
+import 'red_theme.dart';
 
 /// A manager to save the theme preferences in the shared preferences
 class ThemePreferences {

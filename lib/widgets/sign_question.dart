@@ -1,11 +1,12 @@
-import 'package:diving_quizz/providers/theme_provider.dart';
-import 'package:diving_quizz/widgets/bot_dialog.dart';
-import 'package:diving_quizz/widgets/options_widget.dart';
-import 'package:diving_quizz/widgets/question_widget.dart';
 import 'package:diving_quizz/models/question.dart';
-import 'package:diving_quizz/widgets/user_dialog.dart';
+import 'package:diving_quizz/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'bot_dialog.dart';
+import 'options_widget.dart';
+import 'question_widget.dart';
+import 'user_dialog.dart';
 
 /// A dialog for a question about the meaning of a sign.
 /// The bot asks the question, the user can choose an answer and the bot says if it is the correct one

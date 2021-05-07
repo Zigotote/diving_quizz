@@ -1,7 +1,8 @@
 import 'dart:convert';
 
-import 'package:diving_quizz/models/meaning.dart';
 import 'package:diving_quizz/providers/db_provider.dart';
+
+import 'meaning.dart';
 
 abstract class QuestionModel {
   static const String _IMAGE_FOLDER = "assets/images/signs/";

@@ -1,10 +1,11 @@
-import 'package:diving_quizz/pages/settings.dart';
 import 'package:diving_quizz/providers/theme_provider.dart';
-import 'package:diving_quizz/pages/reactions_quizz.dart';
-import 'package:diving_quizz/pages/signs_quizz.dart';
 import 'package:diving_quizz/widgets/my_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'reactions_quizz.dart';
+import 'settings.dart';
+import 'signs_quizz.dart';
 
 class Home extends StatelessWidget {
   /// The folder where the item menu images are stored

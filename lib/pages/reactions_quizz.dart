@@ -1,10 +1,11 @@
 import 'package:diving_quizz/models/question.dart';
-import 'package:diving_quizz/pages/base_quizz.dart';
 import 'package:diving_quizz/providers/question_pool.dart';
 import 'package:diving_quizz/widgets/reaction_question.dart';
 import 'package:diving_quizz/widgets/sign_question.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'base_quizz.dart';
 
 class ReactionsQuizz extends BaseQuizz {
   @override

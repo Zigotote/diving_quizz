@@ -1,5 +1,6 @@
-import 'package:diving_quizz/theme/theme_preferences.dart';
 import 'package:flutter/material.dart';
+
+import 'theme_preferences.dart';
 
 /// A class with the deeper and brighter color of the theme
 abstract class AbstractShadeColors {
