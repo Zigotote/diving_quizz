@@ -8,6 +8,9 @@ class PurpleShadeColors extends AbstractShadeColors {
   ColorThemes get themeName => ColorThemes.Purple;
 
   @override
+  Color get primaryColor => Colors.deepPurple.shade200;
+
+  @override
   Color get deepColor => Colors.purple.shade800;
 
   @override
@@ -16,23 +19,12 @@ class PurpleShadeColors extends AbstractShadeColors {
 
 class LightPurpleTheme extends AbstractLightTheme {
   @override
-  AbstractShadeColors get shadeColorsCouple => PurpleShadeColors();
-
-  @override
-  Color get primaryColor => Colors.purple.shade700;
-
-  @override
-  List<Color> get menuColors =>
-      [Colors.purple.shade200, Colors.deepPurpleAccent.shade100];
+  AbstractShadeColors get shadeColors => PurpleShadeColors();
 }
 
 class DarkPurpleTheme extends AbstractDarkTheme {
   @override
-  AbstractShadeColors get shadeColorsCouple => PurpleShadeColors();
-
-  @override
-  List<Color> get menuColors =>
-      [Colors.purple.shade700, Colors.deepPurple.shade400];
+  AbstractShadeColors get shadeColors => PurpleShadeColors();
 
   @override
   Color get elevatedButtonColor => Colors.purpleAccent.shade700;

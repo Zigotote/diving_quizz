@@ -7,6 +7,9 @@ abstract class AbstractShadeColors {
   /// Returns the name of the theme linked to this shades
   ColorThemes get themeName;
 
+  /// Returns the primary color for the shade theme
+  Color get primaryColor;
+
   /// Returns the deeper color of the theme
   Color get deepColor;
 
@@ -18,10 +21,10 @@ abstract class AbstractShadeColors {
 abstract class AbstractTheme {
   /// Returns deeper and brighter colors of the theme
   @protected
-  AbstractShadeColors get shadeColorsCouple;
+  AbstractShadeColors get shadeColors;
 
   /// Returns the name of the availableTheme linked to the theme
-  ColorThemes get themeName => this.shadeColorsCouple.themeName;
+  ColorThemes get themeName => this.shadeColors.themeName;
 
   /// Returns the default font color for the text
   Color get textColor => this.themeData.textTheme.bodyText1.color;
@@ -37,35 +40,29 @@ abstract class AbstractTheme {
 
   /// Returns the background color of the bot's dialog box
   Color get botBackgroundColor;
-
-  /// Returns the list of the colors to use for the menu items
-  List<Color> get menuColors;
 }
 
 abstract class AbstractLightTheme extends AbstractTheme {
-  /// Returns the primary color of the theme
-  @protected
-  Color get primaryColor;
-
   @override
   ThemeData get themeData => ThemeData.light().copyWith(
-        primaryColor: this.primaryColor,
+        primaryColor: this.shadeColors.primaryColor,
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
-            backgroundColor:
-                MaterialStateProperty.all<Color>(this.primaryColor),
+            backgroundColor: MaterialStateProperty.all<Color>(
+              this.shadeColors.primaryColor,
+            ),
           ),
         ),
       );
 
   @override
-  Color get userPrimaryColor => this.shadeColorsCouple.deepColor;
+  Color get userPrimaryColor => this.shadeColors.deepColor;
 
   @override
   Color get userSecondaryColor => Colors.white;
 
   @override
-  Color get botBackgroundColor => this.shadeColorsCouple.brightColor;
+  Color get botBackgroundColor => this.shadeColors.brightColor;
 }
 
 abstract class AbstractDarkTheme extends AbstractTheme {
@@ -83,6 +80,7 @@ abstract class AbstractDarkTheme extends AbstractTheme {
 
   @override
   ThemeData get themeData => ThemeData.dark().copyWith(
+        primaryColor: this.shadeColors.primaryColor,
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
             backgroundColor:
@@ -96,11 +94,11 @@ abstract class AbstractDarkTheme extends AbstractTheme {
       );
 
   @override
-  Color get userPrimaryColor => this.shadeColorsCouple.brightColor;
+  Color get userPrimaryColor => this.shadeColors.brightColor;
 
   @override
   Color get userSecondaryColor => Colors.black87;
 
   @override
-  Color get botBackgroundColor => this.shadeColorsCouple.deepColor;
+  Color get botBackgroundColor => this.shadeColors.deepColor;
 }

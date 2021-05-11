@@ -37,6 +37,8 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
     return Consumer(builder: (context, ThemeProvider themeProvider, child) {
       return Scaffold(
         appBar: AppBar(
@@ -52,45 +54,32 @@ class Home extends StatelessWidget {
             ),
           ],
         ),
-        body: OrientationBuilder(
-          builder: (context, orientation) {
-            return GridView.count(
-              crossAxisCount: orientation == Orientation.portrait ? 2 : 3,
-              crossAxisSpacing: 2,
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-              children: _menu
-                  .map(
-                    (item) => Container(
-                      padding: EdgeInsets.all(8),
-                      child: ElevatedButton(
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              MyIcon(
-                                image: item.image,
-                                diameter: 100,
-                              ),
-                              Text(
-                                item.text,
-                                textAlign: TextAlign.center,
-                              )
-                            ],
-                          ),
-                        ),
-                        onPressed: () => this._navigateTo(context, item.page),
-                        style: ElevatedButton.styleFrom(
-                          primary: themeProvider.theme.menuColors[
-                              _menu.indexOf(item)], //background color
-                          onPrimary: themeProvider.theme.textColor,
-                          elevation: 10,
-                        ),
-                      ),
-                    ),
-                  )
-                  .toList(),
-            );
-          },
+        body: Stack(
+          children: [
+            Positioned(
+              bottom: screenHeight > 800 && screenWidth > 450
+                  ? -screenWidth * 0.5
+                  : -screenWidth * 0.35,
+              left: screenWidth * 0.05,
+              width: screenWidth * 0.9,
+              height: screenWidth * 0.9,
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: themeProvider.theme.themeData.primaryColor,
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              child: Image.asset(
+                "assets/images/menus/plongeuse.png",
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ],
         ),
       );
     });

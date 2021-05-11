@@ -8,6 +8,9 @@ class GreenShadeColors extends AbstractShadeColors {
   ColorThemes get themeName => ColorThemes.Green;
 
   @override
+  Color get primaryColor => Colors.green.shade200;
+
+  @override
   Color get deepColor => Colors.lightGreen.shade900;
 
   @override
@@ -16,22 +19,12 @@ class GreenShadeColors extends AbstractShadeColors {
 
 class LightGreenTheme extends AbstractLightTheme {
   @override
-  AbstractShadeColors get shadeColorsCouple => GreenShadeColors();
-
-  @override
-  Color get primaryColor => Colors.green.shade800;
-
-  @override
-  List<Color> get menuColors =>
-      [Colors.lightGreen.shade200, Colors.greenAccent.shade100];
+  AbstractShadeColors get shadeColors => GreenShadeColors();
 }
 
 class DarkGreenTheme extends AbstractDarkTheme {
   @override
-  AbstractShadeColors get shadeColorsCouple => GreenShadeColors();
-
-  @override
-  List<Color> get menuColors => [Colors.green.shade800, Colors.teal.shade700];
+  AbstractShadeColors get shadeColors => GreenShadeColors();
 
   @override
   Color get elevatedButtonColor => Colors.greenAccent.shade700;

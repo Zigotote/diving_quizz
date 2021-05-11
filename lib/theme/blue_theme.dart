@@ -8,6 +8,9 @@ class BlueShadeColors extends AbstractShadeColors {
   ColorThemes get themeName => ColorThemes.Blue;
 
   @override
+  Color get primaryColor => Colors.lightBlue.shade200;
+
+  @override
   Color get deepColor => Colors.blueAccent;
 
   @override
@@ -16,22 +19,12 @@ class BlueShadeColors extends AbstractShadeColors {
 
 class LightBlueTheme extends AbstractLightTheme {
   @override
-  AbstractShadeColors get shadeColorsCouple => BlueShadeColors();
-
-  @override
-  Color get primaryColor => Colors.blue;
-
-  @override
-  List<Color> get menuColors =>
-      [Colors.lightBlue.shade200, Colors.blueAccent.shade100];
+  AbstractShadeColors get shadeColors => BlueShadeColors();
 }
 
 class DarkBlueTheme extends AbstractDarkTheme {
   @override
-  AbstractShadeColors get shadeColorsCouple => BlueShadeColors();
-
-  @override
-  List<Color> get menuColors => [Colors.blue.shade700, Colors.indigo.shade400];
+  AbstractShadeColors get shadeColors => BlueShadeColors();
 
   @override
   Color get elevatedButtonColor => Colors.blueAccent.shade700;

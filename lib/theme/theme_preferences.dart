@@ -2,7 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'abstract_themes.dart';
 import 'blue_theme.dart';
-import 'brown_theme.dart';
+import 'orange_theme.dart';
 import 'green_theme.dart';
 import 'purple_theme.dart';
 import 'red_theme.dart';
@@ -50,7 +50,7 @@ class ThemePreferences {
 }
 
 /// List of the available color themes
-enum ColorThemes { Blue, Red, Purple, Brown, Green }
+enum ColorThemes { Blue, Red, Purple, Orange, Green }
 
 /// Extension to link an enum value to a MyTheme class
 extension ColorThemesExtension on ColorThemes {
@@ -67,8 +67,8 @@ extension ColorThemesExtension on ColorThemes {
       case ColorThemes.Purple:
         theme = isDarkTheme ? DarkPurpleTheme() : LightPurpleTheme();
         break;
-      case ColorThemes.Brown:
-        theme = isDarkTheme ? DarkBrownTheme() : LightBrownTheme();
+      case ColorThemes.Orange:
+        theme = isDarkTheme ? DarkOrangeTheme() : LightOrangeTheme();
         break;
       case ColorThemes.Green:
         theme = isDarkTheme ? DarkGreenTheme() : LightGreenTheme();
