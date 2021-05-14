@@ -27,9 +27,6 @@ class DarkRedTheme extends AbstractDarkTheme {
   AbstractShadeColors get shadeColors => RedShadeColors();
 
   @override
-  Color get elevatedButtonColor => Colors.redAccent.shade700;
-
-  @override
   Color get switchThumbColor => Colors.redAccent.shade400;
 
   @override

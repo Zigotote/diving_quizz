@@ -1,7 +1,6 @@
 import 'package:diving_quizz/models/question.dart';
 import 'package:flutter/material.dart';
 
-import 'bot_dialog.dart';
 import 'options_widget.dart';
 import 'abstract_question.dart';
 
@@ -19,7 +18,7 @@ class _ReactionQuestionState
     extends AbstractQuestionWidgetState<ReactionQuestionModel> {
   @override
   List<Widget> buildQuestion() {
-    return [BotText("Comment y réagir ?")];
+    return [Text("Comment y réagir ?")];
   }
 
   @override
@@ -39,10 +38,10 @@ class _ReactionQuestionState
 
   @override
   List<Widget> buildBotResponses() {
-    List<Widget> botResponses = [BotText(this.selectBotResponse())];
+    List<Widget> botResponses = [Text(this.selectBotResponse())];
     if (!widget.question.isCorrectlyAnswered()) {
       botResponses = [
-        BotText(
+        Text(
           "Non, il fallait répondre \"${widget.question.signification}\" avec ce signe :",
         ),
         Image(

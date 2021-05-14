@@ -3,7 +3,6 @@ import 'package:diving_quizz/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'bot_dialog.dart';
 import 'options_widget.dart';
 import 'abstract_question.dart';
 import 'user_dialog.dart';
@@ -23,7 +22,7 @@ class _SignQuestionState
   @override
   List<Widget> buildQuestion() {
     return [
-      BotText("Que signifie ce signe ?"),
+      Text("Que signifie ce signe ?"),
       Image(
         image: AssetImage((widget.question as SignQuestionModel).image),
       )
@@ -49,10 +48,10 @@ class _SignQuestionState
 
   @override
   List<Widget> buildBotResponses() {
-    List<Widget> botResponses = [BotText(this.selectBotResponse())];
+    List<Widget> botResponses = [Text(this.selectBotResponse())];
     if (!widget.question.isCorrectlyAnswered()) {
       botResponses = [
-        BotText(
+        Text(
           "Non, il s'agit de ${widget.question.signification}.",
         ),
         Text(

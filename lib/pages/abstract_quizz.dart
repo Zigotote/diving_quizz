@@ -83,9 +83,7 @@ abstract class AbstractQuizzState extends State<AbstractQuizz> {
         slivers: [
           SliverList(
             delegate: SliverChildListDelegate(
-              introDialog
-                  .map((text) => BotDialog(child: BotText(text)))
-                  .toList(),
+              introDialog.map((text) => BotDialog(child: Text(text))).toList(),
             ),
           ),
           Consumer<QuestionPool>(
@@ -113,12 +111,12 @@ abstract class AbstractQuizzState extends State<AbstractQuizz> {
                   questionPool.isFinished
                       ? [
                           BotDialog(
-                            child: BotText(
+                            child: Text(
                               "Le quizz est maintenant fini.",
                             ),
                           ),
                           BotDialog(
-                            child: BotText(
+                            child: Text(
                               "Ton score est de $score/$totalQuestions.",
                             ),
                           ),
@@ -130,7 +128,7 @@ abstract class AbstractQuizzState extends State<AbstractQuizz> {
           ),
         ],
       ),
-      bottomNavigationBar: ElevatedButton(
+      bottomNavigationBar: OutlinedButton(
         onPressed: Provider.of<QuestionPool>(context, listen: false).initQuizz,
         child: Text("Réinitialiser"),
       ),

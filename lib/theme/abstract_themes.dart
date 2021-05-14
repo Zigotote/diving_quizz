@@ -23,14 +23,39 @@ abstract class AbstractTheme {
   @protected
   AbstractShadeColors get shadeColors;
 
+  ///Returns a dark or light colorscheme
+  @protected
+  ColorScheme get colorScheme;
+
+  /// Returns the default text color for the theme
+  Color get textColor;
+
   /// Returns the name of the availableTheme linked to the theme
   ColorThemes get themeName => this.shadeColors.themeName;
 
-  /// Returns the default font color for the text
-  Color get textColor => this.themeData.textTheme.bodyText1.color;
-
   /// Returns the light or dark theme
-  ThemeData get themeData;
+  ThemeData get themeData =>
+      ThemeData.from(colorScheme: this.colorScheme).copyWith(
+        primaryColor: this.shadeColors.primaryColor,
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(
+              this.shadeColors.primaryColor,
+            ),
+            shape: MaterialStateProperty.all(CircleBorder()),
+          ),
+        ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(this.userSecondaryColor),
+            foregroundColor: MaterialStateProperty.all(this.userPrimaryColor),
+            elevation: MaterialStateProperty.all(10),
+          ),
+        ),
+        textTheme: TextTheme(
+          bodyText2: TextStyle(color: this.textColor),
+        ),
+      );
 
   /// Returns the background color of the user's dialog box
   Color get userPrimaryColor;
@@ -44,16 +69,10 @@ abstract class AbstractTheme {
 
 abstract class AbstractLightTheme extends AbstractTheme {
   @override
-  ThemeData get themeData => ThemeData.light().copyWith(
-        primaryColor: this.shadeColors.primaryColor,
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(
-              this.shadeColors.primaryColor,
-            ),
-          ),
-        ),
-      );
+  ColorScheme get colorScheme => ColorScheme.light();
+
+  @override
+  Color get textColor => Colors.black;
 
   @override
   Color get userPrimaryColor => this.shadeColors.deepColor;
@@ -66,9 +85,11 @@ abstract class AbstractLightTheme extends AbstractTheme {
 }
 
 abstract class AbstractDarkTheme extends AbstractTheme {
-  /// Returns the color for the elevated buttons
-  @protected
-  Color get elevatedButtonColor;
+  @override
+  ColorScheme get colorScheme => ColorScheme.dark();
+
+  @override
+  Color get textColor => Colors.white;
 
   /// Returns the color of switch button
   @protected
@@ -79,14 +100,7 @@ abstract class AbstractDarkTheme extends AbstractTheme {
   Color get switchTrackColor;
 
   @override
-  ThemeData get themeData => ThemeData.dark().copyWith(
-        primaryColor: this.shadeColors.primaryColor,
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ButtonStyle(
-            backgroundColor:
-                MaterialStateProperty.all<Color>(this.elevatedButtonColor),
-          ),
-        ),
+  ThemeData get themeData => super.themeData.copyWith(
         switchTheme: SwitchThemeData(
           thumbColor: MaterialStateProperty.all<Color>(this.switchThumbColor),
           trackColor: MaterialStateProperty.all<Color>(this.switchTrackColor),

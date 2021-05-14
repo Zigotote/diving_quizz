@@ -18,30 +18,21 @@ abstract class AbstractOptionsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(builder: (context, ThemeProvider themeProvider, child) {
-      return Wrap(
-        alignment: WrapAlignment.center,
-        children: this.answers.map((answer) {
-          return Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 6,
-              vertical: 2,
-            ),
-            child: ElevatedButton(
-              onPressed: () => this.onAnswerSelected(answer),
-              child: this.buildAnswer(answer),
-              style: ElevatedButton.styleFrom(
-                onPrimary:
-                    themeProvider.theme.userPrimaryColor, //font and icon color
-                primary:
-                    themeProvider.theme.userSecondaryColor, //background color
-                elevation: 10,
-              ),
-            ),
-          );
-        }).toList(),
-      );
-    });
+    return Wrap(
+      alignment: WrapAlignment.center,
+      children: this.answers.map((answer) {
+        return Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 6,
+            vertical: 2,
+          ),
+          child: OutlinedButton(
+            onPressed: () => this.onAnswerSelected(answer),
+            child: this.buildAnswer(answer),
+          ),
+        );
+      }).toList(),
+    );
   }
 }
 

@@ -81,7 +81,7 @@ class _MySettingsState extends State<MySettings> {
                 child: Column(
                   children: [
                     BotDialog(
-                      child: BotText("Bonjour, je suis le professeur X."),
+                      child: Text("Bonjour, je suis le professeur X."),
                     ),
                     UserDialog(
                       child: UserText("Démarrons le quizz !"),

@@ -26,23 +26,3 @@ class BotDialog extends StatelessWidget {
     });
   }
 }
-
-/// A text to display in a BotDialog
-class BotText extends StatelessWidget {
-  /// The text to display
-  final String text;
-
-  BotText(this.text);
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer(builder: (context, ThemeProvider themeProvider, child) {
-      return Text(
-        this.text,
-        style: TextStyle(
-          color: themeProvider.theme.textColor,
-        ),
-      );
-    });
-  }
-}

@@ -27,9 +27,6 @@ class DarkPurpleTheme extends AbstractDarkTheme {
   AbstractShadeColors get shadeColors => PurpleShadeColors();
 
   @override
-  Color get elevatedButtonColor => Colors.purpleAccent.shade700;
-
-  @override
   Color get switchThumbColor => Colors.purple.shade400;
 
   @override
