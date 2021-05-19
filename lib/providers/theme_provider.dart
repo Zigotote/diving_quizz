@@ -1,7 +1,8 @@
-import 'package:diving_quizz/theme/abstract_themes.dart';
-import 'package:diving_quizz/theme/blue_theme.dart';
-import 'package:diving_quizz/theme/theme_preferences.dart';
 import 'package:flutter/cupertino.dart';
+
+import '../theme/abstract_themes.dart';
+import '../theme/blue_theme.dart';
+import '../theme/theme_preferences.dart';
 
 /// A provider to share the color theme
 class ThemeProvider with ChangeNotifier {

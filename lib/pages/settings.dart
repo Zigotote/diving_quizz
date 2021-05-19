@@ -1,9 +1,10 @@
-import 'package:diving_quizz/providers/theme_provider.dart';
-import 'package:diving_quizz/theme/theme_preferences.dart';
-import 'package:diving_quizz/widgets/bot_dialog.dart';
-import 'package:diving_quizz/widgets/user_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../providers/theme_provider.dart';
+import '../theme/theme_preferences.dart';
+import '../widgets/bot_dialog.dart';
+import '../widgets/user_dialog.dart';
 
 class MySettings extends StatefulWidget {
   @override

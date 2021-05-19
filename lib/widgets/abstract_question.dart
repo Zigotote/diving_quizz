@@ -1,10 +1,10 @@
 import 'dart:math';
 
-import 'package:diving_quizz/models/question.dart';
-import 'package:diving_quizz/providers/question_pool.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/question.dart';
+import '../providers/question_pool.dart';
 import 'bot_dialog.dart';
 import 'user_dialog.dart';
 

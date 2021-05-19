@@ -1,6 +1,4 @@
-import 'package:diving_quizz/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 /// A list of possible options for a question
 abstract class AbstractOptionsWidget extends StatelessWidget {

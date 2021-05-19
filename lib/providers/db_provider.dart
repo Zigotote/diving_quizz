@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-import 'package:diving_quizz/models/meaning.dart';
-import 'package:diving_quizz/models/question.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../models/meaning.dart';
+import '../models/question.dart';
 import 'question_pool.dart';
 
 /// A provider to manage the SQLite database

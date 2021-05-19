@@ -1,8 +1,8 @@
-import 'package:diving_quizz/models/question.dart';
 import 'package:flutter/material.dart';
 
-import 'options_widget.dart';
+import '../models/question.dart';
 import 'abstract_question.dart';
+import 'options_widget.dart';
 
 /// A dialog for a question about the reaction to apply to a sign.
 /// The bot asks the question, the user can choose an answer and the bot says if it is the correct one

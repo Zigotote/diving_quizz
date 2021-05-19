@@ -1,11 +1,11 @@
-import 'package:diving_quizz/providers/theme_provider.dart';
-import 'package:diving_quizz/theme/abstract_themes.dart';
-import 'package:diving_quizz/widgets/my_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_circular_text/circular_text/model.dart';
 import 'package:flutter_circular_text/circular_text/widget.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/theme_provider.dart';
+import '../theme/abstract_themes.dart';
+import '../widgets/my_icon.dart';
 import 'reactions_quizz.dart';
 import 'settings.dart';
 import 'signs_quizz.dart';

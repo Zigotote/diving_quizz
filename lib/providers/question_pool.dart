@@ -2,10 +2,10 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:diving_quizz/models/question.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../models/question.dart';
 import 'db_provider.dart';
 
 /// A provider for each dialog, to manage the question pool

@@ -1,7 +1,6 @@
 import 'dart:convert';
 
-import 'package:diving_quizz/providers/db_provider.dart';
-
+import '../providers/db_provider.dart';
 import 'meaning.dart';
 
 abstract class AbstractQuestionModel {

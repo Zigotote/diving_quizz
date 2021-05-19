@@ -1,5 +1,5 @@
-import 'package:diving_quizz/models/question.dart';
-import 'package:diving_quizz/widgets/sign_question.dart';
+import '../models/question.dart';
+import '../widgets/sign_question.dart';
 import 'package:flutter/material.dart';
 
 import 'abstract_quizz.dart';

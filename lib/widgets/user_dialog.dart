@@ -1,7 +1,8 @@
 import "package:bubble/bubble.dart";
-import 'package:diving_quizz/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../providers/theme_provider.dart';
 
 /// A dialog box from the user. Placed on the right of the screen.
 class UserDialog extends StatelessWidget {

@@ -1,10 +1,10 @@
-import 'package:diving_quizz/models/question.dart';
-import 'package:diving_quizz/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'options_widget.dart';
+import '../models/question.dart';
+import '../providers/theme_provider.dart';
 import 'abstract_question.dart';
+import 'options_widget.dart';
 import 'user_dialog.dart';
 
 /// A dialog for a question about the meaning of a sign.
