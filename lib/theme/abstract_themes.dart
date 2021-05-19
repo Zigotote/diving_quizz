@@ -50,7 +50,10 @@ abstract class AbstractTheme {
           ),
         ),
         textTheme: TextTheme(
-          bodyText2: TextStyle(color: this.colorScheme.onSurface),
+          bodyText2: TextStyle(
+            fontFamily: "Nunito",
+            color: this.colorScheme.onSurface,
+          ),
         ),
       );
 

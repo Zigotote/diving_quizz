@@ -68,7 +68,13 @@ class Home extends StatelessWidget {
           CircularText(
             children: [
               TextItem(
-                text: Text(text, style: TextStyle(color: textColor)),
+                text: Text(
+                  text,
+                  style: TextStyle(
+                    color: textColor,
+                    fontFamily: "Nunito",
+                  ),
+                ),
                 startAngle: 180,
               ),
             ],
@@ -98,7 +104,7 @@ class Home extends StatelessWidget {
           children: [
             ..._buildBackground(primaryColor, screenHeight, screenWidth),
             Positioned(
-              top: screenHeight * 0.06,
+              top: screenHeight * 0.05,
               width: screenWidth,
               child: Text(
                 "Le quizz du plongeur",

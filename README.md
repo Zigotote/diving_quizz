@@ -22,3 +22,7 @@ Flutter circular text : https://pub.dev/packages/flutter_circular_text
 Provider : https://pub.dev/packages/provider
 Sqflite : https://pub.dev/packages/sqflite
 Shared preferences : https://pub.dev/packages/shared_preferences
+
+# Font
+
+Nunito : https://www.1001fonts.com/nunito-font.html
