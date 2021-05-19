@@ -33,6 +33,22 @@ abstract class AbstractTheme {
   /// Returns the light or dark theme
   ThemeData get themeData =>
       ThemeData.from(colorScheme: this.colorScheme).copyWith(
+        appBarTheme: AppBarTheme(
+          backgroundColor: this.colorScheme.background,
+          elevation: 0,
+          centerTitle: true,
+          iconTheme: IconThemeData(
+            color: this.textColor,
+          ),
+          textTheme: TextTheme(
+            headline6: TextStyle(
+              fontFamily: "Nunito",
+              color: this.textColor,
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
         primaryColor: this.shadeColors.primaryColor,
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
@@ -52,10 +68,13 @@ abstract class AbstractTheme {
         textTheme: TextTheme(
           bodyText2: TextStyle(
             fontFamily: "Nunito",
-            color: this.colorScheme.onSurface,
+            color: this.textColor,
           ),
         ),
       );
+
+  /// Returns the default color for the text
+  Color get textColor => this.colorScheme.onSurface;
 
   /// Returns the background color of the user's dialog box
   Color get userPrimaryColor;

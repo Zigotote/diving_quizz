@@ -118,7 +118,7 @@ class Home extends StatelessWidget {
               screenWidth * 0.53,
               "Apprendre les réactions",
               "reaction.jpg",
-              theme.themeData.colorScheme.onSurface,
+              theme.textColor,
               () => _navigateTo(context, ReactionsQuizz()),
             ),
             _buildMenuItem(
@@ -127,7 +127,7 @@ class Home extends StatelessWidget {
               screenWidth * 0.15,
               "Apprendre les signes",
               "sign.jpg",
-              theme.themeData.colorScheme.onSurface,
+              theme.textColor,
               () => _navigateTo(context, SignsQuizz()),
             ),
             Positioned(
