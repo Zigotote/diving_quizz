@@ -23,22 +23,6 @@ class _MySettingsState extends State<MySettings> {
   Widget _buildColorSelector(double screenWidth, double screenHeight,
       double itemWidth, double itemHeight, ThemeProvider themeProvider) {
     return Stack(children: [
-      AnimatedPositioned(
-        left: _leftPositionColorSelector,
-        top: screenHeight * 0.015,
-        child: Container(
-          width: itemWidth * 1.1,
-          height: itemHeight,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: themeProvider.theme.textColor,
-              width: screenWidth * 0.005,
-            ),
-            borderRadius: BorderRadius.circular(25),
-          ),
-        ),
-        duration: Duration(milliseconds: 600),
-      ),
       Row(
         children: ColorThemes.values.map((color) {
           final Color primaryColor =
@@ -80,6 +64,22 @@ class _MySettingsState extends State<MySettings> {
             ),
           );
         }).toList(),
+      ),
+      AnimatedPositioned(
+        left: _leftPositionColorSelector,
+        top: screenHeight * 0.015,
+        child: Container(
+          width: itemWidth * 1.1,
+          height: itemHeight,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: themeProvider.theme.textColor,
+              width: screenWidth * 0.005,
+            ),
+            borderRadius: BorderRadius.circular(25),
+          ),
+        ),
+        duration: Duration(milliseconds: 600),
       ),
     ]);
   }
