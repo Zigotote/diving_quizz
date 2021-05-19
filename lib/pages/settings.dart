@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/theme_provider.dart';
@@ -19,7 +20,7 @@ class _MySettingsState extends State<MySettings> {
   /// Builds the color theme selector row which contains :
   /// - A row with a textButton by available theme color
   /// - An animated rounded container which changes its position depending on the color selected
-  Stack _buildColorSelector(double screenWidth, double screenHeight,
+  Widget _buildColorSelector(double screenWidth, double screenHeight,
       double itemWidth, double itemHeight, ThemeProvider themeProvider) {
     return Stack(children: [
       AnimatedPositioned(
@@ -83,6 +84,25 @@ class _MySettingsState extends State<MySettings> {
     ]);
   }
 
+  /// Builds the switcher for the theme brightness
+  Widget _buildThemeBrightnessSelector(
+      double screenHeight, double paddingLeft, ThemeProvider themeProvider) {
+    return Padding(
+      padding: EdgeInsets.only(
+        top: screenHeight * 0.04,
+        left: paddingLeft * 4,
+      ),
+      child: FlutterToggleTab(
+        labels: ["Thème sombre", "Thème clair"],
+        initialIndex: themeProvider.isDarkTheme ? 0 : 1,
+        selectedLabelIndex: (index) => themeProvider.isDarkTheme = index == 0,
+        width: 75,
+        selectedTextStyle: TextStyle(color: Colors.black),
+        unSelectedTextStyle: TextStyle(color: Colors.black87),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
@@ -91,7 +111,6 @@ class _MySettingsState extends State<MySettings> {
     final double itemHeight = screenHeight * 0.16;
     final double paddingLeft = screenWidth * 0.03;
     return Consumer(builder: (context, ThemeProvider themeProvider, child) {
-      String themeValue = themeProvider.isDarkTheme ? "sombre" : "clair";
       if (_leftPositionColorSelector == null) {
         _leftPositionColorSelector = screenWidth * 0.01 +
             (itemWidth * 1.3) *
@@ -117,19 +136,8 @@ class _MySettingsState extends State<MySettings> {
               child: _buildColorSelector(screenWidth, screenHeight, itemWidth,
                   itemHeight, themeProvider),
             ),
-            Row(
-              children: [
-                Switch(
-                  value: themeProvider.isDarkTheme,
-                  onChanged: (bool value) {
-                    setState(() {
-                      themeProvider.isDarkTheme = value;
-                    });
-                  },
-                ),
-                Text("Thème $themeValue activé"),
-              ],
-            ),
+            _buildThemeBrightnessSelector(
+                screenHeight, paddingLeft, themeProvider),
             Padding(
               padding: EdgeInsets.only(left: 20, top: 30, bottom: 5),
               child: Text(

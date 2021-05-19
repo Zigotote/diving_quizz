@@ -25,10 +25,4 @@ class LightBlueTheme extends AbstractLightTheme {
 class DarkBlueTheme extends AbstractDarkTheme {
   @override
   AbstractShadeColors get shadeColors => BlueShadeColors();
-
-  @override
-  Color get switchThumbColor => Colors.blue.shade400;
-
-  @override
-  Color get switchTrackColor => Colors.blue.shade100;
 }

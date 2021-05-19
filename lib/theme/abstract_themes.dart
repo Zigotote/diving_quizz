@@ -104,22 +104,6 @@ abstract class AbstractDarkTheme extends AbstractTheme {
   @override
   ColorScheme get colorScheme => ColorScheme.dark();
 
-  /// Returns the color of switch button
-  @protected
-  Color get switchThumbColor;
-
-  /// Returns the color of the switch bar
-  @protected
-  Color get switchTrackColor;
-
-  @override
-  ThemeData get themeData => super.themeData.copyWith(
-        switchTheme: SwitchThemeData(
-          thumbColor: MaterialStateProperty.all<Color>(this.switchThumbColor),
-          trackColor: MaterialStateProperty.all<Color>(this.switchTrackColor),
-        ),
-      );
-
   @override
   Color get userPrimaryColor => this.shadeColors.brightColor;
 
