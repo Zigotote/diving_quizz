@@ -27,9 +27,6 @@ abstract class AbstractTheme {
   @protected
   ColorScheme get colorScheme;
 
-  /// Returns the default text color for the theme
-  Color get textColor;
-
   /// Returns the name of the availableTheme linked to the theme
   ColorThemes get themeName => this.shadeColors.themeName;
 
@@ -53,7 +50,7 @@ abstract class AbstractTheme {
           ),
         ),
         textTheme: TextTheme(
-          bodyText2: TextStyle(color: this.textColor),
+          bodyText2: TextStyle(color: this.colorScheme.onSurface),
         ),
       );
 
@@ -72,9 +69,6 @@ abstract class AbstractLightTheme extends AbstractTheme {
   ColorScheme get colorScheme => ColorScheme.light();
 
   @override
-  Color get textColor => Colors.black;
-
-  @override
   Color get userPrimaryColor => this.shadeColors.deepColor;
 
   @override
@@ -87,9 +81,6 @@ abstract class AbstractLightTheme extends AbstractTheme {
 abstract class AbstractDarkTheme extends AbstractTheme {
   @override
   ColorScheme get colorScheme => ColorScheme.dark();
-
-  @override
-  Color get textColor => Colors.white;
 
   /// Returns the color of switch button
   @protected
