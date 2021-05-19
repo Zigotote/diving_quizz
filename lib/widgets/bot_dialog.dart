@@ -16,11 +16,13 @@ class BotDialog extends StatelessWidget {
     return Consumer(builder: (context, ThemeProvider themeProvider, child) {
       return Bubble(
         style: BubbleStyle(
-          nip: BubbleNip.leftCenter,
-          color: themeProvider.theme.botBackgroundColor,
-          elevation: 4,
-          margin: BubbleEdges.only(top: 8, right: 50),
           alignment: Alignment.topLeft,
+          nip: BubbleNip.leftBottom,
+          elevation: 0,
+          color: themeProvider.theme.botBackgroundColor,
+          margin: BubbleEdges.only(top: 8, right: 50),
+          radius: Radius.circular(20),
+          padding: BubbleEdges.symmetric(vertical: 10),
         ),
         child: this.child,
       );

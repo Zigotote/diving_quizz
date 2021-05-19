@@ -103,6 +103,55 @@ class _MySettingsState extends State<MySettings> {
     );
   }
 
+  /// Builds the box where the previsualization of the choosen theme is displayed
+  Widget _buildExampleBox(double screenWidth, double screenHeight,
+      double paddingLeft, ThemeProvider themeProvider) {
+    return Column(children: [
+      Padding(
+        padding: EdgeInsets.only(
+          top: screenHeight * 0.08,
+          bottom: screenHeight * 0.02,
+        ),
+        child: Stack(
+          children: [
+            Divider(
+              color: themeProvider.theme.textColor,
+            ),
+            Positioned(
+              left: paddingLeft,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: themeProvider.theme.themeData.backgroundColor,
+                ),
+                width: screenWidth * 0.2,
+                child: Text(
+                  "Exemple",
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: Container(
+          padding: EdgeInsets.fromLTRB(10, 10, 10, 15),
+          child: Column(
+            children: [
+              BotDialog(
+                child: Text("Bonjour, je suis le professeur X."),
+              ),
+              UserDialog(
+                child: UserText("Démarrons le quizz !"),
+              )
+            ],
+          ),
+        ),
+      )
+    ]);
+  }
+
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
@@ -127,7 +176,7 @@ class _MySettingsState extends State<MySettings> {
             Padding(
               padding: EdgeInsets.only(
                 left: paddingLeft,
-                top: screenHeight * 0.02,
+                top: screenHeight * 0.03,
               ),
               child: Text("Couleur du thème :"),
             ),
@@ -138,37 +187,8 @@ class _MySettingsState extends State<MySettings> {
             ),
             _buildThemeBrightnessSelector(
                 screenHeight, paddingLeft, themeProvider),
-            Padding(
-              padding: EdgeInsets.only(left: 20, top: 30, bottom: 5),
-              child: Text(
-                "Exemple :",
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Container(
-                padding: EdgeInsets.fromLTRB(10, 10, 10, 15),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: themeProvider.isDarkTheme
-                        ? Colors.white
-                        : themeProvider.theme.themeData.primaryColor,
-                  ),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Column(
-                  children: [
-                    BotDialog(
-                      child: Text("Bonjour, je suis le professeur X."),
-                    ),
-                    UserDialog(
-                      child: UserText("Démarrons le quizz !"),
-                    )
-                  ],
-                ),
-              ),
-            )
+            _buildExampleBox(
+                screenWidth, screenHeight, paddingLeft, themeProvider),
           ],
         ),
       );

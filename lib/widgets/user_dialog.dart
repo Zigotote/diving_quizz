@@ -16,11 +16,13 @@ class UserDialog extends StatelessWidget {
     return Consumer(builder: (context, ThemeProvider themeProvider, child) {
       return Bubble(
         style: BubbleStyle(
-          nip: BubbleNip.rightCenter,
-          elevation: 4,
+          alignment: Alignment.topRight,
+          nip: BubbleNip.rightBottom,
+          elevation: 0,
           color: themeProvider.theme.userPrimaryColor,
           margin: BubbleEdges.only(top: 4),
-          alignment: Alignment.topRight,
+          radius: Radius.circular(20),
+          padding: BubbleEdges.symmetric(vertical: 10),
         ),
         child: this.child,
       );
