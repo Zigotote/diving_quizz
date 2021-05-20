@@ -31,47 +31,43 @@ abstract class AbstractTheme {
   ColorThemes get themeName => this.shadeColors.themeName;
 
   /// Returns the light or dark theme
-  ThemeData get themeData =>
-      ThemeData.from(colorScheme: this.colorScheme).copyWith(
-        appBarTheme: AppBarTheme(
-          backgroundColor: this.colorScheme.background,
-          elevation: 0,
-          centerTitle: true,
-          iconTheme: IconThemeData(
-            color: this.textColor,
-          ),
-          textTheme: TextTheme(
-            headline6: TextStyle(
-              fontFamily: "Nunito",
-              color: this.textColor,
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+  ThemeData get themeData {
+    ThemeData theme = ThemeData.from(colorScheme: this.colorScheme);
+    return theme.copyWith(
+      appBarTheme: AppBarTheme(
+        backgroundColor: this.colorScheme.background,
+        elevation: 0,
+        centerTitle: true,
+        iconTheme: IconThemeData(
+          color: this.textColor,
         ),
-        primaryColor: this.shadeColors.primaryColor,
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(
-              this.shadeColors.primaryColor,
-            ),
-            shape: MaterialStateProperty.all(CircleBorder()),
+        textTheme: theme.textTheme
+            .copyWith(
+              headline6: theme.textTheme.headline6.copyWith(fontSize: 20),
+            )
+            .apply(fontFamily: "Nunito"),
+      ),
+      primaryColor: this.shadeColors.primaryColor,
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(
+            this.shadeColors.primaryColor,
           ),
+          shape: MaterialStateProperty.all(CircleBorder()),
         ),
-        outlinedButtonTheme: OutlinedButtonThemeData(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(this.userSecondaryColor),
-            foregroundColor: MaterialStateProperty.all(this.userPrimaryColor),
-            elevation: MaterialStateProperty.all(10),
-          ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(this.userSecondaryColor),
+          foregroundColor: MaterialStateProperty.all(this.userPrimaryColor),
+          elevation: MaterialStateProperty.all(10),
         ),
-        textTheme: TextTheme(
-          bodyText2: TextStyle(
-            fontFamily: "Nunito",
-            color: this.textColor,
-          ),
-        ),
-      );
+      ),
+      textTheme: theme.textTheme
+          .copyWith(bodyText2: theme.textTheme.bodyText2)
+          .apply(fontFamily: "Nunito"),
+    );
+  }
 
   /// Returns the default color for the text
   Color get textColor => this.colorScheme.onSurface;
