@@ -34,11 +34,8 @@ class Home extends StatelessWidget {
         left: (screenWidth - circleSize) / 2,
         width: circleSize,
         height: circleSize,
-        child: Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: primaryColor,
-          ),
+        child: CircleAvatar(
+          backgroundColor: primaryColor,
         ),
       ),
       Positioned(
