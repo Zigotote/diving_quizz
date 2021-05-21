@@ -28,10 +28,9 @@ class Home extends StatelessWidget {
   List<Positioned> _buildBackground(
       Color primaryColor, double screenHeight, double screenWidth) {
     final double circleSize = screenWidth * 0.9;
-    final bool isLargeScreen = screenHeight > 800 && screenWidth > 450;
     return [
       Positioned(
-        bottom: isLargeScreen ? -screenWidth * 0.5 : -screenWidth * 0.35,
+        bottom: screenHeight > 750 ? -screenWidth * 0.3 : -screenWidth * 0.35,
         left: (screenWidth - circleSize) / 2,
         width: circleSize,
         height: circleSize,
@@ -56,7 +55,7 @@ class Home extends StatelessWidget {
 
   /// Builds and item for the menu and displays it at the right position
   _buildMenuItem(double screenWidth, double bottomPosition, double leftPosition,
-      String text, String image, Color textColor, Function navigateTo) {
+      String text, String image, TextStyle textStyle, Function navigateTo) {
     final double circleSize = screenWidth * 0.4;
     return Positioned(
       bottom: bottomPosition,
@@ -68,13 +67,7 @@ class Home extends StatelessWidget {
           CircularText(
             children: [
               TextItem(
-                text: Text(
-                  text,
-                  style: TextStyle(
-                    color: textColor,
-                    fontFamily: "Nunito",
-                  ),
-                ),
+                text: Text(text, style: textStyle),
                 startAngle: 180,
               ),
             ],
@@ -99,16 +92,19 @@ class Home extends StatelessWidget {
     return Consumer(builder: (context, ThemeProvider themeProvider, child) {
       AbstractTheme theme = themeProvider.theme;
       Color primaryColor = theme.themeData.primaryColor;
+      TextStyle textStyle = theme.themeData.textTheme.bodyText2;
       return Scaffold(
         body: Stack(
           children: [
             ..._buildBackground(primaryColor, screenHeight, screenWidth),
             Positioned(
-              top: screenHeight * 0.05,
+              top: screenHeight > 700
+                  ? screenHeight * 0.08
+                  : screenHeight * 0.05,
               width: screenWidth,
               child: Text(
                 "Le quizz du plongeur",
-                style: TextStyle(fontSize: screenWidth * 0.1),
+                style: textStyle.copyWith(fontSize: screenWidth * 0.1),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -118,7 +114,7 @@ class Home extends StatelessWidget {
               screenWidth * 0.53,
               "Apprendre les réactions",
               "reaction.jpg",
-              theme.textColor,
+              textStyle,
               () => _navigateTo(context, ReactionsQuizz()),
             ),
             _buildMenuItem(
@@ -127,7 +123,7 @@ class Home extends StatelessWidget {
               screenWidth * 0.15,
               "Apprendre les signes",
               "sign.jpg",
-              theme.textColor,
+              textStyle,
               () => _navigateTo(context, SignsQuizz()),
             ),
             Positioned(
