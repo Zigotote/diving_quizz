@@ -60,7 +60,13 @@ abstract class AbstractTheme {
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(this.userSecondaryColor),
           foregroundColor: MaterialStateProperty.all(this.userPrimaryColor),
-          elevation: MaterialStateProperty.all(10),
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(20),
+              ),
+            ),
+          ),
         ),
       ),
       textTheme: theme.textTheme
@@ -90,7 +96,7 @@ abstract class AbstractLightTheme extends AbstractTheme {
   Color get userPrimaryColor => this.shadeColors.deepColor;
 
   @override
-  Color get userSecondaryColor => Colors.white;
+  Color get userSecondaryColor => Colors.grey.shade50;
 
   @override
   Color get botBackgroundColor => this.shadeColors.brightColor;
@@ -104,7 +110,7 @@ abstract class AbstractDarkTheme extends AbstractTheme {
   Color get userPrimaryColor => this.shadeColors.brightColor;
 
   @override
-  Color get userSecondaryColor => Colors.black87;
+  Color get userSecondaryColor => Colors.grey.shade800;
 
   @override
   Color get botBackgroundColor => this.shadeColors.deepColor;
