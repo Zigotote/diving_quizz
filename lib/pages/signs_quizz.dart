@@ -19,7 +19,6 @@ class _SignsQuizzState extends AbstractQuizzState {
   @override
   List<String> get introDialog => [
         ...super.introDialog,
-        "Nous allons travailler les signes de plongée ensemble.",
         "Sauras-tu trouver les significations des signes que je vais te présenter ?",
       ];
 

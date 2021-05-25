@@ -45,8 +45,7 @@ abstract class AbstractQuizzState extends State<AbstractQuizz> {
 
   /// Returns the text to put before the quizz
   List<String> get introDialog => [
-        "Bonjour !",
-        "Je suis ${this.botName}.",
+        "Bonjour, moi c'est ${this.botName} !",
       ];
 
   /// Builds the quizz widget for the given question

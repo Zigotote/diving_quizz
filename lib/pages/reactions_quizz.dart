@@ -22,8 +22,7 @@ class _ReactionsQuizzState extends AbstractQuizzState {
   @override
   List<String> get introDialog => [
         ...super.introDialog,
-        "Nous allons travailler les réactions aux signes de plongée.",
-        "Pour cela tu devras trouver la signification du signe, puis la réaction à y appliquer.",
+        "Je vais te montrer des signes. Tu devras trouver leur signification et la réaction adéquate.",
         "Prêt ?",
         "C'est sharky !"
       ];
