@@ -3,8 +3,11 @@ import 'package:provider/provider.dart';
 
 import '../models/question.dart';
 import '../providers/question_pool.dart';
+import '../widgets/back_button.dart';
 import '../widgets/bot_dialog.dart';
 import '../widgets/my_icon.dart';
+import '../widgets/options_widget.dart';
+import '../widgets/user_dialog.dart';
 
 abstract class AbstractQuizz extends StatefulWidget {}
 
@@ -13,8 +16,20 @@ abstract class AbstractQuizzState extends State<AbstractQuizz> {
   final ScrollController _scrollController = ScrollController();
   bool needScroll = false;
 
+  /// The widget displaying the question to restart the quizz (or the answer the user selected)
+  Widget _questionRelaunchQuizz;
+
+  /// The indicator to know if the user has relaunched the same quizz or not
+  bool _isRelaunched = false;
+
   /// The score of the user
-  int score = 0;
+  int score;
+
+  AbstractQuizzState() {
+    score = 0;
+    _questionRelaunchQuizz = AnswerOptions(
+        answers: {"Oui", "Non"}, onAnswerSelected: _handleRestartQuizz);
+  }
 
   @override
   void didChangeDependencies() {
@@ -58,6 +73,60 @@ abstract class AbstractQuizzState extends State<AbstractQuizz> {
     });
   }
 
+  /// Handles the response the user selected to restart the quizz or not
+  _handleRestartQuizz(response) {
+    if (response == "Oui") {
+      setState(() {
+        _isRelaunched = true;
+        score = 0;
+      });
+      Provider.of<QuestionPool>(context, listen: false).initQuizz();
+    } else {
+      setState(() {
+        _questionRelaunchQuizz = UserDialog(child: UserText(response));
+      });
+    }
+  }
+
+  /// Builds the end of the dialog, when the quizz is finished
+  SliverList _buildEndDialog(QuestionPool questionPool) {
+    int totalQuestions = questionPool.questions.length;
+    return SliverList(
+      delegate: SliverChildListDelegate(
+        questionPool.isFinished
+            ? [
+                BotDialog(
+                  child: Text(
+                    "Le quizz est maintenant fini.",
+                  ),
+                ),
+                BotDialog(
+                  child: Text(
+                    "Ton score est de $score/$totalQuestions.",
+                  ),
+                ),
+                BotDialog(
+                  child: Text(
+                    "Veux-tu lancer un nouveau quizz ?",
+                  ),
+                ),
+                AnimatedSwitcher(
+                  duration: Duration(milliseconds: 300),
+                  transitionBuilder:
+                      (Widget child, Animation<double> animation) {
+                    return ScaleTransition(
+                      child: child,
+                      scale: animation,
+                    );
+                  },
+                  child: _questionRelaunchQuizz,
+                ),
+              ]
+            : [],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (needScroll) {
@@ -66,6 +135,7 @@ abstract class AbstractQuizzState extends State<AbstractQuizz> {
     }
     return Scaffold(
       appBar: AppBar(
+        leading: MyBackButton(),
         title: Row(
           children: [
             Padding(
@@ -84,7 +154,11 @@ abstract class AbstractQuizzState extends State<AbstractQuizz> {
         slivers: [
           SliverList(
             delegate: SliverChildListDelegate(
-              introDialog.map((text) => BotDialog(child: Text(text))).toList(),
+              _isRelaunched
+                  ? [BotDialog(child: Text("C'est reparti !"))]
+                  : introDialog
+                      .map((text) => BotDialog(child: Text(text)))
+                      .toList(),
             ),
           ),
           Consumer<QuestionPool>(
@@ -106,32 +180,10 @@ abstract class AbstractQuizzState extends State<AbstractQuizz> {
           ),
           Consumer<QuestionPool>(
             builder: (context, QuestionPool questionPool, child) {
-              int totalQuestions = questionPool.questions.length;
-              return SliverList(
-                delegate: SliverChildListDelegate(
-                  questionPool.isFinished
-                      ? [
-                          BotDialog(
-                            child: Text(
-                              "Le quizz est maintenant fini.",
-                            ),
-                          ),
-                          BotDialog(
-                            child: Text(
-                              "Ton score est de $score/$totalQuestions.",
-                            ),
-                          ),
-                        ]
-                      : [],
-                ),
-              );
+              return _buildEndDialog(questionPool);
             },
           ),
         ],
-      ),
-      bottomNavigationBar: OutlinedButton(
-        onPressed: Provider.of<QuestionPool>(context, listen: false).initQuizz,
-        child: Text("Réinitialiser"),
       ),
     );
   }
