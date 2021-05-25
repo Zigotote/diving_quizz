@@ -14,7 +14,7 @@ class ReactionsQuizz extends AbstractQuizz {
 
 class _ReactionsQuizzState extends AbstractQuizzState {
   @override
-  String get botImage => "assets/images/bots/shark.jpg";
+  String get botImage => "assets/images/bots/shark.png";
 
   @override
   String get botName => "Sharky";
